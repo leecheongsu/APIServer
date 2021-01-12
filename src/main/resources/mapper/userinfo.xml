@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.UserinfoMapper">
+
+	<insert id="insert">
+		insert into userinfo
+			(email, name, teltype, mobile, pwd, jumina, sex, utype, regdate)
+		values (#{email}, #{name}, #{teltype}, #{mobile}, #{pwd}, #{jumina}, #{sex}, #{utype}, sysdate)
+	</insert>
+
+	<delete id="delete">
+		delete from userinfo
+		 where email = #{id}
+	</delete>
+
+	<update id="updatePwd">
+		update userinfo
+		   set pwd = #{newPwd}
+		 where email = #{id}
+	</update>
+
+	<update id="updateJuminb">
+		update userinfo
+		   set juminb = #{juminb}
+		 where email = #{id}
+	</update>
+
+	<update id="updateBasic">
+		update userinfo
+		   set name = #{name},
+		       teltype = #{teltype},
+		       mobile = #{mobile},
+		       jumina = #{jumina},
+		       sex = #{sex}
+		 where email = #{id}
+	</update>
+
+    <select id="getCurrentDateTime" resultType="java.lang.String">
+		select to_char(sysdate,'yyyy/mm/dd')
+		  from DUAL
+    </select>
+
+	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select * 
+		  from userinfo 
+		 where email = #{id}
+	</select> 
+
+	<select id="findId" resultType="String">
+		select email
+		  from userinfo 
+		 where name    = #{name}
+		   and teltype = #{teltype}
+		   and mobile  = #{mobile}
+		   and jumina  = #{jumina}
+		   and sex     = #{sex}
+	</select> 
+
+	<resultMap id="userResultMap" type="com.insrb.app.util.LowerKeyMap"></resultMap>
+	<select id="selectAll" statementType="CALLABLE" parameterType="hashmap" >
+		{ call pk_fireinsurance.sp_test(
+			#{p_cursor,  mode=OUT, jdbcType=CURSOR, javaType=java.sql.ResultSet, resultMap=userResultMap}
+		)}
+	</select> 
+</mapper>
