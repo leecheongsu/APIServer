@@ -11,5 +11,5 @@ public class InsrbApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InsrbApplication.class, args);
 	}
-
+     
 }
