@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class HouseControllerTest {
 
+	private static final String ACCESS_KEY = "myValue";
+
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -34,14 +36,14 @@ public class HouseControllerTest {
 	@Test
 	@DisplayName("UI-APP-020 주소찾기 :  POST /users 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP020_01() throws Exception {
-		mockMvc.perform(get("/house/juso")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc.perform(get("/house/juso").header("X-insr-servicekey", ACCESS_KEY)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	@DisplayName("UI-APP-020 주소찾기 :  POST /users 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP020_02() throws Exception {
 		mockMvc
-			.perform(get("/house/juso").param("search", mockAddress.get("search_text")))
+			.perform(get("/house/juso").header("X-insr-servicekey", ACCESS_KEY).param("search", mockAddress.get("search_text")))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.results.common.errorCode").value("0"));

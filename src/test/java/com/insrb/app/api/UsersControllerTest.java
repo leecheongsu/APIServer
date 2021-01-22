@@ -7,11 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.insrb.app.mapper.UserinfoMapper;
-import com.insrb.app.util.Authentication;
 import java.util.HashMap;
 import java.util.Map;
+import com.insrb.app.mapper.UserinfoMapper;
+import com.insrb.app.util.Authentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class UsersControllerTest {
+
+	/**
+	 *
+	 */
+	private static final String ACCESS_KEY = "myValue";
 
 	@Autowired
 	UserinfoMapper UserinfoMapper;
@@ -80,7 +84,7 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-004 회원가입:  POST /users 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP004_01() throws Exception {
-		mockMvc.perform(post("/users")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/users").header("X-insr-servicekey", ACCESS_KEY)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -89,6 +93,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				post("/users")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("email", mockUser.get("email"))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
@@ -107,6 +112,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				post("/users")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("email", mockUser.get("email"))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
@@ -125,6 +131,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				post("/users")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("email", mockUser.get("email"))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
@@ -143,6 +150,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				post("/users/business")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("email", mockGAUser.get("email"))
 					.param("name", mockGAUser.get("name"))
 					.param("teltype", mockGAUser.get("teltype"))
@@ -162,7 +170,7 @@ public class UsersControllerTest {
 	@DisplayName("UI-APP-005 가입여부 확인(이메일 중복):  GET /users/{user_id}/isjoined 존재하는 사용자는 이름과 200 OK를 리턴해야한다")
 	public void UIAPP005_01() throws Exception {
 		mockMvc
-			.perform(get("/users/" + mockUser.get("email") + "/isjoined"))
+			.perform(get("/users/" + mockUser.get("email") + "/isjoined").header("X-insr-servicekey", ACCESS_KEY))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString(mockUser.get("email"))));
@@ -171,7 +179,10 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-005 가입여부 확인(이메일 중복): GET /users/{user_id}/isjoined 존재하지 않는 사용자는 404 NOT_FOUND를 리턴해야한다")
 	public void UIAPP005_02() throws Exception {
-		mockMvc.perform(get("/users/" + badUser + "/isjoined")).andDo(print()).andExpect(status().isNotFound());
+		mockMvc
+			.perform(get("/users/" + badUser + "/isjoined").header("X-insr-servicekey", ACCESS_KEY))
+			.andDo(print())
+			.andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -180,6 +191,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 			)
 			.andDo(print())
@@ -192,7 +204,11 @@ public class UsersControllerTest {
 	)
 	public void UIAPP005_04() throws Exception {
 		mockMvc
-			.perform(put("/users/" + mockUser.get("email") + "/juminb").param("juminb", mockUser.get("juminb")))
+			.perform(
+				put("/users/" + mockUser.get("email") + "/juminb")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					.param("juminb", mockUser.get("juminb"))
+			)
 			.andDo(print())
 			.andExpect(status().isUnauthorized());
 	}
@@ -203,6 +219,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("pwd", mockUser.get("pwd"))
 					.param("juminb", mockUser.get("juminb") + "AAA")
@@ -217,6 +234,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("juminb", mockUser.get("juminb"))
 			)
@@ -227,14 +245,19 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-008 로그인:  POST /users/auth 파라미터 id, pwd가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP008_01() throws Exception {
-		mockMvc.perform(post("/users/auth")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc.perform(post("/users/auth").header("X-insr-servicekey", ACCESS_KEY)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	@DisplayName("UI-APP-008 로그인: POST /users/auth 패스워드가 틀리면 401 UNAUTHORIZED를 리턴해야한다")
 	public void UIAPP008_02() throws Exception {
 		mockMvc
-			.perform(post("/users/auth").param("id", mockUser.get("email")).param("pwd", "invalidPassword"))
+			.perform(
+				post("/users/auth")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					.param("id", mockUser.get("email"))
+					.param("pwd", "invalidPassword")
+			)
 			.andDo(print())
 			.andExpect(status().isUnauthorized());
 	}
@@ -243,7 +266,12 @@ public class UsersControllerTest {
 	@DisplayName("UI-APP-008 로그인: POST /users/{user_id}/login 로그인하면 토큰과 사용자정보를 200 OK를 리턴해야한다")
 	public void UIAPP008_03() throws Exception {
 		mockMvc
-			.perform(post("/users/auth").param("id", mockUser.get("email")).param("pwd", mockUser.get("pwd")))
+			.perform(
+				post("/users/auth")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					.param("id", mockUser.get("email"))
+					.param("pwd", mockUser.get("pwd"))
+			)
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.token").exists())
@@ -253,7 +281,7 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-009 이메일 찾기(조회): GET /users/email 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP009_01() throws Exception {
-		mockMvc.perform(get("/users/email")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc.perform(get("/users/email").header("X-insr-servicekey", ACCESS_KEY)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -262,6 +290,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				get("/users/email")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("bad_teltype"))
 					.param("mobile", mockUser.get("mobile"))
@@ -278,6 +307,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				get("/users/email")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
 					.param("mobile", mockUser.get("mobile"))
@@ -292,7 +322,10 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-011 비밀번호 찾기(조회): GET /users/{user_id}/can-change 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP011_01() throws Exception {
-		mockMvc.perform(get("/users/" + mockUser.get("email") + "/can-change")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc
+			.perform(get("/users/" + mockUser.get("email") + "/can-change").header("X-insr-servicekey", ACCESS_KEY))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -301,6 +334,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				get("/users/" + mockUser.get("email") + "/can-change")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("teltype", mockUser.get("bad_teltype"))
 					.param("mobile", mockUser.get("mobile"))
 			)
@@ -314,6 +348,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				get("/users/" + mockUser.get("email") + "/can-change")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("teltype", mockUser.get("teltype"))
 					.param("mobile", mockUser.get("mobile"))
 			)
@@ -324,7 +359,10 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("UI-APP-012 비밀번호 찾기(비밀번호 변경): PUT /users/{user_id}/pwd 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
 	public void UIAPP012_01() throws Exception {
-		mockMvc.perform(put("/users/" + mockUser.get("email") + "/pwd")).andDo(print()).andExpect(status().isBadRequest());
+		mockMvc
+			.perform(put("/users/" + mockUser.get("email") + "/pwd").header("X-insr-servicekey", ACCESS_KEY))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -335,6 +373,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/pwd")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("teltype", mockUser.get("bad_teltype"))
 					.param("mobile", mockUser.get("mobile"))
 					.param("newPwd", mockUser.get("newPwd"))
@@ -351,6 +390,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/pwd")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.param("teltype", mockUser.get("teltype"))
 					.param("mobile", mockUser.get("mobile"))
 					.param("newPwd", mockUser.get("newPwd"))
@@ -367,6 +407,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					// .header(Authentication.HEADER_STRING,Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("pwd", mockUser.get("bad_pwd"))
 					.param("name", mockUser.get("name"))
@@ -385,6 +426,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 			)
 			.andDo(print())
@@ -397,6 +439,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
@@ -416,6 +459,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
@@ -435,6 +479,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					// .header(Authentication.HEADER_STRING,Authentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("comname", mockGAUser.get("comname"))
 					.param("sosok", mockGAUser.get("sosok"))
@@ -450,6 +495,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
 			)
 			.andDo(print())
@@ -462,6 +508,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
 					.param("comname", mockGAUser.get("comname"))
 					.param("sosok", mockGAUser.get("sosok"))
@@ -479,6 +526,7 @@ public class UsersControllerTest {
 		mockMvc
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
+					.header("X-insr-servicekey", ACCESS_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
 					.param("comname", mockGAUser.get("comname"))
 					.param("sosok", mockGAUser.get("sosok"))

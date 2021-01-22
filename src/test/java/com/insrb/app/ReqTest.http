@@ -1,0 +1,192 @@
+### 주소검색
+GET http://localhost:8080/house/juso?search=서울특별시 서대문구 증가로24다길 5
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 표제부 다세대: 서울특별시 서대문구 증가로24가길 33
+GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0007
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청 다세대: 서울특별시 서대문구 증가로24가길 33 
+POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0007
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 표제부 주택:  서울특별시 서대문구 증가로24다길 5 
+GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0067
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청 주택:  서울특별시 서대문구 증가로24다길 5 
+POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0067
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+###  주소검색
+GET http://localhost:8080/house/juso?search=두산더랜드파크
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 두산더랜드파크
+GET http://localhost:8080/house/cover?sigungucd=11500&bjdongcd=10500&bun=0757&ji=0000
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청 단체 두산더랜드파크 ->406 error
+POST http://localhost:8080/house/quotes/danche?sigungucd=11500&bjdongcd=10500&bun=0757&ji=0000
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 전유부
+GET http://localhost:8080/house/detail?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 표제부 해들목휴먼빌
+GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 견젹요청 단체 해들목휴먼빌
+POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 표제부 서울특별시 동작구 등용로 127(현대아파트)
+GET http://localhost:8080/house/cover?sigungucd=11590&bjdongcd=10800&bun=0502&ji=0000
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견젹요청 단체 서울특별시 동작구 등용로 127(현대아파트)
+POST http://localhost:8080/house/quotes/danche?sigungucd=11590&bjdongcd=10800&bun=0502&ji=0000
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+###
+{
+  "sigungucd":"11410",
+  "bjdongcd":"11900",
+  "bun":"0002",
+  "ji":"0002"
+}
+### 견적요청 세대별 - 표제부 1, 전유부 1
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+    "cover": {
+            "naRoadCd": 114104136336,
+            "oudrMechUtcnt": 0,
+            "splotNm": "",
+            "ugrndFlrCnt": 0,
+            "pmsnoYear": 2015,
+            "roofCd": 10,
+            "hoCnt": 2,
+            "naSubBun": 0.0,
+            "mgmBldrgstPk": "11410-100211641",
+            "oudrAutoUtcnt": 10,
+            "crtnDay": 20190530,
+            "totDongTotArea": 724.96,
+            "atchBldCnt": 0,
+            "dongNm": "",
+            "stcnsDay": 20150720,
+            "block": "",
+            "indrMechArea": 0,
+            "archArea": 268.07,
+            "pmsnoGbCd": 1101,
+            "regstrGbCdNm": "집합",
+            "gnBldCert": 0,
+            "vlRatEstmTotArea": 724.96,
+            "atchBldArea": 0,
+            "platPlc": "서울특별시 서대문구 북가좌동 2-2번지",
+            "etcPurps": "공동주택(다세대주택(12세대)) 및 제1종근생(소매점)",
+            "mainAtchGbCdNm": "주건축물",
+            "bldNm": "해들목 휴먼빌",
+            "oudrMechArea": 0,
+            "rideUseElvtCnt": 1,
+            "strctCd": 21,
+            "bjdongCd": 11900,
+            "indrAutoArea": 0,
+            "roofCdNm": "(철근)콘크리트",
+            "naMainBun": 74.0,
+            "bcRat": 59.49,
+            "regstrKindCd": 3,
+            "totArea": 724.96,
+            "oudrAutoArea": 115.7,
+            "sigunguCd": 11410,
+            "strctCdNm": "철근콘크리트구조",
+            "vlRat": 160.89,
+            "ji": "0002",
+            "engrEpi": 0,
+            "gnBldGrade": "",
+            "mainPurpsCd": "02000",
+            "platGbCd": 0,
+            "rserthqkDsgnApplyYn": 1,
+            "naUgrndCd": 0,
+            "bylotCnt": 0,
+            "regstrGbCd": 2,
+            "grndFlrCnt": 5,
+            "etcStrct": "철근콘크리트구조",
+            "indrAutoUtcnt": 0,
+            "fmlyCnt": 0,
+            "lot": "",
+            "emgenUseElvtCnt": 0,
+            "pmsnoKikCdNm": "건축과",
+            "indrMechUtcnt": 0,
+            "itgBldGrade": "",
+            "heit": 13.9,
+            "regstrKindCdNm": "표제부",
+            "engrRat": 0,
+            "rserthqkAblty": "",
+            "itgBldCert": 0,
+            "pmsnoGbCdNm": "신축허가",
+            "rnum": 1,
+            "pmsnoKikCd": 3120159,
+            "etcRoof": "(철근)콘크리트(평스라브)",
+            "engrGrade": "",
+            "mainPurpsCdNm": "공동주택",
+            "useAprDay": 20151203,
+            "platArea": 450.6,
+            "hhldCnt": 12,
+            "mainAtchGbCd": 0,
+            "pmsDay": 20150701,
+            "naBjdongCd": 11901,
+            "bun": "0002",
+            "newPlatPlc": "서울특별시 서대문구 증가로20길 74"
+        },
+    "detail": {
+      "naRoadCd": 114104136336,
+      "splotNm": "",
+      "mainPurpsCd": "02003",
+      "platGbCd": 0,
+      "flrGbCd": 20,
+      "naUgrndCd": 0,
+      "regstrGbCd": 2,
+      "etcStrct": "철근콘크리트구조",
+      "lot": "",
+      "naSubBun": 0.0,
+      "mgmBldrgstPk": "11410-100211653",
+      "crtnDay": 20181001,
+      "hoNm": 501,
+      "dongNm": "",
+      "regstrKindCdNm": "전유부",
+      "block": "",
+      "flrNo": 5.0,
+      "flrNoNm": "각층",
+      "area": 7.69,
+      "rnum": 22,
+      "regstrGbCdNm": "집합",
+      "exposPubuseGbCdNm": "공용",
+      "platPlc": "서울특별시 서대문구 북가좌동 2-2번지",
+      "etcPurps": "공동주택(다세대주택(계단실))",
+      "mainAtchGbCdNm": "주건축물",
+      "mainPurpsCdNm": "다세대주택",
+      "bldNm": "해들목 휴먼빌",
+      "strctCd": 21,
+      "bjdongCd": 11900,
+      "flrGbCdNm": "지상",
+      "mainAtchGbCd": 0,
+      "naBjdongCd": 11901,
+      "naMainBun": 74.0,
+      "exposPubuseGbCd": 2,
+      "regstrKindCd": 4,
+      "sigunguCd": 11410,
+      "bun": "0002",
+      "strctCdNm": "철근콘크리트구조",
+      "newPlatPlc": "서울특별시 서대문구 증가로20길 74",
+      "ji": "0002"
+    }
+}
+
+###서버
+GET http://210.179.175.146:8080/webadmin
