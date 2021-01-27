@@ -1,18 +1,79 @@
-### 주소검색 해들목휴먼빌
-GET http://localhost:8080/house/juso?search=해들목휴먼빌
+
+### 2 부산광역시 해운대구 달맞이길117번다길 130-1
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번다길 130-1
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
 X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
 
-### 표제부 해들목휴먼빌
-GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
 X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
 
-### 전유부 해들목휴먼빌
-GET http://localhost:8080/house/detail?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028&dongnm=
+### 3 부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
 X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
 
-### 견젹요청 다세대주택: 해들목휴먼빌
-POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
 X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 4 부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1501&ji=0004
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10600&bun=1501&ji=0004
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 5 부산광역시 해운대구 재반로270번길 37-34 정우빌라. 공동주택과 단독주택이 같이 있음. 각각의 단가 구하는 방식으로 수정.
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10300&bun=1584&ji=0008
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10300&bun=1584&ji=0008
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 9 서울특별시 동대문구 왕산로28길 3-1
+GET http://localhost:8080/house/juso?search=서울특별시 동대문구 왕산로28길 3-1
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=11230&bjdongcd=10200&bun=23&ji=24
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=11230&bjdongcd=10200&bun=23&ji=24
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 17 경기도 성남시 수정구 성남대로1379번길 15-1
+### 주소검색 
+GET http://localhost:8080/house/juso?search=경기도 성남시 수정구 성남대로1379번길 15-1
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부
+GET http://localhost:8080/house/cover?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 전유부
+GET http://localhost:8080/house/detail?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002&dongnm=
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견젹요청
+POST http://localhost:8080/house/quotes/danche?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+
+
 
 
 

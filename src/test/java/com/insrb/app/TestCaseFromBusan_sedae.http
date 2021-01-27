@@ -1,0 +1,556 @@
+### 1 부산광역시 해운대구 윗반송로51번길 95-29
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 윗반송로51번길 95-29
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10100&bun=0040&ji=0652
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10100&bun=0040&ji=0652&dongnm=
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견젹요청
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+  "cover":{
+    "naRoadCd": 263504199152,
+    "oudrMechUtcnt": 0,
+    "splotNm": "",
+    "ugrndFlrCnt": 0,
+    "pmsnoYear": "",
+    "roofCd": 10,
+    "hoCnt": 0,
+    "naSubBun": 29.0,
+    "mgmBldrgstPk": "26350-1305",
+    "oudrAutoUtcnt": 0,
+    "crtnDay": 20200427,
+    "totDongTotArea": 58.48,
+    "atchBldCnt": 0,
+    "dongNm": "",
+    "stcnsDay": 19970423,
+    "block": "",
+    "indrMechArea": 0,
+    "archArea": 29.24,
+    "pmsnoGbCd": "",
+    "regstrGbCdNm": "일반",
+    "gnBldCert": 0,
+    "vlRatEstmTotArea": 58.48,
+    "atchBldArea": 0,
+    "platPlc": "부산광역시 해운대구 반송동 40-652번지",
+    "etcPurps": "단독주택",
+    "mainAtchGbCdNm": "주건축물",
+    "bldNm": "",
+    "oudrMechArea": 0,
+    "rideUseElvtCnt": 0,
+    "strctCd": 19,
+    "bjdongCd": 10100,
+    "indrAutoArea": 0,
+    "roofCdNm": "(철근)콘크리트",
+    "naMainBun": 95.0,
+    "bcRat": 88.61,
+    "regstrKindCd": 2,
+    "totArea": 58.48,
+    "oudrAutoArea": 0,
+    "sigunguCd": 26350,
+    "strctCdNm": "기타조적구조",
+    "vlRat": 177.21,
+    "ji": "0652",
+    "engrEpi": 0,
+    "gnBldGrade": "",
+    "mainPurpsCd": "01000",
+    "platGbCd": 0,
+    "rserthqkDsgnApplyYn": 0,
+    "naUgrndCd": 0,
+    "bylotCnt": 0,
+    "regstrGbCd": 1,
+    "grndFlrCnt": 2,
+    "etcStrct": "조적조",
+    "indrAutoUtcnt": 0,
+    "fmlyCnt": 2,
+    "lot": "",
+    "emgenUseElvtCnt": 0,
+    "pmsnoKikCdNm": "",
+    "indrMechUtcnt": 0,
+    "itgBldGrade": "",
+    "heit": 6.9,
+    "regstrKindCdNm": "일반건축물",
+    "engrRat": 0,
+    "rserthqkAblty": "",
+    "itgBldCert": 0,
+    "pmsnoGbCdNm": "",
+    "rnum": 1,
+    "pmsnoKikCd": "",
+    "etcRoof": "스라브",
+    "engrGrade": "",
+    "mainPurpsCdNm": "단독주택",
+    "useAprDay": 19970714,
+    "platArea": 33,
+    "hhldCnt": 1,
+    "mainAtchGbCd": 0,
+    "pmsDay": 19970331,
+    "naBjdongCd": 10101,
+    "bun": "0040",
+    "newPlatPlc": "부산광역시 해운대구 윗반송로51번길 95-29"
+  },
+  "detail":{
+  }
+}
+
+### 2 부산광역시 해운대구 달맞이길117번다길 130-1
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번다길 130-1
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 표제부 
+GET  http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005&dongnm=
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견젹요청
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+  "cover":,
+  "detail":
+}
+
+
+
+### 6 부산광역시 해운대구 우동 1388-4 대우마리나1차아파트  101동 202호
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004&dongnm=101동&honm=202호
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견적 
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+  "cover":{
+    "naRoadCd": 263503133043,
+    "oudrMechUtcnt": 0,
+    "splotNm": "",
+    "ugrndFlrCnt": 1,
+    "pmsnoYear": "",
+    "roofCd": 10,
+    "hoCnt": 0,
+    "naSubBun": 0.0,
+    "mgmBldrgstPk": "26350-20289",
+    "oudrAutoUtcnt": 0,
+    "crtnDay": 20190601,
+    "totDongTotArea": 5105.33,
+    "atchBldCnt": 6,
+    "dongNm": "101동",
+    "stcnsDay": "",
+    "block": "",
+    "indrMechArea": 0,
+    "archArea": 822.68,
+    "pmsnoGbCd": "",
+    "regstrGbCdNm": "집합",
+    "gnBldCert": 0,
+    "vlRatEstmTotArea": 5997.43,
+    "atchBldArea": 15263.76,
+    "platPlc": "부산광역시 해운대구 우동 1388-4번지",
+    "etcPurps": "공동주택",
+    "mainAtchGbCdNm": "주건축물",
+    "bldNm": "대우마리나아파트",
+    "oudrMechArea": 0,
+    "rideUseElvtCnt": 0,
+    "strctCd": 21,
+    "bjdongCd": 10500,
+    "indrAutoArea": 0,
+    "roofCdNm": "(철근)콘크리트",
+    "naMainBun": 117.0,
+    "bcRat": 0,
+    "regstrKindCd": 3,
+    "totArea": 20369.086,
+    "oudrAutoArea": 0,
+    "sigunguCd": 26350,
+    "strctCdNm": "철근콘크리트구조",
+    "vlRat": 0,
+    "ji": "0004",
+    "engrEpi": 0,
+    "gnBldGrade": "",
+    "mainPurpsCd": "02000",
+    "platGbCd": 0,
+    "rserthqkDsgnApplyYn": 1,
+    "naUgrndCd": 0,
+    "bylotCnt": 7,
+    "regstrGbCd": 2,
+    "grndFlrCnt": 12,
+    "etcStrct": "철근콘크리트",
+    "indrAutoUtcnt": 0,
+    "fmlyCnt": 0,
+    "lot": "",
+    "emgenUseElvtCnt": 0,
+    "pmsnoKikCdNm": "",
+    "indrMechUtcnt": 0,
+    "itgBldGrade": "",
+    "heit": 0,
+    "regstrKindCdNm": "표제부",
+    "engrRat": 0,
+    "rserthqkAblty": "",
+    "itgBldCert": 0,
+    "pmsnoGbCdNm": "",
+    "rnum": 18,
+    "pmsnoKikCd": "",
+    "etcRoof": "슬래브",
+    "engrGrade": "",
+    "mainPurpsCdNm": "공동주택",
+    "useAprDay": 19910621,
+    "platArea": 0,
+    "hhldCnt": 48,
+    "mainAtchGbCd": 0,
+    "pmsDay": 19890531,
+    "naBjdongCd": 10501,
+    "bun": 1388,
+    "newPlatPlc": "부산광역시 해운대구 해운대해변로 117"
+   },
+  "detail":{
+    "naRoadCd": 263503133043,
+    "splotNm": "",
+    "mainPurpsCd": "02001",
+    "platGbCd": 0,
+    "flrGbCd": 20,
+    "naUgrndCd": 0,
+    "regstrGbCd": 2,
+    "etcStrct": "철근콘크리트",
+    "lot": "",
+    "naSubBun": 0.0,
+    "mgmBldrgstPk": "26350-93936",
+    "crtnDay": 20181001,
+    "hoNm": "202호",
+    "dongNm": "101동",
+    "regstrKindCdNm": "전유부",
+    "block": "",
+    "flrNo": 2.0,
+    "flrNoNm": "2층",
+    "area": 84.2249,
+    "rnum": 1,
+    "regstrGbCdNm": "집합",
+    "exposPubuseGbCdNm": "전유",
+    "platPlc": "부산광역시 해운대구 우동 1388-4번지",
+    "etcPurps": "공동주택",
+    "mainAtchGbCdNm": "주건축물",
+    "mainPurpsCdNm": "아파트",
+    "bldNm": "대우마리나아파트",
+    "strctCd": 21,
+    "bjdongCd": 10500,
+    "flrGbCdNm": "지상",
+    "mainAtchGbCd": 0,
+    "naBjdongCd": 10501,
+    "naMainBun": 117.0,
+    "exposPubuseGbCd": 1,
+    "regstrKindCd": 4,
+    "sigunguCd": 26350,
+    "bun": 1388,
+    "strctCdNm": "철근콘크리트구조",
+    "newPlatPlc": "부산광역시 해운대구 해운대해변로 117",
+    "ji": "0004"
+  }
+}
+
+### 7 부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차 에이동 202호
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1501&ji=4
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10600&bun=1501&ji=4&dongnm=에이&honm=202호
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견적 
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+  "cover":{
+    "naRoadCd": 263504199013,
+    "oudrMechUtcnt": 0,
+    "splotNm": "",
+    "ugrndFlrCnt": 1,
+    "pmsnoYear": "",
+    "roofCd": 10,
+    "hoCnt": 0,
+    "naSubBun": 0.0,
+    "mgmBldrgstPk": "26350-23164",
+    "oudrAutoUtcnt": 0,
+    "crtnDay": 20171118,
+    "totDongTotArea": 4066.65,
+    "atchBldCnt": 0,
+    "dongNm": "에이",
+    "stcnsDay": "",
+    "block": "",
+    "indrMechArea": 0,
+    "archArea": 918.54,
+    "pmsnoGbCd": "",
+    "regstrGbCdNm": "집합",
+    "gnBldCert": 0,
+    "vlRatEstmTotArea": 3965.13,
+    "atchBldArea": 0,
+    "platPlc": "부산광역시 해운대구 중동 1501-4번지",
+    "etcPurps": "공동주택",
+    "mainAtchGbCdNm": "주건축물",
+    "bldNm": "아남하이츠3차",
+    "oudrMechArea": 0,
+    "rideUseElvtCnt": 0,
+    "strctCd": 21,
+    "bjdongCd": 10600,
+    "indrAutoArea": 0,
+    "roofCdNm": "(철근)콘크리트",
+    "naMainBun": 98.0,
+    "bcRat": 0,
+    "regstrKindCd": 3,
+    "totArea": 4066.65,
+    "oudrAutoArea": 0,
+    "sigunguCd": 26350,
+    "strctCdNm": "철근콘크리트구조",
+    "vlRat": 0,
+    "ji": "0004",
+    "engrEpi": 0,
+    "gnBldGrade": "",
+    "mainPurpsCd": "02000",
+    "platGbCd": 0,
+    "rserthqkDsgnApplyYn": "",
+    "naUgrndCd": 0,
+    "bylotCnt": 0,
+    "regstrGbCd": 2,
+    "grndFlrCnt": 5,
+    "etcStrct": "철근콘크리트",
+    "indrAutoUtcnt": 0,
+    "fmlyCnt": 0,
+    "lot": "",
+    "emgenUseElvtCnt": 0,
+    "pmsnoKikCdNm": "",
+    "indrMechUtcnt": 0,
+    "itgBldGrade": "",
+    "heit": 0,
+    "regstrKindCdNm": "표제부",
+    "engrRat": 0,
+    "rserthqkAblty": "",
+    "itgBldCert": 0,
+    "pmsnoGbCdNm": "",
+    "rnum": 1,
+    "pmsnoKikCd": "",
+    "etcRoof": "슬래브",
+    "engrGrade": "",
+    "mainPurpsCdNm": "공동주택",
+    "useAprDay": 19890622,
+    "platArea": 0,
+    "hhldCnt": 20,
+    "mainAtchGbCd": 0,
+    "pmsDay": 19880414,
+    "naBjdongCd": 10601,
+    "bun": 1501,
+    "newPlatPlc": "부산광역시 해운대구 달맞이길117번가길 98"
+  },
+  "detail":{
+    "naRoadCd": 263504199013,
+    "splotNm": "",
+    "mainPurpsCd": "02001",
+    "platGbCd": 0,
+    "flrGbCd": 20,
+    "naUgrndCd": 0,
+    "regstrGbCd": 2,
+    "etcStrct": "철근콘크리트",
+    "lot": "",
+    "naSubBun": 0.0,
+    "mgmBldrgstPk": "26350-109060",
+    "crtnDay": 20181001,
+    "hoNm": "202호",
+    "dongNm": "에이",
+    "regstrKindCdNm": "전유부",
+    "block": "",
+    "flrNo": 2.0,
+    "flrNoNm": "2층",
+    "area": 174.98,
+    "rnum": 1,
+    "regstrGbCdNm": "집합",
+    "exposPubuseGbCdNm": "전유",
+    "platPlc": "부산광역시 해운대구 중동 1501-4번지",
+    "etcPurps": "공동주택",
+    "mainAtchGbCdNm": "주건축물",
+    "mainPurpsCdNm": "아파트",
+    "bldNm": "아남하이츠3차",
+    "strctCd": 21,
+    "bjdongCd": 10600,
+    "flrGbCdNm": "지상",
+    "mainAtchGbCd": 0,
+    "naBjdongCd": 10601,
+    "naMainBun": 98.0,
+    "exposPubuseGbCd": 1,
+    "regstrKindCd": 4,
+    "sigunguCd": 26350,
+    "bun": 1501,
+    "strctCdNm": "철근콘크리트구조",
+    "newPlatPlc": "부산광역시 해운대구 달맞이길117번가길 98",
+    "ji": "0004"
+  }
+}
+
+### 7 부산광역시 해운대구 재반로270번길 37-34 정우빌라 202호
+### 주소검색 
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10300&bun=1584&ji=8
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10300&bun=1584&ji=8&dongnm=&honm=201호
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+### 견적 
+POST http://localhost:8080/house/quotes/sedae
+X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+content-type: application/json
+
+{
+  "cover":{
+    "naRoadCd": 263504199177,
+    "oudrMechUtcnt": 0,
+    "splotNm": "",
+    "ugrndFlrCnt": 0,
+    "pmsnoYear": "",
+    "roofCd": 10,
+    "hoCnt": 0,
+    "naSubBun": 36.0,
+    "mgmBldrgstPk": "26350-13256",
+    "oudrAutoUtcnt": 0,
+    "crtnDay": 20200427,
+    "totDongTotArea": 209.33,
+    "atchBldCnt": 0,
+    "dongNm": "",
+    "stcnsDay": 19940928,
+    "block": "",
+    "indrMechArea": 0,
+    "archArea": 57.35,
+    "pmsnoGbCd": "",
+    "regstrGbCdNm": "집합",
+    "gnBldCert": 0,
+    "vlRatEstmTotArea": 209.33,
+    "atchBldArea": 0,
+    "platPlc": "부산광역시 해운대구 반여동 1584-8번지",
+    "etcPurps": "공동주택",
+    "mainAtchGbCdNm": "주건축물",
+    "bldNm": "",
+    "oudrMechArea": 0,
+    "rideUseElvtCnt": 0,
+    "strctCd": 19,
+    "bjdongCd": 10300,
+    "indrAutoArea": 0,
+    "roofCdNm": "(철근)콘크리트",
+    "naMainBun": 37.0,
+    "bcRat": 84.34,
+    "regstrKindCd": 3,
+    "totArea": 209.33,
+    "oudrAutoArea": 0,
+    "sigunguCd": 26350,
+    "strctCdNm": "기타조적구조",
+    "vlRat": 307.84,
+    "ji": "0008",
+    "engrEpi": 0,
+    "gnBldGrade": "",
+    "mainPurpsCd": "02000",
+    "platGbCd": 0,
+    "rserthqkDsgnApplyYn": 0,
+    "naUgrndCd": 0,
+    "bylotCnt": 0,
+    "regstrGbCd": 2,
+    "grndFlrCnt": 4,
+    "etcStrct": "RC, 조적조",
+    "indrAutoUtcnt": 0,
+    "fmlyCnt": 0,
+    "lot": "",
+    "emgenUseElvtCnt": 0,
+    "pmsnoKikCdNm": "",
+    "indrMechUtcnt": 0,
+    "itgBldGrade": "",
+    "heit": 11.6,
+    "regstrKindCdNm": "표제부",
+    "engrRat": 0,
+    "rserthqkAblty": "",
+    "itgBldCert": 0,
+    "pmsnoGbCdNm": "",
+    "rnum": 1,
+    "pmsnoKikCd": "",
+    "etcRoof": "스라브",
+    "engrGrade": "",
+    "mainPurpsCdNm": "공동주택",
+    "useAprDay": 19950128,
+    "platArea": 68,
+    "hhldCnt": 4,
+    "mainAtchGbCd": 0,
+    "pmsDay": 19940907,
+    "naBjdongCd": 10301,
+    "bun": 1584,
+    "newPlatPlc": "부산광역시 해운대구 재반로270번길 37-36"
+  }
+  ,
+  "detail":{
+    "naRoadCd": 263504199177,
+    "splotNm": "",
+    "mainPurpsCd": "02003",
+    "platGbCd": 0,
+    "flrGbCd": 20,
+    "naUgrndCd": 0,
+    "regstrGbCd": 2,
+    "etcStrct": "조적조",
+    "lot": "",
+    "naSubBun": 36.0,
+    "mgmBldrgstPk": "26350-51579",
+    "crtnDay": 20181001,
+    "hoNm": "201호",
+    "dongNm": "",
+    "regstrKindCdNm": "전유부",
+    "block": "",
+    "flrNo": 2.0,
+    "flrNoNm": "2층",
+    "area": 46.48,
+    "rnum": 1,
+    "regstrGbCdNm": "집합",
+    "exposPubuseGbCdNm": "전유",
+    "platPlc": "부산광역시 해운대구 반여동 1584-8번지",
+    "etcPurps": "다세대주택",
+    "mainAtchGbCdNm": "주건축물",
+    "mainPurpsCdNm": "다세대주택",
+    "bldNm": "",
+    "strctCd": 19,
+    "bjdongCd": 10300,
+    "flrGbCdNm": "지상",
+    "mainAtchGbCd": 0,
+    "naBjdongCd": 10301,
+    "naMainBun": 37.0,
+    "exposPubuseGbCd": 1,
+    "regstrKindCd": 4,
+    "sigunguCd": 26350,
+    "bun": 1584,
+    "strctCdNm": "기타조적구조",
+    "newPlatPlc": "부산광역시 해운대구 재반로270번길 37-36",
+    "ji": "0008"
+  }
+}
+
+

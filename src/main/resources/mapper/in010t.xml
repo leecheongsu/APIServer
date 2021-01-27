@@ -4,7 +4,7 @@
 <mapper namespace="com.insrb.app.mapper.IN010TMapper">
 	<insert id="insert" statementType="CALLABLE">
 		{ call pk_fireinsurance.sp_insertIN001T( 
-			#{quote_no},#{address_api}, #{group_ins}, #{bld_nm},#{dong_info},#{main_purps_cd_nm}, #{new_plat_plc}, #{etc_purps}, #{use_apr_day},
+			#{quote_no},#{building_type},#{address_api}, #{group_ins}, #{bld_nm},#{dong_info},#{main_purps_cd_nm}, #{new_plat_plc}, #{etc_purps}, #{use_apr_day},
 			#{etc_roof}, #{dong_nm}, #{tot_area}, #{cnt_sedae}, #{grnd_flr_cnt}, #{ugrnd_flr_cnt}, #{etc_strct}, #{cover}, #{detail}
 		)}
 	</insert> 

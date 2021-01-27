@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.IN005CMapper">
+	<select id="selectAll" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select * 
+		  from in005c 
+	</select> 
+</mapper>

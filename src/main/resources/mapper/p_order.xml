@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.POrderMapper">
+	<insert id="insert">
+		insert into p_order
+			(quote_no, prod_code,  opayment, polholder, insurant_a, insurant_b, premium, insdate, ins_from,ins_to, ptype, insloc, mobile, email, poption, pbohumja_mobile, pbohumja_teltype, odate, jumin, user_id, o_by, owner, pbohumja_birth, advisor_no)
+		values (#{quote_no}, 
+				#{prod_code}, 
+				#{opayment}, 
+				#{polholder}, 
+				#{insurant_a}, 
+				#{insurant_b}, 
+				#{premium}, 
+				#{insdate}, 
+				#{ins_from}, 
+				#{ins_to}, 
+				#{ptype}, 
+				#{insloc}, 
+				#{mobile}, 
+				#{email}, 
+				#{poption},
+				#{pbohumja_mobile}, 
+				#{pbohumja_teltype}, 
+				#{odate}, 
+				#{jumin}, 
+				#{user_id}, 
+				#{o_by}, 
+				#{owner}, 
+				#{pbohumja_birth}, 
+				#{advisor_no})
+	</insert>
+
+	<delete id="delete">
+		delete from p_order
+		 where quote_no = #{quote_no}
+	</delete>
+	
+</mapper>

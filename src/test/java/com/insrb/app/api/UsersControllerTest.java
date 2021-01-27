@@ -18,10 +18,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class UsersControllerTest {
@@ -535,4 +536,35 @@ public class UsersControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
+
+	@Test
+	@DisplayName("UI-APP-045 회원탈퇴 : PUT /users/{user_id}/quit userinfo.use_yn 을 'N' 처리하고 OK를 리턴해야한다")
+	public void UIAPP045_01() throws Exception {
+		mockMvc
+			.perform(
+				put("/users/" + mockUser.get("email") + "/quit")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
+
+	@Test
+	@DisplayName("UI-APP-050 추천인 선택 : GET /users/advisors 추천인 3건 리턴해야한다")
+	public void UIAPP050_01() throws Exception {
+		mockMvc
+			.perform(
+				get("/users/advisors")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					// .header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
+			;
+	}
+
+
 }

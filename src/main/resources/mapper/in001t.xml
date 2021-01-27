@@ -9,4 +9,8 @@
 		 where quote_no = #{quote_no}
 	</select> 
 
+	<select id="getBuildingType" resultType="String">
+		select pk_fireinsurance.sf_getBuildingType(#{etc_purps},#{main_purps_cd_nm},#{p_cnt},#{p_max_grnd_cnt},#{p_total_area}) building_type
+		from dual;
+	</select> 
 </mapper>

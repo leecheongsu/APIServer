@@ -3,6 +3,7 @@ package com.insrb.app.mapper;
 public interface IN010TMapper {
 	void insert(
 		String quote_no,
+		String building_type,
 		String address_api,
 		String group_ins,
 		String bld_nm,

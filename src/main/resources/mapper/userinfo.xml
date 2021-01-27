@@ -22,7 +22,7 @@
 
 	<update id="updateJuminb">
 		update userinfo
-		   set juminb = #{juminb}
+		   set juminb = #{encJuminb}
 		 where email = #{id}
 	</update>
 
@@ -33,6 +33,12 @@
 		       mobile = #{mobile},
 		       jumina = #{jumina},
 		       sex = #{sex}
+		 where email = #{id}
+	</update>
+
+	<update id="updateUseYN">
+		update userinfo
+		   set use_yn = #{useYn}
 		 where email = #{id}
 	</update>
 
