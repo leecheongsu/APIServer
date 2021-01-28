@@ -1,0 +1,25 @@
+{
+	"user_id": "vingorius@gmail.com",
+	"data": {
+		"quote_no": "q20210128111209.530",
+		"prod_code": "m002",
+		"opayment": 233798,
+		"polholder": "김학성",
+		"insurant_a": "김학성",
+		"insurant_b": "김학성",
+		"premium": 233798,
+		"insdate": "20210126",
+		"ins_from": "20210126",
+		"ins_to": "20220125",
+		"ptype": 0,
+		"insloc": "서울특별시 서대문구 증가로20가길 91",
+		"mobile": "01012345678",
+		"email": "vingorius@gmail.com",
+		"pbohumja_mobile": "01012345678",
+		"jumin": "094910",
+		"o_by": 0,
+		"owner": "r",
+		"pbohumja_birth": "790809",
+		"advisor_no": 3
+	}
+}

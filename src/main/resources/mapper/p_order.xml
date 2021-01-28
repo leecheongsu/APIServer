@@ -4,7 +4,7 @@
 <mapper namespace="com.insrb.app.mapper.POrderMapper">
 	<insert id="insert">
 		insert into p_order
-			(quote_no, prod_code,  opayment, polholder, insurant_a, insurant_b, premium, insdate, ins_from,ins_to, ptype, insloc, mobile, email, poption, pbohumja_mobile, pbohumja_teltype, odate, jumin, user_id, o_by, owner, pbohumja_birth, advisor_no)
+			(quote_no, prod_code, opayment, polholder, insurant_a, insurant_b, premium, insdate, ins_from, ins_to, ptype, insloc, mobile, email, pbohumja_mobile, odate, jumin, user_id, o_by, owner, pbohumja_birth, advisor_no)
 		values (#{quote_no}, 
 				#{prod_code}, 
 				#{opayment}, 
@@ -19,10 +19,8 @@
 				#{insloc}, 
 				#{mobile}, 
 				#{email}, 
-				#{poption},
 				#{pbohumja_mobile}, 
-				#{pbohumja_teltype}, 
-				#{odate}, 
+				sysdate, 
 				#{jumin}, 
 				#{user_id}, 
 				#{o_by}, 
@@ -35,5 +33,9 @@
 		delete from p_order
 		 where quote_no = #{quote_no}
 	</delete>
-	
+	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select * 
+		  from p_order 
+		 where quote_no = #{quote_no}
+	</select> 
 </mapper>
