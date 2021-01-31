@@ -1,7 +1,5 @@
 package com.insrb.app.mapper;
 
-import java.util.Date;
-
 public interface PhoneCertificateDataMapper {
 	void insert(
 		String rslt_name,

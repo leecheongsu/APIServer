@@ -1,12 +1,12 @@
 package com.insrb.app.insurance;
 
 import java.util.Map;
+import org.json.XML;
+import org.springframework.stereotype.Component;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
-import org.json.XML;
-import org.springframework.stereotype.Component;
 
 @Component
 public class AddressSearch {
@@ -109,4 +109,6 @@ public class AddressSearch {
 		org.json.JSONObject jObject = XML.toJSONObject(res.getBody());
 		return jObject.toMap();
 	}
+
+
 }

@@ -54,7 +54,7 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(41290000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(10694)); //단체보험미가입건으로 확인
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(0)); //단체보험미가입건으로 확인
 	}
 
 
@@ -72,7 +72,7 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(72060000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(19888)); //단체보험미가입건으로 확인
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(0)); //단체보험미가입건으로 확인
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(142360000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(39291));
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(0));
 	}
 
 	@Test
@@ -106,6 +106,6 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(31660000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(7788));
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(0));
 	}
 }
