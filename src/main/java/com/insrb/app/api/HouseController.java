@@ -74,7 +74,7 @@ public class HouseController {
 
 		try {
 			String quote_no = getNewQuoteNo("q");
-			in010tMapper.insert(
+			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
 				String.valueOf(cover.get("newPlatPlc")),
@@ -145,7 +145,7 @@ public class HouseController {
 
 		try {
 			String quote_no = getNewQuoteNo("q");
-			in010tMapper.insert(
+			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
 				String.valueOf(cover.get("newPlatPlc")),

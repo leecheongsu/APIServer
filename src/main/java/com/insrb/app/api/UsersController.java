@@ -1,5 +1,6 @@
 package com.insrb.app.api;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,6 +13,7 @@ import com.insrb.app.util.Authentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +57,7 @@ public class UsersController {
 	// }
 
 	@PostMapping(path = "")
-	public void insert(
+	public String insert(
 		@RequestParam(name = "email", required = true) String email,
 		@RequestParam(name = "name", required = true) String name,
 		@RequestParam(name = "teltype", required = true) String teltype,
@@ -73,11 +75,22 @@ public class UsersController {
 			String encPwd = UserInfoCyper.EncryptPassword(email, pwd);
 			int result = userinfoMapper.insert(email, name, teltype, encMobile, encPwd, jumina, sex, utype);
 			if (result < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
 		} catch (EncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		} catch (DataAccessException e) {
+			if( e.getRootCause() instanceof SQLException) {
+				SQLException sqlEx = (SQLException) e.getRootCause();
+				int sqlErrorCode = sqlEx.getErrorCode();
+				log.error("sqlErrorCode:"+sqlErrorCode);
+				if(sqlErrorCode == -10007){ // Unique Constriant Error
+					throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 사용자입니다.");
+				}
+			}
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED , e.getMessage());
 		}
 	}
 
@@ -110,6 +123,16 @@ public class UsersController {
 		} catch (EncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+		} catch (DataAccessException e) {
+			if( e.getRootCause() instanceof SQLException) {
+				SQLException sqlEx = (SQLException) e.getRootCause();
+				int sqlErrorCode = sqlEx.getErrorCode();
+				log.error("sqlErrorCode:"+sqlErrorCode);
+				if(sqlErrorCode == -10007){ // Unique Constriant Error
+					throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 사용자입니다.");
+				}
+			}
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED , e.getMessage());
 		}
 	}
 

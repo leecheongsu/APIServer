@@ -35,23 +35,32 @@ public class WWControllerTest {
 	@Value("classpath:static/mock/file_for_test/address.json")
 	private Resource address_json;
 
-	Map<String, String> mockAddress;
+	Map<String, String> mockSearch;
 
 	{
-		mockAddress = new HashMap<String, String>();
-		mockAddress.put("search_text", "해들목휴먼빌");
+		mockSearch = new HashMap<String, String>();
+		mockSearch.put("search_text", "두산더랜드파크");
 	}
+
+	Map<String, String> mockAddress;
+	{
+		mockAddress = new HashMap<String, String>();
+		mockAddress.put("sigungucd", "11500");
+		mockAddress.put("bjdongcd", "10500");
+		mockAddress.put("bun", "757");
+		mockAddress.put("ji", "0");
+	}
+
 
 	@Test
 	@DisplayName("UI-APP-033-01 풍수해 주소찾기")
 	public void UIAPP033_01() throws Exception {
 		mockMvc
 			.perform(
-				get("http://localhost:8080/ww/juso").header("X-insr-servicekey", ACCESS_KEY).param("search", mockAddress.get("search_text"))
+				get("http://localhost:8080/ww/juso").header("X-insr-servicekey", ACCESS_KEY).param("search", mockSearch.get("search_text"))
 			)
 			.andDo(print())
-			.andExpect(status().isOk())// .andExpect(MockMvcResultMatchers.jsonPath("$.code.length()").value(51))
-		// .andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.ptyKorNm").value("이청수"));
+			.andExpect(status().isOk())
 		;
 	}
 
@@ -62,15 +71,15 @@ public class WWControllerTest {
 			.perform(
 				get("http://localhost:8080/ww/cover")
 					.header("X-insr-servicekey", ACCESS_KEY)
-					.param("sigungucd", "11410")
-					.param("bjdongcd","11900")
-					.param("bun", "0002")
-					.param("ji", "0002")
+					.param("sigungucd", mockAddress.get("sigungucd"))
+					.param("bjdongcd", mockAddress.get("bjdongcd"))
+					.param("bun", mockAddress.get("bun"))
+					.param("ji", mockAddress.get("ji"))
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.code.length()").value(51))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.ptyKorNm").value("이청수"));
+			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.ptyKorNm").value("김종호"));
 	}
 
 	@Test
@@ -91,5 +100,21 @@ public class WWControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("$.govtPrem").value(51600)) //정부 부담 보험료
 			.andExpect(MockMvcResultMatchers.jsonPath("$.lgovtPrem").value(21300)) // 지자체 부담 보험료
 			.andExpect(MockMvcResultMatchers.jsonPath("$.tpymPrem").value(91100)); //총보험료
+	}
+
+	@Test
+	@DisplayName("UI-APP-03701 풍수해 Batch 확인")
+	public void UIAPP037_01() throws Exception {
+		String json = ResourceUtil.asString(address_json);
+		mockMvc
+			.perform(
+				get("http://localhost:8080/ww/batch")
+					.header("X-insr-servicekey", ACCESS_KEY)
+					.param("caSerial", "210202112414KC000139")
+					.param("caDn", "B000")
+					.content(json)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
 	}
 }
