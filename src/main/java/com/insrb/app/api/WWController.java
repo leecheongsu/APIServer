@@ -94,17 +94,20 @@ public class WWController {
 				String.valueOf(cover.get("grndFlrCnt")),
 				String.valueOf(cover.get("ugrndFlrCnt")),
 				String.valueOf(cover.get("etcStrct")),
-				cover.toString(),
+				"",//cover.toString(),
 				"" //풍수해는 전유부가 없다.
 			);
 
 			data = in001tMapper.selectById(quote_no);
 			data.put("code", in007cMapper.selectAll());
 			// TODO: cover 정보로 template 정보 보완할 것.,
+			// WindWaterInsurance.aspx.cs::BuildingInfoText
 			Map<String,Object> tmpl = ResourceUtil.asMap(tmpl_preminum_req_body_json);
-			tmpl.put("poleStrc","");
-			tmpl.put("roofStrc","");
-			tmpl.put("otwlStrc","");
+			tmpl.put("lsgcCd",data.get("lsgc_cd"));
+			tmpl.put("poleStrc",data.get("pold_strc"));
+			tmpl.put("roofStrc",data.get("pold_strc"));
+			tmpl.put("otwlStrc",data.get("pold_strc"));
+	
 			// .....TODO:
 			data.put("template", tmpl);
 			return data;
@@ -114,7 +117,8 @@ public class WWController {
 		}
 	}
 
-	@PostMapping(path = "pre-premium")
+
+  @PostMapping(path = "pre-premium")
 	public Map<String, Object> prePremium(@RequestBody(required = true) Map<String, Object> body) {
 		log.info("현대해상 가보험료 요청");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");

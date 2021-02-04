@@ -7,7 +7,6 @@ import java.io.UncheckedIOException;
 import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import kong.unirest.json.JSONObject;
@@ -33,7 +32,7 @@ public class ResourceUtil {
 		}
 	}
 
-	public static JSONObject asJSONObject(Resource resource) throws ParseException {
+	public static JSONObject asJSONObject(Resource resource)  {
 		Map<String, Object> map = ResourceUtil.asMap(resource);
 		JSONObject obj = new JSONObject(map);
 		return obj;

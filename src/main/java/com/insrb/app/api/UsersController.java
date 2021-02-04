@@ -1,9 +1,5 @@
 package com.insrb.app.api;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import com.insrb.app.exception.AuthException;
 import com.insrb.app.exception.EncryptException;
 import com.insrb.app.mapper.GaDetailsMapper;
@@ -12,6 +8,11 @@ import com.insrb.app.mapper.UserinfoMapper;
 import com.insrb.app.util.Authentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -41,19 +41,18 @@ public class UsersController {
 	@Autowired
 	IN005CMapper in005cMapper;
 
-
-	// @GetMapping(path = "today")
-	// public String today() {
-	// log.info("Today is called");
-	// return userinfoMapper.getCurrentDateTime();
-	// }
+	@GetMapping(path = "today")
+	public String today() {
+		log.info("Today is called");
+		return userinfoMapper.getCurrentDateTime();
+	}
 
 	// Example For procedure's cursor
 	// @GetMapping(path = "/all")
-	// public List<HashMap<String, Object>> selectAll() {
-	// HashMap<String, Object> param = new HashMap<String, Object>();
+	// public List<Map<String, Object>> selectAll() {
+	// Map<String, Object> param = new Map<String, Object>();
 	// userinfoMapper.selectAll(param);
-	// return (List<HashMap<String, Object>>) param.get("p_cursor");
+	// return (List<Map<String, Object>>) param.get("p_cursor");
 	// }
 
 	@PostMapping(path = "")
@@ -82,15 +81,15 @@ public class UsersController {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		} catch (DataAccessException e) {
-			if( e.getRootCause() instanceof SQLException) {
+			if (e.getRootCause() instanceof SQLException) {
 				SQLException sqlEx = (SQLException) e.getRootCause();
 				int sqlErrorCode = sqlEx.getErrorCode();
-				log.error("sqlErrorCode:"+sqlErrorCode);
-				if(sqlErrorCode == -10007){ // Unique Constriant Error
+				log.error("sqlErrorCode:" + sqlErrorCode);
+				if (sqlErrorCode == -10007) { // Unique Constriant Error
 					throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 사용자입니다.");
 				}
 			}
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED , e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
 	}
 
@@ -124,21 +123,21 @@ public class UsersController {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		} catch (DataAccessException e) {
-			if( e.getRootCause() instanceof SQLException) {
+			if (e.getRootCause() instanceof SQLException) {
 				SQLException sqlEx = (SQLException) e.getRootCause();
 				int sqlErrorCode = sqlEx.getErrorCode();
-				log.error("sqlErrorCode:"+sqlErrorCode);
-				if(sqlErrorCode == -10007){ // Unique Constriant Error
+				log.error("sqlErrorCode:" + sqlErrorCode);
+				if (sqlErrorCode == -10007) { // Unique Constriant Error
 					throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 사용자입니다.");
 				}
 			}
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED , e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
 	}
 
 	@GetMapping(path = "/advisors")
 	public List<Map<String, Object>> advisors() {
-        List<Map<String, Object>> advisors = in005cMapper.selectAll();
+		List<Map<String, Object>> advisors = in005cMapper.selectAll();
 		if (Objects.isNull(advisors)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		return advisors;
 	}
@@ -177,6 +176,8 @@ public class UsersController {
 				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid pwd");
 			} else {
 				user.remove("pwd");
+				String decMobile = UserInfoCyper.DecryptMobile((String) user.get("mobile"));
+				user.put("mobile", decMobile);
 				user.put("token", Authentication.GetToken(id));
 				return user;
 			}

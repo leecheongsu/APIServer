@@ -1,20 +1,19 @@
 package com.insrb.app.insurance.hi;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.mapper.WPremcalDetailMapper;
 import com.insrb.app.util.ResourceUtil;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
 //ref : http://kong.github.io/unirest-java/#requests
 
@@ -171,7 +170,7 @@ public class HiWindWaterInsurance {
 			// 6. Data 저장
 			fn_6_ApiPremSaveData();
 			return "a";
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			log.info(e.getMessage());
 			throw new WWException("잘못된 JSON 형식입니다.");
 		}

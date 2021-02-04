@@ -79,6 +79,7 @@ public class WWControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.code.length()").value(51))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.lsgcCd").value("I014"))
 			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.ptyKorNm").value("김종호"));
 	}
 

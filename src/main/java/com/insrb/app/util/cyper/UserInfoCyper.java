@@ -23,6 +23,13 @@ public class UserInfoCyper {
         return enc;
     }
 
+
+    public static String DecryptMobile(String data) throws EncryptException {
+        Key key = TripleDESUtil.createKey(SALT);
+        String dec = TripleDESUtil.decrypt(key, data);
+        return dec;
+    }
+ 
     /**
      * 전화번호 암호화와 동일
      * 
