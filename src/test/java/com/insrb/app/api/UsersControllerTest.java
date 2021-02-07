@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.HashMap;
 import java.util.Map;
-import com.insrb.app.mapper.UserinfoMapper;
+import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.util.Authentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -30,7 +30,7 @@ public class UsersControllerTest {
 	private static final String SERVICE_KEY = "Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==";
 
 	@Autowired
-	UserinfoMapper UserinfoMapper;
+	IN005TMapper in005tMapper;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -75,8 +75,8 @@ public class UsersControllerTest {
 	@Test
 	@DisplayName("테스트 전: 이미 DB에 존재하는 사용자는 삭제한다")
 	public void UIAPP000_01() throws Exception {
-		UserinfoMapper.delete(mockUser.get("email"));
-		UserinfoMapper.delete(mockGAUser.get("email"));
+		in005tMapper.delete(mockUser.get("email"));
+		in005tMapper.delete(mockGAUser.get("email"));
 	}
 
 	@Test
@@ -261,7 +261,7 @@ public class UsersControllerTest {
 	}
 
 	@Test
-	@DisplayName("UI-APP-008 로그인: POST /users/{user_id}/login 로그인하면 토큰과 사용자정보를 200 OK를 리턴해야한다")
+	@DisplayName("UI-APP-008 로그인: POST /users/{user_id}/login 로그인하면 토큰과 사용자정보 200 OK를 리턴해야한다")
 	public void UIAPP008_03() throws Exception {
 		mockMvc
 			.perform(
@@ -535,7 +535,7 @@ public class UsersControllerTest {
 	}
 
 	@Test
-	@DisplayName("UI-APP-045 회원탈퇴 : PUT /users/{user_id}/quit userinfo.use_yn 을 'N' 처리하고 OK를 리턴해야한다")
+	@DisplayName("UI-APP-045 회원탈퇴 : PUT /users/{user_id}/quit in005t.use_yn 을 'N' 처리하고 OK를 리턴해야한다")
 	public void UIAPP045_01() throws Exception {
 		mockMvc
 			.perform(

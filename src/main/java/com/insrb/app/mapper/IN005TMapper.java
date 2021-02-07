@@ -2,7 +2,7 @@ package com.insrb.app.mapper;
 
 import java.util.HashMap;
 
-public interface UserinfoMapper {
+public interface IN005TMapper {
 	String getCurrentDateTime();
 
 	int insert(String email, String name, String teltype, String mobile, String pwd, String jumina, String sex, String utype);

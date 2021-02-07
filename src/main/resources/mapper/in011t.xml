@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.insrb.app.mapper.TermsMapper">
+<mapper namespace="com.insrb.app.mapper.IN011TMapper">
 	<insert id="insert">
-		insert into terms
+		insert into in011t
 			(user_id,quote_no, termsa_1, termsa_2, termsa_3, termsa_4, termsa_5, termsb_1, termsb_2, termsb_3, termsc_1, termsc_2, termsc_3, termsc_4, termsc_5, termsd_1, termsd_2, termsd_3, termse_1, termse_2, termse_3, termsf_1, termsg_1)
 		values (#{user_id},
 				#{quote_no},
@@ -31,7 +31,7 @@
 	</insert>
 
 	<delete id="delete">
-		delete from terms
+		delete from in011t
 		 where quote_no = #{quote_no}
 	</delete>
 

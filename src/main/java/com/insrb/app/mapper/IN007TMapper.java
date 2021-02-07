@@ -1,6 +1,6 @@
 package com.insrb.app.mapper;
 
-public interface PhoneCertificateDataMapper {
+public interface IN007TMapper {
 	void insert(
 		String rslt_name,
 		String rslt_birthday,

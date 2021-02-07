@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.insrb.app.mapper.GaDetailsMapper">
+<mapper namespace="com.insrb.app.mapper.IN006TMapper">
 
 	<insert id="merge">
-		merge into ga_details
+		merge into in006t
 		using DUAL
 		on (email = #{email})
 		when matched then

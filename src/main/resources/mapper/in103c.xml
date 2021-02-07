@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.insrb.app.mapper.CodeJobListMapper">
+<mapper namespace="com.insrb.app.mapper.IN103CMapper">
 
 	<select id="selectAll" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
-		select * 
-		  from code_job_list 
+		select *
+		  from in103c 
+		 where obj_type != 0
+		 order by obj_type asc  
 	</select> 
 
 </mapper>

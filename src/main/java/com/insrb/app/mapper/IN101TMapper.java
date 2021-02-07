@@ -1,6 +1,6 @@
 package com.insrb.app.mapper;
 
-public interface WPremcalDetailMapper {
+public interface IN101TMapper {
 	void insert(
 		String quote_no,
 		String email,

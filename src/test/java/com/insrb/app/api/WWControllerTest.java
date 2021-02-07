@@ -32,8 +32,8 @@ public class WWControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Value("classpath:static/mock/file_for_test/address.json")
-	private Resource address_json;
+	@Value("classpath:static/mock/file_for_test/address_for_pre_premium.json")
+	private Resource address_for_pre_premium_json;
 
 	Map<String, String> mockSearch;
 
@@ -49,6 +49,7 @@ public class WWControllerTest {
 		mockAddress.put("bjdongcd", "10500");
 		mockAddress.put("bun", "757");
 		mockAddress.put("ji", "0");
+		mockAddress.put("zip", "07788");
 	}
 
 
@@ -65,7 +66,7 @@ public class WWControllerTest {
 	}
 
 	@Test
-	@DisplayName("UI-APP-033-01 풍수해 주소찾기, Cover 요청")
+	@DisplayName("UI-APP-033-01 풍수해 Cover 요청")
 	public void UIAPP033_02() throws Exception {
 		mockMvc
 			.perform(
@@ -75,10 +76,12 @@ public class WWControllerTest {
 					.param("bjdongcd", mockAddress.get("bjdongcd"))
 					.param("bun", mockAddress.get("bun"))
 					.param("ji", mockAddress.get("ji"))
+					.param("zip", mockAddress.get("zip"))
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.code.length()").value(51))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums.length()").value(51))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.lobz_cds.length()").value(31))
 			.andExpect(MockMvcResultMatchers.jsonPath("$.ww_info.oagi6002vo.lsgcCd").value("I004"))
 			.andExpect(MockMvcResultMatchers.jsonPath("$.ww_info.oagi6002vo.ptyKorNm").value("이청수"));
 	}
@@ -86,13 +89,13 @@ public class WWControllerTest {
 	@Test
 	@DisplayName("UI-APP-036-01 풍수해 가보험료 확인")
 	public void UIAPP036_01() throws Exception {
-		String json = ResourceUtil.asString(address_json);
+		String json_string = ResourceUtil.asString(address_for_pre_premium_json);
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/pre-premium")
 					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(json)
+					.content(json_string)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -106,7 +109,7 @@ public class WWControllerTest {
 	@Test
 	@DisplayName("UI-APP-03701 풍수해 Batch 확인")
 	public void UIAPP037_01() throws Exception {
-		String json = ResourceUtil.asString(address_json);
+		String json = ResourceUtil.asString(address_for_pre_premium_json);
 		mockMvc
 			.perform(
 				get("http://localhost:8080/ww/batch")

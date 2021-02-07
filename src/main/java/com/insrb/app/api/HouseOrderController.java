@@ -1,18 +1,17 @@
 package com.insrb.app.api;
 
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.EncryptException;
-import com.insrb.app.mapper.POrderMapper;
-import com.insrb.app.mapper.PhoneCertificateDataMapper;
-import com.insrb.app.mapper.TermsMapper;
-import com.insrb.app.util.Authentication;
-import com.insrb.app.util.InsuDateUtil;
-import com.insrb.app.util.cyper.UserInfoCyper;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import lombok.extern.slf4j.Slf4j;
+import com.insrb.app.exception.AuthException;
+import com.insrb.app.exception.EncryptException;
+import com.insrb.app.mapper.IN003TMapper;
+import com.insrb.app.mapper.IN011TMapper;
+import com.insrb.app.mapper.IN007TMapper;
+import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuDateUtil;
+import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -33,13 +33,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class HouseOrderController {
 
 	@Autowired
-	POrderMapper pOrderMapper;
+	IN003TMapper in003tMapper;
 
 	@Autowired
-	PhoneCertificateDataMapper phoneCertificateDataMapper;
+	IN007TMapper in007tMapper;
 
 	@Autowired
-	TermsMapper termsMapper;
+	IN011TMapper termsMapper;
 
 	@GetMapping(path = "/{quote_no}")
 	public Map<String, Object> selectById(
@@ -50,7 +50,7 @@ public class HouseOrderController {
 		try {
 			Authentication.ValidateAuthHeader(auth_header, user_id);
 
-			Map<String, Object> order = pOrderMapper.selectById(quote_no);
+			Map<String, Object> order = in003tMapper.selectById(quote_no);
 			if (Objects.isNull(order)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			return order;
 		} catch (AuthException e) {
@@ -95,8 +95,8 @@ public class HouseOrderController {
 			String owner = (String) data.get("owner");
 			String pbohumja_birth = (String) data.get("pbohumja_birth");
 			int advisor_no = (int) data.get("advisor_no");
-			pOrderMapper.delete(quote_no);
-			pOrderMapper.insert(
+			in003tMapper.delete(quote_no);
+			in003tMapper.insert(
 				quote_no,
 				prod_code,
 				opayment,
@@ -156,8 +156,8 @@ public class HouseOrderController {
 			String tel_no = (String) data.get("tel_no");
 			String return_msg = quote_no;
 
-			phoneCertificateDataMapper.delete(return_msg);
-			phoneCertificateDataMapper.insert(
+			in007tMapper.delete(return_msg);
+			in007tMapper.insert(
 				rslt_name,
 				rslt_birthday,
 				rslt_sex_cd,

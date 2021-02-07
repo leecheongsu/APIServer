@@ -43,6 +43,24 @@ public class HouseOrderControllerTest {
 	private String USER_ID = "vingorius@gmail.com";
 
 	@Test
+	@DisplayName("UI-APP-027 약관동의 저장")
+	public void UIAPP027_01() throws Exception {
+		String json = ResourceUtil.asString(terms_json);
+		mockMvc
+			.perform(
+				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/terms")
+					.header("X-insr-servicekey", SERVICE_KEY)
+					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
+
+
+	@Test
 	@DisplayName("UI-APP-028 계약등록")
 	public void UIAPP028_01() throws Exception {
 		String json = ResourceUtil.asString(p_order_json);
@@ -65,22 +83,6 @@ public class HouseOrderControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/phone-certification")
-					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(json)
-			)
-			.andDo(print())
-			.andExpect(status().isOk());
-	}
-
-	@Test
-	@DisplayName("UI-APP-027 약관동의 저장")
-	public void UIAPP027_01() throws Exception {
-		String json = ResourceUtil.asString(terms_json);
-		mockMvc
-			.perform(
-				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/terms")
 					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)

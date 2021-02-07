@@ -1,6 +1,6 @@
 package com.insrb.app.mapper;
 
-public interface TermsMapper {
+public interface IN011TMapper {
 	void insert(
 		String user_id,
 		String quote_no,

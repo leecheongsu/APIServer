@@ -3,7 +3,7 @@ package com.insrb.app.mapper;
 import java.util.Date;
 import java.util.HashMap;
 
-public interface POrderMapper {
+public interface IN003TMapper {
 	void insert(
 		String quote_no,
 		String prod_code,

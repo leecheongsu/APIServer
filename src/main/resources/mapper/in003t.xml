@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.insrb.app.mapper.POrderMapper">
+<mapper namespace="com.insrb.app.mapper.IN003TMapper">
 	<insert id="insert">
-		insert into p_order
+		insert into in003t
 			(quote_no, prod_code, opayment, polholder, insurant_a, insurant_b, premium, insdate, ins_from, ins_to, ptype, insloc, mobile, email, pbohumja_mobile, odate, jumin, user_id, o_by, owner, pbohumja_birth, advisor_no)
 		values (#{quote_no}, 
 				#{prod_code}, 
@@ -30,12 +30,12 @@
 	</insert>
 
 	<delete id="delete">
-		delete from p_order
+		delete from in003t
 		 where quote_no = #{quote_no}
 	</delete>
 	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
 		select * 
-		  from p_order 
+		  from in003t 
 		 where quote_no = #{quote_no}
 	</select> 
 </mapper>

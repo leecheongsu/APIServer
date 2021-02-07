@@ -2,9 +2,9 @@ package com.insrb.app.api;
 
 import com.insrb.app.exception.AuthException;
 import com.insrb.app.exception.EncryptException;
-import com.insrb.app.mapper.GaDetailsMapper;
+import com.insrb.app.mapper.IN006TMapper;
 import com.insrb.app.mapper.IN005CMapper;
-import com.insrb.app.mapper.UserinfoMapper;
+import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.util.Authentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
@@ -33,10 +33,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class UsersController {
 
 	@Autowired
-	UserinfoMapper userinfoMapper;
+	IN005TMapper in005tMapper;
 
 	@Autowired
-	GaDetailsMapper gaDetailMapper;
+	IN006TMapper in006tMapper;
 
 	@Autowired
 	IN005CMapper in005cMapper;
@@ -44,14 +44,14 @@ public class UsersController {
 	@GetMapping(path = "today")
 	public String today() {
 		log.info("Today is called");
-		return userinfoMapper.getCurrentDateTime();
+		return in005tMapper.getCurrentDateTime();
 	}
 
 	// Example For procedure's cursor
 	// @GetMapping(path = "/all")
 	// public List<Map<String, Object>> selectAll() {
 	// Map<String, Object> param = new Map<String, Object>();
-	// userinfoMapper.selectAll(param);
+	// in005tMapper.selectAll(param);
 	// return (List<Map<String, Object>>) param.get("p_cursor");
 	// }
 
@@ -72,7 +72,7 @@ public class UsersController {
 			Integer.parseInt(sex); // isValidNumber
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
 			String encPwd = UserInfoCyper.EncryptPassword(email, pwd);
-			int result = userinfoMapper.insert(email, name, teltype, encMobile, encPwd, jumina, sex, utype);
+			int result = in005tMapper.insert(email, name, teltype, encMobile, encPwd, jumina, sex, utype);
 			if (result < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 			return "OK";
 		} catch (NumberFormatException e) {
@@ -114,9 +114,9 @@ public class UsersController {
 			Integer.parseInt(businessnum); // isValidNumber
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
 			String encPwd = UserInfoCyper.EncryptPassword(email, pwd);
-			int result = userinfoMapper.insert(email, name, teltype, encMobile, encPwd, jumina, sex, utype);
+			int result = in005tMapper.insert(email, name, teltype, encMobile, encPwd, jumina, sex, utype);
 			if (result < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-			gaDetailMapper.merge(email, comname, sosok, businessnum);
+			in006tMapper.merge(email, comname, sosok, businessnum);
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
 		} catch (EncryptException e) {
@@ -144,14 +144,14 @@ public class UsersController {
 
 	@GetMapping(path = "/{id}")
 	public Map<String, Object> selectById(@PathVariable String id) {
-		Map<String, Object> user = userinfoMapper.selectById(id);
+		Map<String, Object> user = in005tMapper.selectById(id);
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		return user;
 	}
 
 	@GetMapping(path = "/{id}/isjoined")
 	public String isjoined(@PathVariable String id) {
-		Map<String, Object> user = userinfoMapper.selectById(id);
+		Map<String, Object> user = in005tMapper.selectById(id);
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		return (String) user.get("email");
 	}
@@ -161,7 +161,7 @@ public class UsersController {
 		@RequestParam(name = "id", required = true) String id,
 		@RequestParam(name = "pwd", required = true) String plainPassword
 	) {
-		Map<String, Object> user = userinfoMapper.selectById(id);
+		Map<String, Object> user = in005tMapper.selectById(id);
 
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
@@ -200,7 +200,7 @@ public class UsersController {
 	) {
 		try {
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
-			String email = userinfoMapper.findId(name, teltype, encMobile, jumina, sex);
+			String email = in005tMapper.findId(name, teltype, encMobile, jumina, sex);
 			if (Objects.isNull(email)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user");
 			return email;
 		} catch (EncryptException e) {
@@ -215,7 +215,7 @@ public class UsersController {
 		@RequestParam(name = "teltype", required = true) String teltype,
 		@RequestParam(name = "mobile", required = true) String mobile
 	) {
-		Map<String, Object> user = userinfoMapper.selectById(id);
+		Map<String, Object> user = in005tMapper.selectById(id);
 
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user");
 
@@ -237,7 +237,7 @@ public class UsersController {
 		@RequestParam(name = "mobile", required = true) String mobile,
 		@RequestParam(name = "newPwd", required = true) String newPwd
 	) {
-		Map<String, Object> user = userinfoMapper.selectById(id);
+		Map<String, Object> user = in005tMapper.selectById(id);
 
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
@@ -245,7 +245,7 @@ public class UsersController {
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
 			if (user.get("teltype").equals(teltype) && user.get("mobile").equals(encMobile)) {
 				String encPwd = UserInfoCyper.EncryptPassword(id, newPwd);
-				userinfoMapper.updatePwd(id, encPwd);
+				in005tMapper.updatePwd(id, encPwd);
 				return "OK";
 			} else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "mismatch");
 		} catch (EncryptException e) {
@@ -265,7 +265,7 @@ public class UsersController {
 			Integer.parseInt(juminb); // isValidNumber
 			String encJuminb = UserInfoCyper.EncryptJuminb(juminb);
 
-			userinfoMapper.updateJuminb(id, encJuminb);
+			in005tMapper.updateJuminb(id, encJuminb);
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
@@ -294,7 +294,7 @@ public class UsersController {
 			Integer.parseInt(mobile); // isValidNumber
 			Integer.parseInt(jumina); // isValidNumber
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
-			userinfoMapper.updateBasic(id, name, teltype, encMobile, jumina, sex);
+			in005tMapper.updateBasic(id, name, teltype, encMobile, jumina, sex);
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
@@ -319,7 +319,7 @@ public class UsersController {
 			Authentication.ValidateAuthHeader(auth_header, id);
 
 			Integer.parseInt(businessnum); // isValidNumber
-			gaDetailMapper.merge(id, comname, sosok, businessnum);
+			in006tMapper.merge(id, comname, sosok, businessnum);
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
@@ -334,10 +334,10 @@ public class UsersController {
 		try {
 			Authentication.ValidateAuthHeader(auth_header, id);
 
-			Map<String, Object> user = userinfoMapper.selectById(id);
+			Map<String, Object> user = in005tMapper.selectById(id);
 			if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
-			userinfoMapper.updateUseYN(id, "N");
+			in005tMapper.updateUseYN(id, "N");
 			return "OK";
 		} catch (AuthException e) {
 			log.error(e.getMessage());

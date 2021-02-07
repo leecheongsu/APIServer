@@ -1,8 +1,5 @@
 package com.insrb.app.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insrb.app.exception.AuthException;
@@ -11,13 +8,18 @@ import com.insrb.app.exception.WWException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.insurance.hi.HiWindWaterInsurance;
 import com.insrb.app.mapper.IN001TMapper;
-import com.insrb.app.mapper.IN007CMapper;
+import com.insrb.app.mapper.IN102CMapper;
+import com.insrb.app.mapper.IN103CMapper;
 import com.insrb.app.mapper.IN010TMapper;
-import com.insrb.app.mapper.UserinfoMapper;
+import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.util.Authentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -30,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -39,25 +40,28 @@ import lombok.extern.slf4j.Slf4j;
 public class WWController {
 
 	@Autowired
-	UserinfoMapper userinfoMapper;
+	IN005TMapper in005tMapper;
 
 	@Autowired
 	AddressSearch addressSearch;
 
-	@Value("classpath:basic/tmpl_preminum_req_body.json")
-	private Resource tmpl_preminum_req_body_json;
-
 	@Autowired
-	private HiWindWaterInsurance hi;
+	HiWindWaterInsurance hi;
 
 	@Autowired
 	IN001TMapper in001tMapper;
 
 	@Autowired
-	IN010TMapper in010tMapper;
+	IN102CMapper in102cMapper;
 
 	@Autowired
-	IN007CMapper in007cMapper;
+	IN103CMapper in103cMapper;
+
+	@Autowired
+	IN010TMapper in010tMapper;
+
+	@Value("classpath:basic/tmpl_preminum_req_body.json")
+	private Resource tmpl_preminum_req_body_json;
 
 	@GetMapping(path = "juso")
 	public Map<String, Object> juso(@RequestParam(name = "search", required = true) String search) {
@@ -104,13 +108,14 @@ public class WWController {
 			);
 
 			data = in001tMapper.selectById(quote_no);
-			data.put("premiums", in007cMapper.selectAll());
+			data.put("premiums", in102cMapper.selectAll());
+			data.put("lobz_cds", in103cMapper.selectAll());
 			// TODO: cover 정보로 template 정보 보완할 것.,
 			// WindWaterInsurance.aspx.cs::BuildingInfoText
 			Map<String, Object> tmpl = ResourceUtil.asMap(tmpl_preminum_req_body_json);
 			Map<String, Object> oagi6002vo = (Map<String, Object>) tmpl.get("oagi6002vo");
 			oagi6002vo.put("lsgcCd", data.get("lsgc_cd"));
-			oagi6002vo.put("poleStrc", data.get("pold_strc"));
+			oagi6002vo.put("poleStrc", data.get("pole_strc"));
 			oagi6002vo.put("roofStrc", data.get("roof_strc"));
 			oagi6002vo.put("otwlStrc", data.get("otwl_strc"));
 
@@ -150,16 +155,6 @@ public class WWController {
 		}
 	}
 
-	// @GetMapping(path = "batch")
-	// public String batch(
-	// 	@RequestParam(name = "caSerial", required = true) String caSerial,
-	// 	@RequestParam(name = "caDn", required = true) String caDn
-	// )
-	// 	throws WWException {
-	// 	log.info("현대해상 Batch 요청");
-	// 	return hi.batch(caSerial, caDn);
-	// }
-
 	@PostMapping(path = "premium")
 	public String premium(
 		@RequestHeader(name = "Authorization", required = false) String auth_header,
@@ -179,12 +174,12 @@ public class WWController {
 
 		try {
 			Authentication.ValidateAuthHeader(auth_header, user_id);
-			log.info("현대해상 Batch 요청");
+			log.info("현대해상 premium 요청");
 			return "OK";
 			// return hi.batch(caSerial, caDn, ww_info);
-		// } catch (WWException e) {
-		// 	log.error("/ww/premium: {}", e.getMessage());
-		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			// } catch (WWException e) {
+			// 	log.error("/ww/premium: {}", e.getMessage());
+			// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

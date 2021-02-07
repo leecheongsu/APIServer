@@ -3,7 +3,7 @@ package com.insrb.app.insurance.hi;
 import java.util.HashMap;
 import java.util.Map;
 import com.insrb.app.exception.WWException;
-import com.insrb.app.mapper.WPremcalDetailMapper;
+import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.util.ResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +40,7 @@ public class HiWindWaterInsurance {
 	private Resource prodtManual_json;
 
 	@Autowired
-	WPremcalDetailMapper wPremcalDetailMapper;
+	IN101TMapper in101tMapper;
 
 	// 개발
 	// private String sso_server = "https://apid-sso.hi.co.kr";
@@ -387,7 +387,7 @@ public class HiWindWaterInsurance {
 		String lgovtprem = giid0100vo.getString("lgovtPrem");
 		String applno = oagi6002vo.getString("applNo");
 		String scno = oagi6002vo.getString("scNo");
-		wPremcalDetailMapper.insert(
+		in101tMapper.insert(
 			quote_no,
 			email,
 			agmtkind,
