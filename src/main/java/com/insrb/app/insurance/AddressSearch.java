@@ -7,7 +7,9 @@ import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class AddressSearch {
 
@@ -29,6 +31,7 @@ public class AddressSearch {
 	 * @return JSONObject
 	 */
 	public Map<String, Object> getJusoList(String search) {
+		log.info("getJusoList:" + search);
 		HttpResponse<JsonNode> res = Unirest
 			.post(JUSO_GO_KR_URL)
 			.field("keyword", search)
@@ -62,6 +65,7 @@ public class AddressSearch {
 	public Map<String, Object> getHouseCoverInfo(String sigunguCd, String bjdongCd, int bun, int ji) {
 		String str_bun = String.format("%04d", bun);
 		String str_ji = String.format("%04d", ji);
+		log.info("getHouseCoverInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
 			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrTitleInfo")
@@ -90,9 +94,10 @@ public class AddressSearch {
 	 *
 	 * @return  Map<String,Object>
 	 */
-	public Map<String, Object> getHouseDetailInfo(String sigunguCd, String bjdongCd, int bun, int ji, String dongnm,String honm) {
+	public Map<String, Object> getHouseDetailInfo(String sigunguCd, String bjdongCd, int bun, int ji, String dongnm, String honm) {
 		String str_bun = String.format("%04d", bun);
 		String str_ji = String.format("%04d", ji);
+		log.info("getHouseDetailInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
 			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrExposPubuseAreaInfo")
@@ -109,6 +114,4 @@ public class AddressSearch {
 		org.json.JSONObject jObject = XML.toJSONObject(res.getBody());
 		return jObject.toMap();
 	}
-
-
 }

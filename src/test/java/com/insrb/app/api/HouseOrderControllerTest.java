@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class HouseOrderControllerTest {
 
-	private static final String ACCESS_KEY = "myValue";
+	private static final String SERVICE_KEY = "Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -49,7 +49,7 @@ public class HouseOrderControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/orders")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
@@ -65,7 +65,7 @@ public class HouseOrderControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/phone-certification")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
@@ -81,7 +81,7 @@ public class HouseOrderControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/terms")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
@@ -97,7 +97,7 @@ public class HouseOrderControllerTest {
 		mockMvc
 			.perform(
 				get("http://localhost:8080/house/orders/" + QUOTE_NO )
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
 					.param("user_id", USER_ID)
 

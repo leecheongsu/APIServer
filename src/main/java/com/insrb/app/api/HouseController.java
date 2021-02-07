@@ -1,17 +1,16 @@
 package com.insrb.app.api;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.insrb.app.exception.SearchException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.mapper.IN001TMapper;
 import com.insrb.app.mapper.IN002TMapper;
 import com.insrb.app.mapper.IN010TMapper;
+import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
+import com.insrb.app.util.QuoteUtil;
+import java.util.List;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONArray;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -54,26 +51,25 @@ public class HouseController {
 		@RequestParam(name = "bun", required = true) int bun,
 		@RequestParam(name = "ji", required = true) int ji
 	) {
-		Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
-		List<Map<String, Object>> items = getItemFromHouseInfo(search);
-
-		if (items == null || items.size() < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-		Map<String, Object> cover = getCoverSummary(items);
-
-		// 주택화재 보험은 주택에 대해서만 가입 가능하다.
-		String building_type = in001tMapper.getBuildingType(
-			(String) cover.get("etcPurps"),
-			(String) cover.get("mainPurpsCdNm"),
-			String.valueOf(items.size()),
-			(String)cover.get("max_grnd_flr_cnt"),
-			(String)cover.get("total_area")
-		);
-		if (InsuStringUtil.isEmpty(building_type)) {
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
-		}
-
 		try {
-			String quote_no = getNewQuoteNo("q");
+			Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
+			List<Map<String, Object>> items = QuoteUtil.GetItemFromHouseInfo(search);
+
+			// if (items == null || items.size() < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+			Map<String, Object> cover = QuoteUtil.GetCoverSummary(items);
+
+			// 주택화재 보험은 주택에 대해서만 가입 가능하다.
+			String building_type = in001tMapper.getBuildingType(
+				(String) cover.get("etcPurps"),
+				(String) cover.get("mainPurpsCdNm"),
+				String.valueOf(items.size()),
+				(String) cover.get("max_grnd_flr_cnt"),
+				(String) cover.get("total_area")
+			);
+			if (InsuStringUtil.isEmpty(building_type)) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
+			}
+			String quote_no = QuoteUtil.GetNewQuoteNo("q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
@@ -100,9 +96,9 @@ public class HouseController {
 			List<Map<String, Object>> detail = in002tMapper.selectById(quote_no);
 			data.put("premiums", detail);
 			return data;
-		} catch (Exception e) {
+		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
 		}
 	}
 
@@ -115,7 +111,7 @@ public class HouseController {
 
 		// 주택화재 보험은 주택에 대해서만 가입 가능하다.
 		// String building_type = in001tMapper.getBuildingType((String) cover.get("etcPurps"), (String) cover.get("mainPurpsCdNm"));
-		Double tot_area = intOrDoubleToDouble(cover.get("totArea"));
+		Double tot_area = InsuJsonUtil.IntOrDoubleToDouble(cover.get("totArea"));
 		String building_type = in001tMapper.getBuildingType(
 			(String) cover.get("etcPurps"),
 			(String) cover.get("mainPurpsCdNm"),
@@ -124,10 +120,10 @@ public class HouseController {
 			String.valueOf(tot_area)
 		);
 
-		int cnt_sedae = (int)cover.get("hhldCnt");
-		if( cnt_sedae < 1) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "표제부 세대수가 1 이상이어야 합니다.");
+		int cnt_sedae = (int) cover.get("hhldCnt");
+		if (cnt_sedae < 1) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "표제부 세대수가 1 이상이어야 합니다.");
 		// 단독주택(일반주택)이 아닌 경우 전유부가 있어야 한다.
-		if(!InsuStringUtil.equals(building_type, "ILB")){
+		if (!InsuStringUtil.equals(building_type, "ILB")) {
 			if (detail == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "전유부가 있어야합니다.");
 
 			// 단독주택은 전유부만 온다.
@@ -136,7 +132,7 @@ public class HouseController {
 				"detail.exposPubuseGbCdNm 항목이 \"전유\" 여야합니다."
 			);
 			// 개별 세대의 면적으로 치환
-			tot_area = intOrDoubleToDouble(detail.get("area"));
+			tot_area = InsuJsonUtil.IntOrDoubleToDouble(detail.get("area"));
 		}
 
 		if (InsuStringUtil.isEmpty(building_type)) {
@@ -144,7 +140,7 @@ public class HouseController {
 		}
 
 		try {
-			String quote_no = getNewQuoteNo("q");
+			String quote_no = QuoteUtil.GetNewQuoteNo("q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
@@ -184,8 +180,12 @@ public class HouseController {
 		@RequestParam(name = "bun", required = true) int bun,
 		@RequestParam(name = "ji", required = true) int ji
 	) {
-		Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
-		return getItemFromHouseInfo(search);
+		try {
+			Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
+			return QuoteUtil.GetItemFromHouseInfo(search);
+		} catch (SearchException e) {
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+		}
 	}
 
 	@GetMapping(path = "detail")
@@ -197,109 +197,106 @@ public class HouseController {
 		@RequestParam(name = "dongnm", required = true) String dongnm,
 		@RequestParam(name = "honm", required = false) String honm
 	) {
-		Map<String, Object> search = addressSearch.getHouseDetailInfo(sigungucd, bjdongcd, bun, ji, dongnm,honm);
-		List<Map<String, Object>> items = getDetailItemFromHouseInfo(search);
+		Map<String, Object> search = addressSearch.getHouseDetailInfo(sigungucd, bjdongcd, bun, ji, dongnm, honm);
+		List<Map<String, Object>> items = QuoteUtil.getDetailItemFromHouseInfo(search);
 		return items;
 	}
+	// private List<Map<String, Object>> getItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
+	// 	Map<String, Object> response = (Map<String, Object>) search.get("response");
+	// 	Map<String, Object> header = (Map<String, Object>) response.get("header");
 
-	private List<Map<String, Object>> getItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
-		Map<String, Object> response = (Map<String, Object>) search.get("response");
-		Map<String, Object> header = (Map<String, Object>) response.get("header");
+	// 	if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 
-		if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+	// 	Map<String, Object> body = (Map<String, Object>) response.get("body");
+	// 	Map<String, Object> items = (Map<String, Object>) body.get("items");
 
-		Map<String, Object> body = (Map<String, Object>) response.get("body");
-		Map<String, Object> items = (Map<String, Object>) body.get("items");
+	// 	List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();
 
-		List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();
+	// 	// 단건인 경우, XML 파서가 단건인 경우 배열 처리 안하고 넘기는 것 같음.
+	// 	if (items.get("item") instanceof HashMap) {
+	// 		item.add((Map<String, Object>) items.get("item"));
+	// 	} else { //리스트로 올 경우
+	// 		item = (List<Map<String, Object>>) items.get("item");
+	// 	}
 
-		// 단건인 경우, XML 파서가 단건인 경우 배열 처리 안하고 넘기는 것 같음.
-		if (items.get("item") instanceof HashMap) {
-			item.add((Map<String, Object>) items.get("item"));
-		} else { //리스트로 올 경우
-			item = (List<Map<String, Object>>) items.get("item");
-		}
+	// 	return item;
+	// }
 
-		return item;
-	}
+	// private List<Map<String, Object>> getDetailItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
+	// 	Map<String, Object> response = (Map<String, Object>) search.get("response");
+	// 	Map<String, Object> header = (Map<String, Object>) response.get("header");
 
+	// 	if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 
-	private List<Map<String, Object>> getDetailItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
-		Map<String, Object> response = (Map<String, Object>) search.get("response");
-		Map<String, Object> header = (Map<String, Object>) response.get("header");
+	// 	Map<String, Object> body = (Map<String, Object>) response.get("body");
+	// 	Map<String, Object> items = (Map<String, Object>) body.get("items");
 
-		if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+	// 	List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();
 
-		Map<String, Object> body = (Map<String, Object>) response.get("body");
-		Map<String, Object> items = (Map<String, Object>) body.get("items");
+	// 	// 단건인 경우, XML 파서가 단건인 경우 배열 처리 안하고 넘기는 것 같음.
+	// 	if (items.get("item") instanceof HashMap) {
+	// 		item.add((Map<String, Object>) items.get("item"));
+	// 	} else { //리스트로 올 경우
+	// 		List<Map<String, Object>> list = (List<Map<String, Object>>) items.get("item");
+	// 		for(Map<String, Object> row : list){
+	// 			if(InsuStringUtil.equals((String)row.get("exposPubuseGbCdNm"), "전유"))
+	// 			item.add(row);
+	// 		}
+	// 	}
 
-		List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();
+	// 	return item;
+	// }
 
-		// 단건인 경우, XML 파서가 단건인 경우 배열 처리 안하고 넘기는 것 같음.
-		if (items.get("item") instanceof HashMap) {
-			item.add((Map<String, Object>) items.get("item"));
-		} else { //리스트로 올 경우
-			List<Map<String, Object>> list = (List<Map<String, Object>>) items.get("item");
-			for(Map<String, Object> row : list){
-				if(InsuStringUtil.equals((String)row.get("exposPubuseGbCdNm"), "전유"))
-				item.add(row);
-			}
-		}
+	// private Map<String, Object> getCoverSummary(List<Map<String, Object>> items) {
+	// 	int cnt_sedae = 0;
+	// 	double total_area = 0.00;
+	// 	Object useAprDay = "";
+	// 	Map<String, Object> dong_info = new HashMap<String, Object>();
 
-		return item;
-	}
+	// 	Map<String, Object> cover = null;
+	// 	int max_grnd_flr_cnt = 1;
+	// 	for (Map<String, Object> item : items) {
+	// 		int sedae = (int) item.get("hhldCnt");
+	// 		// if (cover == null && sedae > 0) cover = item; // 세대가 한세대라도 있는 건물(동)을 대표로 한다.
+	// 		cnt_sedae += sedae;
+	// 		total_area += InsuJsonUtil.IntOrDoubleToDouble(item.get("totArea"));
+	// 		String dong_name = item.get("dongNm") != "" ? (String) item.get("dongNm") : (String) item.get("bldNm");
+	// 		dong_info.put(dong_name, item.get("totArea"));
 
-	private Map<String, Object> getCoverSummary(List<Map<String, Object>> items) {
-		int cnt_sedae = 0;
-		double total_area = 0.00;
-		Object useAprDay = "";
-		Map<String, Object> dong_info = new HashMap<String, Object>();
+	// 		if(item.get("grndFlrCnt")!=null){
+	// 			int grnd_flr_cnt =  (int) item.get("grndFlrCnt");
+	// 			max_grnd_flr_cnt = (grnd_flr_cnt > max_grnd_flr_cnt) ? grnd_flr_cnt : max_grnd_flr_cnt;
+	// 		}
+	// 		// 마지막 데이터의 승인일.
+	// 		useAprDay =  item.get("useAprDay");
+	// 	}
+	// 	// if (cover == null) cover = items.get(items.size() -1 );
+	// 	cover = items.get(items.size() -1 );
 
-		Map<String, Object> cover = null;
-		int max_grnd_flr_cnt = 1;
-		for (Map<String, Object> item : items) {
-			int sedae = (int) item.get("hhldCnt");
-			// if (cover == null && sedae > 0) cover = item; // 세대가 한세대라도 있는 건물(동)을 대표로 한다.
-			cnt_sedae += sedae;
-			total_area += intOrDoubleToDouble(item.get("totArea"));
-			String dong_name = item.get("dongNm") != "" ? (String) item.get("dongNm") : (String) item.get("bldNm");
-			dong_info.put(dong_name, item.get("totArea"));
+	// 	cover.put("cnt_sedae", String.valueOf(cnt_sedae));
+	// 	cover.put("total_area", String.valueOf(total_area));
+	// 	cover.put("dong_info", new JSONArray().put(dong_info).toString());
+	// 	cover.put("max_grnd_flr_cnt", String.valueOf(max_grnd_flr_cnt));
+	// 	cover.put("useAprDay",useAprDay);
+	// 	return cover;
+	// }
 
-			if(item.get("grndFlrCnt")!=null){
-				int grnd_flr_cnt =  (int) item.get("grndFlrCnt");
-				max_grnd_flr_cnt = (grnd_flr_cnt > max_grnd_flr_cnt) ? grnd_flr_cnt : max_grnd_flr_cnt;
-			}
-			// 마지막 데이터의 승인일.
-			useAprDay =  item.get("useAprDay");
-		}
-		// if (cover == null) cover = items.get(items.size() -1 );
-		cover = items.get(items.size() -1 );
+	// private double intOrDoubleToDouble(Object item) {
+	// 	if (item instanceof Integer) {
+	// 		return (int) item;
+	// 	} else if (item instanceof Double) {
+	// 		return (double) item;
+	// 	}
+	// 	return 0.0;
+	// }
 
-		
-		cover.put("cnt_sedae", String.valueOf(cnt_sedae));
-		cover.put("total_area", String.valueOf(total_area));
-		cover.put("dong_info", new JSONArray().put(dong_info).toString());
-		cover.put("max_grnd_flr_cnt", String.valueOf(max_grnd_flr_cnt));
-		cover.put("useAprDay",useAprDay);
-		return cover;
-	}
-
-	private double intOrDoubleToDouble(Object item) {
-		if (item instanceof Integer) {
-			return (int) item;
-		} else if (item instanceof Double) {
-			return (double) item;
-		}
-		return 0.0;
-	}
-
-	private String getNewQuoteNo(String prefix) {
-		// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		// DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		// 밀리세컨드까지 해야 UK 오류가 나지 않는다.
-		// 더 확실한 방법은 SEQ를 쓰는 것이다.
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss.SSS");
-		Date date = new Date();
-		return prefix + dateFormat.format(date);
-	}
+	// private String getNewQuoteNo(String prefix) {
+	// 	// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	// 	// DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+	// 	// 밀리세컨드까지 해야 UK 오류가 나지 않는다.
+	// 	// 더 확실한 방법은 SEQ를 쓰는 것이다.
+	// 	DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss.SSS");
+	// 	Date date = new Date();
+	// 	return prefix + dateFormat.format(date);
+	// }
 }

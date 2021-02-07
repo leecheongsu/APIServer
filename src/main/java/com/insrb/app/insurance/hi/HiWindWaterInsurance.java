@@ -99,7 +99,6 @@ public class HiWindWaterInsurance {
 	// 2. 가보험료 산출 요청
 	public Map<String, Object> getPrePremium(String data) throws WWException {
 		String wwToken = getWWBearerToken();
-		log.info("Token:{}", wwToken);
 		HttpResponse<JsonNode> res = Unirest
 			.post(server + "/v1/OASF2001M05S")
 			.header("X-Channel-Id", "Main")
@@ -140,7 +139,7 @@ public class HiWindWaterInsurance {
 	private String certConfmSeqNo; //인증순번
 	private JSONObject hid;
 
-	public String batch(String caSerial, String caDn) throws WWException {
+	public String batch(String caSerial, String caDn,Map<String,Object> ww_info) throws WWException {
 		try {
 			this.hid = new JSONObject();
 			this.fn_1_certJson = ResourceUtil.asJSONObject(tmplCertConfmApi_json);

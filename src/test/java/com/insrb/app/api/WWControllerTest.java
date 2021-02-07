@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class WWControllerTest {
 
-	private static final String ACCESS_KEY = "myValue";
+	private static final String SERVICE_KEY = "Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -57,7 +57,7 @@ public class WWControllerTest {
 	public void UIAPP033_01() throws Exception {
 		mockMvc
 			.perform(
-				get("http://localhost:8080/ww/juso").header("X-insr-servicekey", ACCESS_KEY).param("search", mockSearch.get("search_text"))
+				get("http://localhost:8080/ww/juso").header("X-insr-servicekey", SERVICE_KEY).param("search", mockSearch.get("search_text"))
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -70,7 +70,7 @@ public class WWControllerTest {
 		mockMvc
 			.perform(
 				get("http://localhost:8080/ww/cover")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.param("sigungucd", mockAddress.get("sigungucd"))
 					.param("bjdongcd", mockAddress.get("bjdongcd"))
 					.param("bun", mockAddress.get("bun"))
@@ -79,8 +79,8 @@ public class WWControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.code.length()").value(51))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.lsgcCd").value("I014"))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.template.oagi6002vo.ptyKorNm").value("김종호"));
+			.andExpect(MockMvcResultMatchers.jsonPath("$.ww_info.oagi6002vo.lsgcCd").value("I004"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.ww_info.oagi6002vo.ptyKorNm").value("이청수"));
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class WWControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/pre-premium")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -110,7 +110,7 @@ public class WWControllerTest {
 		mockMvc
 			.perform(
 				get("http://localhost:8080/ww/batch")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.param("caSerial", "210202112414KC000139")
 					.param("caDn", "B000")
 					.content(json)

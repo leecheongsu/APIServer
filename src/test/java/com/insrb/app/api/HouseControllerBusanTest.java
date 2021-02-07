@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class HouseControllerBusanTest {
 
-	private static final String ACCESS_KEY = "myValue";
+	private static final String SERVICE_KEY = "Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -47,7 +47,7 @@ public class HouseControllerBusanTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/quotes/sedae")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -65,7 +65,7 @@ public class HouseControllerBusanTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/quotes/sedae")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -82,7 +82,7 @@ public class HouseControllerBusanTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/quotes/sedae")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -99,7 +99,7 @@ public class HouseControllerBusanTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/house/quotes/sedae")
-					.header("X-insr-servicekey", ACCESS_KEY)
+					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
