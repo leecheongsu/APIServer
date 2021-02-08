@@ -37,6 +37,13 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/resources/lib/tibero6-jdbc.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>OkCert3</groupId>
+			<artifactId>OkCert3-custom</artifactId>
+			<version>1.5-2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/lib/OkCert3-java1.5-2.2.3.jar</systemPath>
+		</dependency>
 		<!-- 소스 수정하면 리부팅되도록.. ref: https://www.codejava.net/frameworks/spring-boot/spring-boot-automatic-restart-using-spring-boot-devtools -->
 		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>

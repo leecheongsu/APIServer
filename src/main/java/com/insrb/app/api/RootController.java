@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class RootContoller {
+public class RootController {
 
     @GetMapping(path = "/")
     public String page() {

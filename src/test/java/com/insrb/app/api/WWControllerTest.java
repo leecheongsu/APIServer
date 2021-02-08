@@ -4,10 +4,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.insrb.app.util.ResourceUtil;
 import java.util.HashMap;
 import java.util.Map;
+import com.insrb.app.util.Authentication;
+import com.insrb.app.util.ResourceUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -32,8 +32,18 @@ public class WWControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Value("classpath:static/mock/file_for_test/address_for_pre_premium.json")
-	private Resource address_for_pre_premium_json;
+	@Value("classpath:static/mock/pre_premium.json")
+	private Resource pre_premium_json;
+
+	@Value("classpath:static/mock/premium.json")
+	private Resource premium_json;
+
+
+	Map<String, String> mockUser;
+	{
+		mockUser = new HashMap<String, String>();
+		mockUser.put("email", "vingorius@gmail.com"); // premium.json 에 있는 user와 동일하여야 한다.
+	}
 
 	Map<String, String> mockSearch;
 
@@ -89,13 +99,13 @@ public class WWControllerTest {
 	@Test
 	@DisplayName("UI-APP-036-01 풍수해 가보험료 확인")
 	public void UIAPP036_01() throws Exception {
-		String json_string = ResourceUtil.asString(address_for_pre_premium_json);
+		String json = ResourceUtil.asString(pre_premium_json);
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/pre-premium")
 					.header("X-insr-servicekey", SERVICE_KEY)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(json_string)
+					.content(json)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -107,15 +117,15 @@ public class WWControllerTest {
 	}
 
 	@Test
-	@DisplayName("UI-APP-03701 풍수해 Batch 확인")
+	@DisplayName("UI-APP-03701 풍수해 실보험료 확인")
 	public void UIAPP037_01() throws Exception {
-		String json = ResourceUtil.asString(address_for_pre_premium_json);
+		String json = ResourceUtil.asString(premium_json);
 		mockMvc
 			.perform(
-				get("http://localhost:8080/ww/batch")
+				post("http://localhost:8080/ww/premium")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.param("caSerial", "210202112414KC000139")
-					.param("caDn", "B000")
+					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
 			.andDo(print())

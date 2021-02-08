@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/contents")
-public class ContentsContoller {
+public class ContentsController {
 
 	@Value("classpath:static/mock/content.json")
 	private Resource mockContent;

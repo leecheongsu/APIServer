@@ -1,0 +1,8 @@
+### 주소검색 해들목휴먼빌
+GET http://localhost:8080/okcert
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
+### 주소검색 해들목휴먼빌
+GET http://localhost:8080/okcert/hello2
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
