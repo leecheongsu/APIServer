@@ -1,18 +1,18 @@
 package com.insrb.app.api;
 
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.EncryptException;
-import com.insrb.app.mapper.IN006TMapper;
-import com.insrb.app.mapper.IN005CMapper;
-import com.insrb.app.mapper.IN005TMapper;
-import com.insrb.app.util.Authentication;
-import com.insrb.app.util.InsuStringUtil;
-import com.insrb.app.util.cyper.UserInfoCyper;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import lombok.extern.slf4j.Slf4j;
+import com.insrb.app.exception.AuthException;
+import com.insrb.app.exception.AuthExpiredException;
+import com.insrb.app.exception.EncryptException;
+import com.insrb.app.mapper.IN005CMapper;
+import com.insrb.app.mapper.IN005TMapper;
+import com.insrb.app.mapper.IN006TMapper;
+import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuStringUtil;
+import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -178,7 +179,7 @@ public class UsersController {
 				user.remove("pwd");
 				String decMobile = UserInfoCyper.DecryptMobile((String) user.get("mobile"));
 				user.put("mobile", decMobile);
-				user.put("token", Authentication.GetToken(id));
+				user.put("token", Authentication.CreateToken(id));
 				return user;
 			}
 		} catch (EncryptException e) {
@@ -275,6 +276,9 @@ public class UsersController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -304,6 +308,9 @@ public class UsersController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -326,6 +333,9 @@ public class UsersController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -342,6 +352,9 @@ public class UsersController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 }

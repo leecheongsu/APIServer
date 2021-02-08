@@ -47,17 +47,19 @@ public class AuthFilter implements Filter {
 		}
 	}
 
-	//2021.02.04 TMAX 에서는 오류나서 이부분 막아야 한다. Tmax 기술지원, 조성환 매니저.
+	/**
+	 * 2021.02.04 JUEUS 에서는 오류나서 이부분 막아야 한다. Tmax 기술지원, 조성환 매니저.
+	 */
 	@Override
 	public void destroy() {
 		// Filter.super.destroy();
 	}
 
 	/**
+	 * 2021.02.04 JUEUS 에서는 오류나서 이부분 막아야 한다. Tmax 기술지원, 조성환 매니저.
 	 * @param filterConfig
 	 * @throws ServletException
 	 */
-	//2021.02.04 TMAX 에서는 오류나서 이부분 막아야 한다. Tmax 기술지원, 조성환 매니저.
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// Filter.super.init(filterConfig);

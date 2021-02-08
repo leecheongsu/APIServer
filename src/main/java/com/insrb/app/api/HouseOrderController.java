@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import com.insrb.app.exception.AuthException;
+import com.insrb.app.exception.AuthExpiredException;
 import com.insrb.app.exception.EncryptException;
 import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN011TMapper;
@@ -56,6 +57,9 @@ public class HouseOrderController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -78,8 +82,8 @@ public class HouseOrderController {
 			String insurant_b = (String) data.get("insurant_b");
 			int premium = (int) data.get("premium");
 			String insdate = (String) data.get("insdate");
-			Date ins_from = InsuDateUtil.toDate((String) data.get("ins_from"));
-			Date ins_to = InsuDateUtil.toDate((String) data.get("ins_to"));
+			Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
+			Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
 			int ptype = (int) data.get("ptype");
 			String insloc = (String) data.get("insloc");
 			String mobile = (String) data.get("mobile");
@@ -129,6 +133,9 @@ public class HouseOrderController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -173,6 +180,9 @@ public class HouseOrderController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
@@ -241,6 +251,9 @@ public class HouseOrderController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 }

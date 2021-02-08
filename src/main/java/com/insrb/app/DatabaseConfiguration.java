@@ -23,17 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 @PropertySource("classpath:/application.properties")
 public class DatabaseConfiguration {
 	@Bean
-	@Profile("dev")
+	@Profile("local")
 	@ConfigurationProperties(prefix = "spring.datasource.hikari")
 	public HikariConfig hikariConfig() {
 		return new HikariConfig();
 	}
 
 	@Bean
-	@Profile("dev")
+	@Profile("local")
 	public DataSource dataSource() {
 		DataSource dataSource = new HikariDataSource(hikariConfig());
-		log.info("dev datasource : {}", dataSource);
+		log.info("local datasource : {}", dataSource);
 		return dataSource;
     }
     

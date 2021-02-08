@@ -1,25 +1,25 @@
 package com.insrb.app.api;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insrb.app.exception.AuthException;
+import com.insrb.app.exception.AuthExpiredException;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.insurance.hi.HiWindWaterInsurance;
 import com.insrb.app.mapper.IN001TMapper;
+import com.insrb.app.mapper.IN005TMapper;
+import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
-import com.insrb.app.mapper.IN010TMapper;
-import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.util.Authentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -183,6 +184,9 @@ public class WWController {
 		} catch (AuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (AuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 }
