@@ -4,13 +4,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.AuthExpiredException;
-import com.insrb.app.exception.EncryptException;
+import com.insrb.app.exception.InsuAuthException;
+import com.insrb.app.exception.InsuAuthExpiredException;
+import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.mapper.IN005CMapper;
 import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.mapper.IN006TMapper;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class UsersController {
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		} catch (DataAccessException e) {
@@ -120,7 +120,7 @@ public class UsersController {
 			in006tMapper.merge(email, comname, sosok, businessnum);
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		} catch (DataAccessException e) {
@@ -166,7 +166,7 @@ public class UsersController {
 
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-		if (!InsuStringUtil.equals((String) user.get("use_yn"), "Y")) {
+		if (!InsuStringUtil.Equals((String) user.get("use_yn"), "Y")) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "탈퇴한 사용자입니다.재가입하시기 바랍니다");
 		}
 
@@ -179,13 +179,13 @@ public class UsersController {
 				user.remove("pwd");
 				String decMobile = UserInfoCyper.DecryptMobile((String) user.get("mobile"));
 				user.put("mobile", decMobile);
-				user.put("token", Authentication.CreateToken(id));
+				user.put("token", InsuAuthentication.CreateToken(id));
 				return user;
 			}
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
 		}
@@ -204,7 +204,7 @@ public class UsersController {
 			String email = in005tMapper.findId(name, teltype, encMobile, jumina, sex);
 			if (Objects.isNull(email)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user");
 			return email;
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -225,7 +225,7 @@ public class UsersController {
 			if (
 				user.get("teltype").equals(teltype) && user.get("mobile").equals(encMobile)
 			) return "OK"; else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "invalid user info");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -249,7 +249,7 @@ public class UsersController {
 				in005tMapper.updatePwd(id, encPwd);
 				return "OK";
 			} else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "mismatch");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 		}
@@ -262,7 +262,7 @@ public class UsersController {
 		@RequestParam(name = "juminb", required = true) String juminb
 	) {
 		try {
-			Authentication.ValidateAuthHeader(auth_header, id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, id);
 			Integer.parseInt(juminb); // isValidNumber
 			String encJuminb = UserInfoCyper.EncryptJuminb(juminb);
 
@@ -270,13 +270,13 @@ public class UsersController {
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid juminb");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
@@ -293,7 +293,7 @@ public class UsersController {
 		@RequestParam(name = "sex", required = true) String sex
 	) {
 		try {
-			Authentication.ValidateAuthHeader(auth_header, id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, id);
 
 			Integer.parseInt(mobile); // isValidNumber
 			Integer.parseInt(jumina); // isValidNumber
@@ -302,13 +302,13 @@ public class UsersController {
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
@@ -323,17 +323,17 @@ public class UsersController {
 		@RequestParam(name = "businessnum", required = true) String businessnum
 	) {
 		try {
-			Authentication.ValidateAuthHeader(auth_header, id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, id);
 
 			Integer.parseInt(businessnum); // isValidNumber
 			in006tMapper.merge(id, comname, sosok, businessnum);
 			return "OK";
 		} catch (NumberFormatException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
@@ -342,17 +342,17 @@ public class UsersController {
 	@PutMapping(path = "/{id}/quit")
 	public String quit(@RequestHeader(name = "Authorization", required = false) String auth_header, @PathVariable String id) {
 		try {
-			Authentication.ValidateAuthHeader(auth_header, id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, id);
 
 			Map<String, Object> user = in005tMapper.selectById(id);
 			if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
 			in005tMapper.updateUseYN(id, "N");
 			return "OK";
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}

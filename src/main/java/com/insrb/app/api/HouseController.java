@@ -58,7 +58,6 @@ public class HouseController {
 			// if (items == null || items.size() < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 			Map<String, Object> cover = QuoteUtil.GetCoverSummary(items);
 
-			// 주택화재 보험은 주택에 대해서만 가입 가능하다.
 			String building_type = in001tMapper.getBuildingType(
 				(String) cover.get("etcPurps"),
 				(String) cover.get("mainPurpsCdNm"),
@@ -66,9 +65,16 @@ public class HouseController {
 				(String) cover.get("max_grnd_flr_cnt"),
 				(String) cover.get("total_area")
 			);
-			if (InsuStringUtil.isEmpty(building_type)) {
+			// 주택화재 보험은 주택에 대해서만 가입 가능하다.
+			if (InsuStringUtil.IsEmpty(building_type) || InsuStringUtil.Equals(building_type, "ETC")) {
 				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
 			}
+			// 16층 이상은 가입할 수 없다.
+			if (InsuStringUtil.ToIntOrDefault((String) cover.get("max_grnd_flr_cnt"), 0) > 15) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "15층 이상은 가입할 수 없습니다.");
+			}
+			// TODO: 3,4등급 가입 불가 로직 구현할 것.
+
 			String quote_no = QuoteUtil.GetNewQuoteNo("q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
@@ -98,7 +104,7 @@ public class HouseController {
 			return data;
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
 	}
 
@@ -121,22 +127,34 @@ public class HouseController {
 		);
 
 		int cnt_sedae = (int) cover.get("hhldCnt");
-		if (cnt_sedae < 1) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "표제부 세대수가 1 이상이어야 합니다.");
-		// 단독주택(일반주택)이 아닌 경우 전유부가 있어야 한다.
-		if (!InsuStringUtil.equals(building_type, "ILB")) {
-			if (detail == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "전유부가 있어야합니다.");
+		// 주택화재 보험은 주택에 대해서만 가입 가능하다.
+		if (InsuStringUtil.IsEmpty(building_type) || InsuStringUtil.Equals(building_type, "ETC")) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
+		}
+		// 단독주택은 단체가입으로~~
+		if (InsuStringUtil.Equals(building_type, "ILB")) {
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, "단독주택은 단체가입하셔야 합니다.");
+		}
+		if (cnt_sedae < 1) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "표제부 세대수가 1 이상이어야 합니다.");
+		}
+		// TODO: 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
 
-			// 단독주택은 전유부만 온다.
-			if (!detail.get("exposPubuseGbCdNm").equals("전유")) throw new ResponseStatusException(
-				HttpStatus.NOT_ACCEPTABLE,
-				"detail.exposPubuseGbCdNm 항목이 \"전유\" 여야합니다."
-			);
-			// 개별 세대의 면적으로 치환
-			tot_area = InsuJsonUtil.IntOrDoubleToDouble(detail.get("area"));
+		if (detail == null) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "전유부가 있어야합니다.");
+
+		// 단독주택은 전유부만 온다.
+		if (!detail.get("exposPubuseGbCdNm").equals("전유")) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "detail.exposPubuseGbCdNm 항목이 \"전유\" 여야합니다.");
 		}
 
-		if (InsuStringUtil.isEmpty(building_type)) {
+		// 개별 세대의 면적으로 치환
+		tot_area = InsuJsonUtil.IntOrDoubleToDouble(detail.get("area"));
+
+		if (InsuStringUtil.IsEmpty(building_type)) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
+		}
+		if (InsuStringUtil.ToIntOrDefault((String) cover.get("grndFlrCnt"), 0) > 15) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "15층 이상은 가입할 수 없습니다.");
 		}
 
 		try {
@@ -184,7 +202,7 @@ public class HouseController {
 			Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
 			return QuoteUtil.GetItemFromHouseInfo(search);
 		} catch (SearchException e) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
 	}
 

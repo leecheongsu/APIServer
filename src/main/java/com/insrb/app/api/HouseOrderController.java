@@ -4,13 +4,13 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.AuthExpiredException;
-import com.insrb.app.exception.EncryptException;
+import com.insrb.app.exception.InsuAuthException;
+import com.insrb.app.exception.InsuAuthExpiredException;
+import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN011TMapper;
 import com.insrb.app.mapper.IN007TMapper;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +49,15 @@ public class HouseOrderController {
 		@RequestParam(name = "user_id", required = true) String user_id
 	) {
 		try {
-			Authentication.ValidateAuthHeader(auth_header, user_id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 
 			Map<String, Object> order = in003tMapper.selectById(quote_no);
 			if (Objects.isNull(order)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 			return order;
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
@@ -73,9 +73,9 @@ public class HouseOrderController {
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		log.info(data.toString());
 		try {
-			Authentication.ValidateAuthHeader(auth_header, user_id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			String quote_no = (String) data.get("quote_no");
-			String prod_code = (String) data.get("prod_code");
+			String prod_code = "m002"; // 인슈로보주택종합보험(메리츠화재)
 			int opayment = (int) data.get("opayment");
 			String polholder = (String) data.get("polholder");
 			String insurant_a = (String) data.get("insurant_a");
@@ -83,7 +83,8 @@ public class HouseOrderController {
 			int premium = (int) data.get("premium");
 			String insdate = (String) data.get("insdate");
 			Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
-			Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
+			// Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
+			Date ins_to = InsuDateUtil.GetOneYearPeriod(ins_from);
 			int ptype = (int) data.get("ptype");
 			String insloc = (String) data.get("insloc");
 			String mobile = (String) data.get("mobile");
@@ -127,64 +128,65 @@ public class HouseOrderController {
 		} catch (ParseException e) {
 			log.error("/house/orders: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 날짜 형식입니다.");
-		} catch (EncryptException e) {
+		} catch (InsuEncryptException e) {
 			log.error("/house/orders: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "암호화에 문제 있습니다.");
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
 
+	// OKCertController로 이동.
 	// /api/house/orders/[order_id]/phone-certification
-	@PostMapping(path = "/{quote_no}/phone-certification")
-	@ResponseStatus(HttpStatus.OK)
-	public String phone_certification(
-		@PathVariable String quote_no,
-		@RequestBody(required = true) Map<String, Object> body,
-		@RequestHeader(name = "Authorization", required = false) String auth_header
-	) {
-		String user_id = (String) body.get("user_id");
-		try {
-			Authentication.ValidateAuthHeader(auth_header, user_id);
-			Map<String, Object> data = (Map<String, Object>) body.get("data");
-			log.info(data.toString());
-			String rslt_name = (String) data.get("rslt_name");
-			String rslt_birthday = (String) data.get("rslt_birthday");
-			String rslt_sex_cd = (String) data.get("rslt_sex_cd");
-			String rslt_ntv_frnr_cd = (String) data.get("rslt_ntv_frnr_cd");
-			String di = (String) data.get("di");
-			String ci = (String) data.get("ci");
-			String ci_update = (String) data.get("ci_update");
-			String tel_com_cd = (String) data.get("tel_com_cd");
-			String tel_no = (String) data.get("tel_no");
-			String return_msg = quote_no;
+	// @PostMapping(path = "/{quote_no}/phone-certification")
+	// @ResponseStatus(HttpStatus.OK)
+	// public String phone_certification(
+	// 	@PathVariable String quote_no,
+	// 	@RequestBody(required = true) Map<String, Object> body,
+	// 	@RequestHeader(name = "Authorization", required = false) String auth_header
+	// ) {
+	// 	String user_id = (String) body.get("user_id");
+	// 	try {
+	// 		Authentication.ValidateAuthHeader(auth_header, user_id);
+	// 		Map<String, Object> data = (Map<String, Object>) body.get("data");
+	// 		log.info(data.toString());
+	// 		String rslt_name = (String) data.get("rslt_name");
+	// 		String rslt_birthday = (String) data.get("rslt_birthday");
+	// 		String rslt_sex_cd = (String) data.get("rslt_sex_cd");
+	// 		String rslt_ntv_frnr_cd = (String) data.get("rslt_ntv_frnr_cd");
+	// 		String di = (String) data.get("di");
+	// 		String ci = (String) data.get("ci");
+	// 		String ci_update = (String) data.get("ci_update");
+	// 		String tel_com_cd = (String) data.get("tel_com_cd");
+	// 		String tel_no = (String) data.get("tel_no");
+	// 		String return_msg = quote_no;
 
-			in007tMapper.delete(return_msg);
-			in007tMapper.insert(
-				rslt_name,
-				rslt_birthday,
-				rslt_sex_cd,
-				rslt_ntv_frnr_cd,
-				di,
-				ci,
-				ci_update,
-				tel_com_cd,
-				tel_no,
-				return_msg
-			);
-			return quote_no;
-		} catch (AuthException e) {
-			log.error(e.getMessage());
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
-			log.error(e.getMessage());
-			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
-		}
-	}
+	// 		in007tMapper.delete(return_msg);
+	// 		in007tMapper.insert(
+	// 			rslt_name,
+	// 			rslt_birthday,
+	// 			rslt_sex_cd,
+	// 			rslt_ntv_frnr_cd,
+	// 			di,
+	// 			ci,
+	// 			ci_update,
+	// 			tel_com_cd,
+	// 			tel_no,
+	// 			return_msg
+	// 		);
+	// 		return quote_no;
+	// 	} catch (AuthException e) {
+	// 		log.error(e.getMessage());
+	// 		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+	// 	} catch (AuthExpiredException e) {
+	// 		log.error(e.getMessage());
+	// 		throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
+	// 	}
+	// }
 
 	@PostMapping(path = "/{quote_no}/terms")
 	@ResponseStatus(HttpStatus.OK)
@@ -197,7 +199,7 @@ public class HouseOrderController {
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		log.info(data.toString());
 		try {
-			Authentication.ValidateAuthHeader(auth_header, user_id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 
 			int termsA_1 = (int) data.get("termsA_1");
 			int termsA_2 = (int) data.get("termsA_2");
@@ -248,10 +250,10 @@ public class HouseOrderController {
 				termsG_1
 			);
 			return quote_no;
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}

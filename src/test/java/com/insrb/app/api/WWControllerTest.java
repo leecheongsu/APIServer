@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.HashMap;
 import java.util.Map;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.ResourceUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -124,7 +124,7 @@ public class WWControllerTest {
 			.perform(
 				post("http://localhost:8080/ww/premium")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)

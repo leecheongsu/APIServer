@@ -9,13 +9,13 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.AuthExpiredException;
+import com.insrb.app.exception.InsuAuthException;
+import com.insrb.app.exception.InsuAuthExpiredException;
 import org.springframework.util.StringUtils;
 
 // ref: https://github.com/auth0/java-jwt
 
-public class Authentication {
+public class InsuAuthentication {
     private static final String ID = "id";
     private static final String SECRET = "secret";
     private static final String ISS = "insurb.com";
@@ -28,9 +28,9 @@ public class Authentication {
     /** 
      * @param email
      * @return String
-     * @throws AuthException
+     * @throws InsuAuthException
      */
-    public static String GetAuthorizationValue(String email) throws AuthException {
+    public static String GetAuthorizationValue(String email) throws InsuAuthException {
         return TOKEN_PREFIX + SPACE + CreateToken(email);
     }
 
@@ -38,16 +38,16 @@ public class Authentication {
     /** 
      * @param email
      * @return String
-     * @throws AuthException
+     * @throws InsuAuthException
      */
-    public static String CreateToken(String email) throws AuthException {
+    public static String CreateToken(String email) throws InsuAuthException {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             Date expiresAt = InsuDateUtil.Tomorrow();
             String token = JWT.create().withIssuer(ISS).withClaim(ID, email).withExpiresAt(expiresAt).sign(algorithm);
             return token;
         } catch (JWTCreationException | ParseException e) {
-            throw new AuthException(e.getMessage());
+            throw new InsuAuthException(e.getMessage());
         }
     }
 
@@ -55,17 +55,17 @@ public class Authentication {
     /** 
      * @param email
      * @return String
-     * @throws AuthException
+     * @throws InsuAuthException
      */
     // For Test용
-    public static String CreateYesterdayToken(String email) throws AuthException {
+    public static String CreateYesterdayToken(String email) throws InsuAuthException {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             Date expiresAt = InsuDateUtil.Yesterday();
             String token = JWT.create().withIssuer(ISS).withClaim(ID, email).withExpiresAt(expiresAt).sign(algorithm);
             return token;
         } catch (JWTCreationException | ParseException e) {
-            throw new AuthException(e.getMessage());
+            throw new InsuAuthException(e.getMessage());
         }
     }
 
@@ -73,19 +73,19 @@ public class Authentication {
     /** 
      * @param token
      * @return String
-     * @throws AuthException
-     * @throws AuthExpiredException
+     * @throws InsuAuthException
+     * @throws InsuAuthExpiredException
      */
-    public static String GetUserIdFromToken(String token) throws AuthException, AuthExpiredException {
+    public static String GetUserIdFromToken(String token) throws InsuAuthException, InsuAuthExpiredException {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISS).build(); // Reusable
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim(ID).asString();
         } catch (TokenExpiredException e) {
-            throw new AuthExpiredException(e.getMessage());
+            throw new InsuAuthExpiredException(e.getMessage());
         } catch (JWTVerificationException e) {
-            throw new AuthException(e.getMessage());
+            throw new InsuAuthException(e.getMessage());
         }
     }
 
@@ -94,19 +94,19 @@ public class Authentication {
      * 요청한 사용자와 토큰 상 사용자가 같은지 검증한다.
      * @param auth_header
      * @param user_id
-     * @throws AuthException
-     * @throws AuthExpiredException
+     * @throws InsuAuthException
+     * @throws InsuAuthExpiredException
      */
-    public static void ValidateAuthHeader(String auth_header, String user_id) throws AuthException, AuthExpiredException {
+    public static void ValidateAuthHeader(String auth_header, String user_id) throws InsuAuthException, InsuAuthExpiredException {
         if (!StringUtils.hasText(auth_header))
-            throw new AuthException("no auth");
+            throw new InsuAuthException("no auth");
 
-        String token = Authentication.GetTokenFromHeader(auth_header);
-        String user_id_on_token = Authentication.GetUserIdFromToken(token);
+        String token = InsuAuthentication.GetTokenFromHeader(auth_header);
+        String user_id_on_token = InsuAuthentication.GetUserIdFromToken(token);
 
 
         if (!user_id.equals(user_id_on_token))
-            throw new AuthException("user mismatch");
+            throw new InsuAuthException("user mismatch");
 
     }
 

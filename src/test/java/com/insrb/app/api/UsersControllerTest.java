@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.HashMap;
 import java.util.Map;
 import com.insrb.app.mapper.IN005TMapper;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -190,7 +190,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 			)
 			.andDo(print())
 			.andExpect(status().isBadRequest());
@@ -218,7 +218,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("pwd", mockUser.get("pwd"))
 					.param("juminb", mockUser.get("juminb") + "AAA")
 			)
@@ -233,7 +233,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/juminb")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("juminb", mockUser.get("juminb"))
 			)
 			.andDo(print())
@@ -425,7 +425,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 			)
 			.andDo(print())
 			.andExpect(status().isBadRequest());
@@ -438,7 +438,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
 					.param("mobile", mockUser.get("mobile"))
@@ -458,7 +458,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/basic")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.param("name", mockUser.get("name"))
 					.param("teltype", mockUser.get("teltype"))
 					.param("mobile", mockUser.get("mobile"))
@@ -494,7 +494,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockGAUser.get("email")))
 			)
 			.andDo(print())
 			.andExpect(status().isBadRequest());
@@ -507,7 +507,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockGAUser.get("email")))
 					.param("comname", mockGAUser.get("comname"))
 					.param("sosok", mockGAUser.get("sosok"))
 					.param("businessnum", mockGAUser.get("businessnum") + "xxx")
@@ -525,7 +525,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockGAUser.get("email") + "/business")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockGAUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockGAUser.get("email")))
 					.param("comname", mockGAUser.get("comname"))
 					.param("sosok", mockGAUser.get("sosok"))
 					.param("businessnum", mockGAUser.get("businessnum"))
@@ -541,7 +541,7 @@ public class UsersControllerTest {
 			.perform(
 				put("/users/" + mockUser.get("email") + "/quit")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(mockUser.get("email")))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 			)
 			.andDo(print())
 			.andExpect(status().isOk());

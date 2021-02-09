@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.ResourceUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -50,7 +50,7 @@ public class HouseOrderControllerTest {
 			.perform(
 				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/terms")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -68,7 +68,7 @@ public class HouseOrderControllerTest {
 			.perform(
 				post("http://localhost:8080/house/orders")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -84,7 +84,7 @@ public class HouseOrderControllerTest {
 			.perform(
 				post("http://localhost:8080/house/orders/" + QUOTE_NO + "/phone-certification")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(json)
 			)
@@ -100,7 +100,7 @@ public class HouseOrderControllerTest {
 			.perform(
 				get("http://localhost:8080/house/orders/" + QUOTE_NO )
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.header(Authentication.HEADER_STRING, Authentication.GetAuthorizationValue(USER_ID))
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
 					.param("user_id", USER_ID)
 
 			)

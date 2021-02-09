@@ -1,5 +1,6 @@
 package com.insrb.app.util;
 
+import com.insrb.app.exception.SearchException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,13 +8,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.insrb.app.exception.SearchException;
+import kong.unirest.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONArray;
 
 @SuppressWarnings("unchecked")
 public class QuoteUtil {
+
 	public static String GetNewQuoteNo(String prefix) {
 		// DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		// DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -22,7 +23,7 @@ public class QuoteUtil {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		Date date = new Date();
 		return prefix + dateFormat.format(date);
-	}    
+	}
 
 	public static Map<String, Object> GetCoverSummary(List<Map<String, Object>> items) {
 		int cnt_sedae = 0;
@@ -63,9 +64,10 @@ public class QuoteUtil {
 		Map<String, Object> header = (Map<String, Object>) response.get("header");
 
 		// if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-		if (!"00".equals(header.get("resultCode"))) throw new SearchException("주소 검색 응답 오류");
+		if (!"00".equals(header.get("resultCode"))) throw new SearchException("건축물 대장 표제부 검색이 원할하지 않습니다.\n관리자에게 문의하십시요.");
 
 		Map<String, Object> body = (Map<String, Object>) response.get("body");
+		if (body.get("items") instanceof String) throw new SearchException("해당 물건은 표제부가 없습니다.\n관리자에게 문의하십시요.");
 		Map<String, Object> items = (Map<String, Object>) body.get("items");
 
 		List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();
@@ -76,13 +78,12 @@ public class QuoteUtil {
 		} else { //리스트로 올 경우
 			item = (List<Map<String, Object>>) items.get("item");
 		}
-		if (items == null || items.size() < 1) throw new SearchException("주소 검색 결과 = 0 오류");
+		if (items == null || items.size() < 1) throw new SearchException("해당 물건은 표제부가 없습니다.\n관리자에게 문의하십시요.");
 
 		return item;
 	}
 
-
-	public static  List<Map<String, Object>> getDetailItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
+	public static List<Map<String, Object>> getDetailItemFromHouseInfo(Map<String, Object> search) throws ResponseStatusException {
 		Map<String, Object> response = (Map<String, Object>) search.get("response");
 		Map<String, Object> header = (Map<String, Object>) response.get("header");
 
@@ -98,13 +99,11 @@ public class QuoteUtil {
 			item.add((Map<String, Object>) items.get("item"));
 		} else { //리스트로 올 경우
 			List<Map<String, Object>> list = (List<Map<String, Object>>) items.get("item");
-			for(Map<String, Object> row : list){
-				if(InsuStringUtil.equals((String)row.get("exposPubuseGbCdNm"), "전유"))
-				item.add(row);
+			for (Map<String, Object> row : list) {
+				if (InsuStringUtil.Equals((String) row.get("exposPubuseGbCdNm"), "전유")) item.add(row);
 			}
 		}
 
 		return item;
 	}
-
 }

@@ -1,13 +1,13 @@
 package com.insrb.app.exception;
 
-public class AuthExpiredException extends Exception {
+public class InsuEncryptException extends Exception {
 
   /**
    *
    */
   private static final long serialVersionUID = 1L;
 
-  public AuthExpiredException(String message) {
+  public InsuEncryptException(String message) {
       super(message);
   }
 

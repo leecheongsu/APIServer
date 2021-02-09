@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insrb.app.exception.AuthException;
-import com.insrb.app.exception.AuthExpiredException;
+import com.insrb.app.exception.InsuAuthException;
+import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.insurance.AddressSearch;
@@ -16,7 +16,7 @@ import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
-import com.insrb.app.util.Authentication;
+import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
@@ -168,23 +168,23 @@ public class WWController {
 		String caDn = (String) data.get("ca_dn");
 		Map<String, Object> ww_info = (Map<String, Object>) data.get("ww_info");
 
-		if (InsuStringUtil.isEmpty(user_id)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user_id");
-		if (InsuStringUtil.isEmpty(caSerial)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caSerial");
-		if (InsuStringUtil.isEmpty(caDn)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caDn");
+		if (InsuStringUtil.IsEmpty(user_id)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user_id");
+		if (InsuStringUtil.IsEmpty(caSerial)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caSerial");
+		if (InsuStringUtil.IsEmpty(caDn)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caDn");
 		if (ww_info == null || ww_info.size() == 0) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No(Empty) ww_info");
 
 		try {
-			Authentication.ValidateAuthHeader(auth_header, user_id);
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			log.info("현대해상 premium 요청");
 			return "OK";
 			// return hi.batch(caSerial, caDn, ww_info);
 			// } catch (WWException e) {
 			// 	log.error("/ww/premium: {}", e.getMessage());
 			// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
-		} catch (AuthException e) {
+		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-		} catch (AuthExpiredException e) {
+		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}

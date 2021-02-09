@@ -3,7 +3,7 @@ package com.insrb.app.util.cyper;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import com.insrb.app.exception.EncryptException;
+import com.insrb.app.exception.InsuEncryptException;
 
 public class UserInfoCyper {
     private static String SALT = "insurobo";
@@ -17,14 +17,14 @@ public class UserInfoCyper {
      * @return String
      * @throws Exception
      */
-    public static String EncryptMobile(String data) throws EncryptException {
+    public static String EncryptMobile(String data) throws InsuEncryptException {
         Key key = TripleDESUtil.createKey(SALT);
         String enc = TripleDESUtil.encrypt(key, data);
         return enc;
     }
 
 
-    public static String DecryptMobile(String data) throws EncryptException {
+    public static String DecryptMobile(String data) throws InsuEncryptException {
         Key key = TripleDESUtil.createKey(SALT);
         String dec = TripleDESUtil.decrypt(key, data);
         return dec;
@@ -37,7 +37,7 @@ public class UserInfoCyper {
      * @return String
      * @throws Exception
      */
-    public static String EncryptJuminb(String juminB) throws EncryptException {
+    public static String EncryptJuminb(String juminB) throws InsuEncryptException {
         Key key = TripleDESUtil.createKey(SALT);
         return TripleDESUtil.encrypt(key, juminB);
     }
@@ -51,12 +51,12 @@ public class UserInfoCyper {
      * @throws Exception
      */
     public static String EncryptPassword(String emailAsSalt, String plainPassword)
-            throws EncryptException {
+            throws InsuEncryptException {
         byte[] txt;
         try {
             txt = SHA256Util.hashAfterConcat(plainPassword, emailAsSalt);
         } catch (NoSuchAlgorithmException e) {
-            throw new EncryptException(e.getMessage());
+            throw new InsuEncryptException(e.getMessage());
         }
         return  Base64.getEncoder().encodeToString(txt);
     }

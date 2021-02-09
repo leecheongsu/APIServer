@@ -14,7 +14,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
-import com.insrb.app.exception.EncryptException;
+import com.insrb.app.exception.InsuEncryptException;
 
 public class TripleDESUtil {
 
@@ -28,7 +28,7 @@ public class TripleDESUtil {
      * TDES 키 생성 로직 : hash 값을 24 bytes(8bytes 씩 3개씩 사용하는 Triple DES 요건) 사용함. DESede : Triple DES 의
      * 자바 표현
      */
-    public static Key createKey(final String salt) throws EncryptException {
+    public static Key createKey(final String salt) throws InsuEncryptException {
 
         byte[] hash;
         try {
@@ -46,7 +46,7 @@ public class TripleDESUtil {
 
             return keyFactory.generateSecret(desKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException e) {
-            throw new EncryptException(e.getMessage());
+            throw new InsuEncryptException(e.getMessage());
         }
 
     }
@@ -54,7 +54,7 @@ public class TripleDESUtil {
     /**
      * 문자열 대칭 암호화 return String 암호화된 문자열
      */
-    public static String encrypt(final Key key, final String input) throws EncryptException {
+    public static String encrypt(final Key key, final String input) throws InsuEncryptException {
 
         if (input == null || input.length() == 0)
             return "";
@@ -72,14 +72,14 @@ public class TripleDESUtil {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
                 | UnsupportedEncodingException | IllegalBlockSizeException
                 | BadPaddingException e) {
-            throw new EncryptException(e.getMessage());
+            throw new InsuEncryptException(e.getMessage());
         }
     }
 
     /**
      * 문자열 대칭 복호화 return String 복호화된 문자열
      */
-    public static String decrypt(final Key key, final String input) throws EncryptException {
+    public static String decrypt(final Key key, final String input) throws InsuEncryptException {
 
         if (input == null || input.length() == 0)
             return "";
@@ -96,7 +96,7 @@ public class TripleDESUtil {
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
                 | IllegalBlockSizeException | BadPaddingException
                 | UnsupportedEncodingException e) {
-            throw new EncryptException(e.getMessage());
+            throw new InsuEncryptException(e.getMessage());
         }
     }
 }
