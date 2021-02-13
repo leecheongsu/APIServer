@@ -66,8 +66,15 @@ public class WWController {
 
 	@GetMapping(path = "juso")
 	public Map<String, Object> juso(@RequestParam(name = "search", required = true) String search) {
-		Map<String, Object> result = addressSearch.getJusoList(search);
-		return result;
+		// Map<String, Object> result = addressSearch.getJusoList(search);
+		// return result;
+
+		try {
+			return addressSearch.getJusoList(search);
+		} catch (SearchException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+		}
+
 	}
 
 	@GetMapping(path = "cover")

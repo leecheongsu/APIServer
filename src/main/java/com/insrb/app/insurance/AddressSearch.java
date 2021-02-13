@@ -1,6 +1,9 @@
 package com.insrb.app.insurance;
 
 import java.util.Map;
+import java.util.Objects;
+import com.insrb.app.exception.SearchException;
+import com.insrb.app.util.InsuStringUtil;
 import org.json.XML;
 import org.springframework.stereotype.Component;
 import kong.unirest.HttpResponse;
@@ -29,8 +32,9 @@ public class AddressSearch {
 	 *
 	 * @param search
 	 * @return JSONObject
+	 * @throws SearchException
 	 */
-	public Map<String, Object> getJusoList(String search) {
+	public Map<String, Object> getJusoList(String search) throws SearchException {
 		log.info("getJusoList:" + search);
 		HttpResponse<JsonNode> res = Unirest
 			.post(JUSO_GO_KR_URL)
@@ -44,6 +48,17 @@ public class AddressSearch {
 			.asJson();
 
 		JSONObject json = res.getBody().getObject();
+		log.info(json.toString());
+		if(Objects.isNull(json)) throw new SearchException("응답이없습니다");
+		String errCode = json.getJSONObject("results").getJSONObject("common").getString("errorCode");
+		if(!InsuStringUtil.Equals(errCode, "0")){
+			String errorMessage = json.getJSONObject("results").getJSONObject("common").getString("errorMessage");
+			throw new SearchException(errorMessage);
+		}
+		String totalCount = json.getJSONObject("results").getJSONObject("common").getString("totalCount");
+		if(InsuStringUtil.Equals(totalCount, "0")){
+			throw new SearchException("조회된 데이터가 없습니다.");
+		}
 		return json.toMap();
 	}
 

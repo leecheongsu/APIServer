@@ -80,13 +80,13 @@ public class UsersControllerTest {
 	}
 
 	@Test
-	@DisplayName("UI-APP-004 회원가입:  POST /users 파라미터가 없으면 400 BAD_REQUEST를 리턴해야한다")
+	@DisplayName("UI-APP-004 회원가입:  POST /users 파라미터가 없으면 40 Bad Request를 리턴해야한다")
 	public void UIAPP004_01() throws Exception {
 		mockMvc.perform(post("/users").header("X-insr-servicekey", SERVICE_KEY)).andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
-	@DisplayName("UI-APP-004 회원가입: POST /users 전화번호가 숫자가 아니면 400 BAD_REQUEST를 리턴해야한다")
+	@DisplayName("UI-APP-004 회원가입: POST /users 전화번호가 숫자가 아니면 417 Expection Failed를 리턴해야한다")
 	public void UIAPP004_02() throws Exception {
 		mockMvc
 			.perform(
@@ -101,11 +101,11 @@ public class UsersControllerTest {
 					.param("sex", mockUser.get("sex"))
 			)
 			.andDo(print())
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isExpectationFailed());
 	}
 
 	@Test
-	@DisplayName("UI-APP-004 회원가입: POST /users 주민번호가 숫자가 아니면 400 BAD_REQUEST를 리턴해야한다")
+	@DisplayName("UI-APP-004 회원가입: POST /users 주민번호가 숫자가 아니면 417 Expedtation Failed 를 리턴해야한다")
 	public void UIAPP004_03() throws Exception {
 		mockMvc
 			.perform(
@@ -120,7 +120,7 @@ public class UsersControllerTest {
 					.param("sex", mockUser.get("sex"))
 			)
 			.andDo(print())
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isExpectationFailed());
 	}
 
 	@Test

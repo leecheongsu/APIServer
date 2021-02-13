@@ -13,9 +13,12 @@ public class InsuStringUtil {
 		if (str1.equals(str2)) return true; else return false;
 	}
 
-	public static int ToIntOrDefault(String str, int dflt) {
+	public static int ToIntOrDefault(Object obj, int dflt) {
 		int i = dflt;
-		i = Integer.parseInt(str);
+		try{
+			if (obj instanceof Integer) i = (Integer) obj; else i = Integer.parseInt((String) obj);
+		}catch(NumberFormatException e){
+		}
 		return i;
 	}
 }

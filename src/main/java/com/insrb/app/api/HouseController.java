@@ -8,10 +8,12 @@ import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +43,11 @@ public class HouseController {
 
 	@GetMapping(path = "juso")
 	public Map<String, Object> juso(@RequestParam(name = "search", required = true) String search) {
-		return addressSearch.getJusoList(search);
+		try {
+			return addressSearch.getJusoList(search);
+		} catch (SearchException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+		}
 	}
 
 	@PostMapping(path = "quotes/danche")
@@ -51,6 +57,7 @@ public class HouseController {
 		@RequestParam(name = "bun", required = true) int bun,
 		@RequestParam(name = "ji", required = true) int ji
 	) {
+		log.info("quotes/danche:{},{},{},{}", sigungucd, bjdongcd, bun, ji);
 		try {
 			Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
 			List<Map<String, Object>> items = QuoteUtil.GetItemFromHouseInfo(search);
@@ -69,9 +76,9 @@ public class HouseController {
 			if (InsuStringUtil.IsEmpty(building_type) || InsuStringUtil.Equals(building_type, "ETC")) {
 				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
 			}
-			// 16층 이상은 가입할 수 없다.
-			if (InsuStringUtil.ToIntOrDefault((String) cover.get("max_grnd_flr_cnt"), 0) > 15) {
-				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "15층 이상은 가입할 수 없습니다.");
+			// 16층 이상 건물은 가입할 수 없다.
+			if (InsuStringUtil.ToIntOrDefault(cover.get("max_grnd_flr_cnt"), 0) > 15) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 			}
 			// TODO: 3,4등급 가입 불가 로직 구현할 것.
 
@@ -153,12 +160,12 @@ public class HouseController {
 		if (InsuStringUtil.IsEmpty(building_type)) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
 		}
-		if (InsuStringUtil.ToIntOrDefault((String) cover.get("grndFlrCnt"), 0) > 15) {
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "15층 이상은 가입할 수 없습니다.");
+		if (InsuStringUtil.ToIntOrDefault(cover.get("grndFlrCnt"), 0) > 15) {
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 		}
 
+		String quote_no = QuoteUtil.GetNewQuoteNo("q");
 		try {
-			String quote_no = QuoteUtil.GetNewQuoteNo("q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
@@ -185,6 +192,14 @@ public class HouseController {
 			List<Map<String, Object>> in002t = in002tMapper.selectById(quote_no);
 			data.put("premiums", in002t);
 			return data;
+		} catch (DataAccessException e) {
+			log.error("/house/quotes/sedae:{}, {}", quote_no, e.getMessage());
+			if (e.getRootCause() instanceof SQLException) {
+				SQLException sqlEx = (SQLException) e.getRootCause();
+				int sqlErrorCode = sqlEx.getErrorCode();
+				log.error("/house/quotes/sedae:{}, sqlErrorCode:{}", quote_no, sqlErrorCode);
+			}
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		} catch (Exception e) {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());

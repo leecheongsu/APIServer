@@ -11,9 +11,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.insrb.app.util.InsuStringUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -32,15 +32,22 @@ public class AuthFilter implements Filter {
 	 * @throws ServletException
 	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest  request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String service_key = req.getHeader("X-insr-servicekey");
 		log.info("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
 
+		// 시스템 외부에서 들어오는 요청은 인증 체크를 하지 않는다.
+		String path = req.getRequestURI();
+		if ("/okcert/house/rtn".equals(path) || "/okcert/ww/rtn".equals(path)) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		if (service_key == null) {
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid access.");
-		} else if (!InsuStringUtil.equals(service_key, SERVICE_KEY)) {
+		} else if (!InsuStringUtil.Equals(service_key, SERVICE_KEY)) {;
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid service key.");
 		} else {
 			chain.doFilter(request, response);

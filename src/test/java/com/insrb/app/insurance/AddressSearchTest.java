@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
+import com.insrb.app.exception.SearchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AddressSearchTest {
 
     @Test
     @DisplayName("주소 검색시 오류코드가 0 으로 오류가 나지 않아야한다.")
-    public void test_getJusoList1() {
+    public void test_getJusoList1() throws SearchException {
         Map<String, Object> search = address.getJusoList(SEARCH_TXT);
         Map<String, Object> results = (Map<String, Object>) search.get("results");
         Map<String, Object> common = (Map<String, Object>) results.get("common");
@@ -29,7 +30,7 @@ public class AddressSearchTest {
 
     @Test
     @DisplayName("주소 검색시 결과가 1이상이어야 한다.")
-    public void test_getJusoList2() {
+    public void test_getJusoList2() throws SearchException {
         Map<String, Object> search = address.getJusoList(SEARCH_TXT);
         Map<String, Object> results = (Map<String, Object>) search.get("results");
         List<Map<String, Object>> juso = (List<Map<String, Object>>) results.get("juso");
@@ -38,7 +39,7 @@ public class AddressSearchTest {
 
     @Test
     @DisplayName("검색된 주소 결과로 표제부 데이터를 가져온다.")
-    public void test_getHouseInfo1() {
+    public void test_getHouseInfo1() throws SearchException {
         Map<String, Object> search = address.getJusoList(SEARCH_TXT);
         Map<String, Object> results = (Map<String, Object>) search.get("results");
         List<Map<String, Object>> juso = (List<Map<String, Object>>) results.get("juso");
@@ -56,7 +57,7 @@ public class AddressSearchTest {
 
     @Test
     @DisplayName("검색된 주소 결과  이름이 검색시 사용한 빌딩이름과 같아야 한다.")
-    public void test_getHouseInfo2() {
+    public void test_getHouseInfo2() throws SearchException {
         Map<String, Object> search = address.getJusoList(SEARCH_TXT);
         Map<String, Object> results = (Map<String, Object>) search.get("results");
         List<Map<String, Object>> juso = (List<Map<String, Object>>) results.get("juso");

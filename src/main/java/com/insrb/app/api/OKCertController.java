@@ -1,14 +1,20 @@
 package com.insrb.app.api;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.mapper.IN007TMapper;
 import com.insrb.app.util.InsuAuthentication;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import kcb.module.v3.OkCert;
+import kcb.module.v3.exception.OkCertException;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kcb.module.v3.OkCert;
-import kcb.module.v3.exception.OkCertException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -43,8 +45,8 @@ public class OKCertController {
 	//String popupUrl = "";	// 테스트 URL
 	private static String POPUP_URL = "https://safe.ok-name.co.kr/CommonSvl"; // 운영 URL
 
-	// @Value("classpath:basic/V44820000000_IDS_01_PROD_AES_license.dat")
-	// private Resource licenseResource;
+	@Value("classpath:basic/V44820000000_IDS_01_PROD_AES_license.dat")
+	private Resource licenseResource;
 
 	@GetMapping(path = "/house")
 	public Map<String, Object> page(
@@ -59,7 +61,7 @@ public class OKCertController {
 			// 서비스명 (고정값)
 			String svcName = "IDS_HS_POPUP_START";
 			// TODO: http --> 나중에 https 로 바꿀것...URL을 통째로 바꿀것.
-			// String RETURN_URL = "http://" + request.getServerName() + ":8080/okcert/rtn"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
+			// String RETURN_URL = "http://" + request.getServerName() + ":8080/okcert/house/rtn"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
 			String RETURN_URL = "http://210.179.175.145/okcert/house/rtn"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
 
 			// okcert3 요청 정보
@@ -73,8 +75,9 @@ public class OKCertController {
 
 			// okcert3 실행
 			OkCert okcert = new OkCert();
-			String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr);
-
+			// String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr);
+			java.io.InputStream is = licenseResource.getInputStream(); // new java.io.FileInputStream(license);	// 환경에 맞게 InputStream 로드
+			String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr, is);
 			JSONObject resJson = new JSONObject(resultStr);
 
 			String RSLT_CD = resJson.getString("RSLT_CD");
@@ -108,7 +111,7 @@ public class OKCertController {
 
 	@PostMapping(path = "/house/rtn", produces = MediaType.TEXT_HTML_VALUE)
 	@ResponseBody
-	public String rtn(HttpServletRequest request) throws OkCertException {
+	public String rtn(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");
 
 		// 서비스명 (고정값)
@@ -123,7 +126,10 @@ public class OKCertController {
 		// okcert3 실행
 		OkCert okcert = new OkCert();
 
-		String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr);
+		// String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr);
+
+		java.io.InputStream is = licenseResource.getInputStream(); // new java.io.FileInputStream(license);	// 환경에 맞게 InputStream 로드
+		String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr, is);
 
 		JSONObject resJson = new JSONObject(resultStr);
 
