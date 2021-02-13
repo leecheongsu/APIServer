@@ -61,8 +61,8 @@ public class OKCertController {
 			// 서비스명 (고정값)
 			String svcName = "IDS_HS_POPUP_START";
 			// TODO: http --> 나중에 https 로 바꿀것...URL을 통째로 바꿀것.
-			// String RETURN_URL = "http://" + request.getServerName() + ":8080/okcert/house/rtn"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
-			String RETURN_URL = "http://210.179.175.145/okcert/house/rtn"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
+			// String RETURN_URL = "http://" + request.getServerName() + ":8080/okcert/rtn/house"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
+			String RETURN_URL = "http://210.179.175.145/okcert/rtn/house"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
 
 			// okcert3 요청 정보
 			JSONObject reqJson = new JSONObject();
@@ -109,7 +109,8 @@ public class OKCertController {
 		}
 	}
 
-	@PostMapping(path = "/house/rtn", produces = MediaType.TEXT_HTML_VALUE)
+	// 아래 URL은 Filterconfig에서 Rule Out되어야 함.
+	@PostMapping(path = "/rtn/house", produces = MediaType.TEXT_HTML_VALUE)
 	@ResponseBody
 	public String rtn(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");

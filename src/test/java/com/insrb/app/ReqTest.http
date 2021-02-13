@@ -1,5 +1,5 @@
 ### 주소검색 해들목휴먼빌
-GET http://localhost:8080/house/juso?search=현대아
+GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 # 2021-02-09 08:49:25.023  INFO 26420 --- [0-19 [web01-60]] com.insrb.app.insurance.AddressSearch    : getJusoList:현대아파트
