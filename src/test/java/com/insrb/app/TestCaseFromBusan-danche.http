@@ -2,74 +2,74 @@
 ### 2 부산광역시 해운대구 달맞이길117번다길 130-1
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번다길 130-1
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 3 부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 4 부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1501&ji=0004
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10600&bun=1501&ji=0004
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 5 부산광역시 해운대구 재반로270번길 37-34 정우빌라. 공동주택과 단독주택이 같이 있음. 각각의 단가 구하는 방식으로 수정.
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10300&bun=1584&ji=0008
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10300&bun=1584&ji=0008
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 9 서울특별시 동대문구 왕산로28길 3-1
 GET http://localhost:8080/house/juso?search=서울특별시 동대문구 왕산로28길 3-1
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=11230&bjdongcd=10200&bun=23&ji=24
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=11230&bjdongcd=10200&bun=23&ji=24
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 17 경기도 성남시 수정구 성남대로1379번길 15-1
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=경기도 성남시 수정구 성남대로1379번길 15-1
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부
 GET http://localhost:8080/house/cover?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 전유부
 GET http://localhost:8080/house/detail?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002&dongnm=
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견젹요청
 POST http://localhost:8080/house/quotes/danche?sigungucd=41131&bjdongcd=10700&bun=0583&ji=0002
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 
@@ -79,54 +79,54 @@ X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
 
 ### 표제부 다세대: 서울특별시 서대문구 증가로24가길 33
 GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0007
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청 다세대: 서울특별시 서대문구 증가로24가길 33 
 POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0007
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 표제부 일반주택:  서울특별시 서대문구 증가로24다길 5 
 GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0067
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청 일반주택:  서울특별시 서대문구 증가로24다길 5 
 POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0067
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ###  주소검색
 GET http://localhost:8080/house/juso?search=두산더랜드파크
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 두산더랜드파크
 GET http://localhost:8080/house/cover?sigungucd=11500&bjdongcd=10500&bun=0757&ji=0000
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 견젹요청 단체 두산더랜드파크, 주택화재 대상 아님->406 error
 POST http://localhost:8080/house/quotes/danche?sigungucd=11500&bjdongcd=10500&bun=0757&ji=0000
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 표제부 해들목휴먼빌
 GET http://localhost:8080/house/cover?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 전유부 해들목휴먼빌
 GET http://localhost:8080/house/detail?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002&dongnm=
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 견젹요청 단체 해들목휴먼빌
 POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0002&ji=0002
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 표제부 서울특별시 동작구 등용로 127(현대아파트)
 GET http://localhost:8080/house/cover?sigungucd=11590&bjdongcd=10800&bun=0502&ji=0000
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 전유부 서울특별시 동작구 등용로 127(현대아파트) : Data가 너무 많다. -> 동요청
 GET http://localhost:8080/house/detail?sigungucd=11590&bjdongcd=10800&bun=0502&ji=0000&dongnm=105동
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 
 ### 견젹요청 단체 서울특별시 동작구 등용로 127(현대아파트)
 POST http://localhost:8080/house/quotes/danche?sigungucd=11590&bjdongcd=10800&bun=0502&ji=0000
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ###
 {
@@ -137,7 +137,7 @@ X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
 }
 ### 견적요청 세대별 :해들목휴먼빌 501호 - 표제부 1, 전유부 1
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {

@@ -91,7 +91,7 @@ public class WWController {
 
 			Map<String, Object> data = new HashMap<String, Object>();
 			Map<String, Object> cover = QuoteUtil.GetCoverSummary(items);
-			String quote_no = QuoteUtil.GetNewQuoteNo("w");
+			String quote_no = QuoteUtil.GetNewQuoteNo("W");
 
 			in010tMapper.ww_insert(
 				quote_no,

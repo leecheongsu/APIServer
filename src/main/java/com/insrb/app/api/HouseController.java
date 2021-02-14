@@ -1,17 +1,17 @@
 package com.insrb.app.api;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.mapper.IN001TMapper;
 import com.insrb.app.mapper.IN002TMapper;
+import com.insrb.app.mapper.IN006CMapper;
 import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -31,6 +32,9 @@ public class HouseController {
 
 	@Autowired
 	AddressSearch addressSearch;
+
+	@Autowired
+	IN006CMapper in006cMapper;
 
 	@Autowired
 	IN001TMapper in001tMapper;
@@ -82,7 +86,7 @@ public class HouseController {
 			}
 			// TODO: 3,4등급 가입 불가 로직 구현할 것.
 
-			String quote_no = QuoteUtil.GetNewQuoteNo("q");
+			String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
@@ -108,6 +112,8 @@ public class HouseController {
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
 			List<Map<String, Object>> detail = in002tMapper.selectById(quote_no);
 			data.put("premiums", detail);
+			Map<String, Object> prodcut = in006cMapper.selectByPcode("m002");
+			data.put("prodcut", prodcut);
 			return data;
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
@@ -164,7 +170,7 @@ public class HouseController {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 		}
 
-		String quote_no = QuoteUtil.GetNewQuoteNo("q");
+		String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 		try {
 			in010tMapper.fireinsurance_insert(
 				quote_no,
@@ -191,6 +197,8 @@ public class HouseController {
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
 			List<Map<String, Object>> in002t = in002tMapper.selectById(quote_no);
 			data.put("premiums", in002t);
+			Map<String, Object> prodcut = in006cMapper.selectByPcode("m002");
+			data.put("prodcut", prodcut);
 			return data;
 		} catch (DataAccessException e) {
 			log.error("/house/quotes/sedae:{}, {}", quote_no, e.getMessage());
