@@ -12,21 +12,22 @@ public interface IN003TMapper {
 		String insurant_a,
 		String insurant_b,
 		int premium,
-		String insdate,
+		Date insdate,
 		Date ins_from,
 		Date ins_to,
-		int ptype,
+		String ptype,
 		String insloc,
 		String mobile,
 		String email,
+		String poption,
+		String receipt_id,
 		String pbohumja_mobile,
 		String jumin,
-		String user_id,
-		int o_by,
 		String owner,
 		String pbohumja_birth,
-		int advisor_no
-	);
+		String advisor_no,
+		String already_group_ins
+		);
 	void delete(String quote_no);
 
 	HashMap<String, Object> selectById(String quote_no);

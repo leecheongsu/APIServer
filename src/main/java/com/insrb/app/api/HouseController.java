@@ -112,8 +112,8 @@ public class HouseController {
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
 			List<Map<String, Object>> detail = in002tMapper.selectById(quote_no);
 			data.put("premiums", detail);
-			Map<String, Object> prodcut = in006cMapper.selectByPcode("m002");
-			data.put("prodcut", prodcut);
+			Map<String, Object> product = in006cMapper.selectByPcode("m002");
+			data.put("product", product);
 			return data;
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
@@ -197,8 +197,8 @@ public class HouseController {
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
 			List<Map<String, Object>> in002t = in002tMapper.selectById(quote_no);
 			data.put("premiums", in002t);
-			Map<String, Object> prodcut = in006cMapper.selectByPcode("m002");
-			data.put("prodcut", prodcut);
+			Map<String, Object> product = in006cMapper.selectByPcode("m002");
+			data.put("product", product);
 			return data;
 		} catch (DataAccessException e) {
 			log.error("/house/quotes/sedae:{}, {}", quote_no, e.getMessage());

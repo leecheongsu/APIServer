@@ -4,29 +4,54 @@
 <mapper namespace="com.insrb.app.mapper.IN003TMapper">
 	<insert id="insert">
 		insert into in003t
-			(quote_no, prod_code, opayment, polholder, insurant_a, insurant_b, premium, insdate, ins_from, ins_to, ptype, insloc, mobile, email, pbohumja_mobile, odate, jumin, user_id, o_by, owner, pbohumja_birth, advisor_no)
-		values (#{quote_no}, 
-				#{prod_code}, 
-				#{opayment}, 
-				#{polholder}, 
-				#{insurant_a}, 
-				#{insurant_b}, 
-				#{premium}, 
-				#{insdate}, 
-				#{ins_from}, 
-				#{ins_to}, 
-				#{ptype}, 
-				#{insloc}, 
-				#{mobile}, 
-				#{email}, 
-				#{pbohumja_mobile}, 
-				sysdate, 
-				#{jumin}, 
-				#{user_id}, 
-				#{o_by}, 
-				#{owner}, 
-				#{pbohumja_birth}, 
-				#{advisor_no})
+			(
+				quote_no,
+				prod_code,
+				opayment,
+				polholder,
+				insurant_a,
+				insurant_b,
+				premium,
+				insdate,
+				ins_from,
+				ins_to,
+				ptype,
+				insloc,
+				mobile,
+				email,
+				poption,
+				receipt_id,
+				pbohumja_mobile,
+				jumin,
+				owner,
+				pbohumja_birth,
+				advisor_no,
+				already_group_ins
+			)
+		values (
+				#{quote_no},
+				#{prod_code},
+				#{opayment},
+				#{polholder},
+				#{insurant_a},
+				#{insurant_b},
+				#{premium},
+				#{insdate},
+				#{ins_from},
+				#{ins_to},
+				#{ptype},
+				#{insloc},
+				#{mobile},
+				#{email},
+				#{poption},
+				#{receipt_id},
+				#{pbohumja_mobile},
+				#{jumin},
+				#{owner},
+				#{pbohumja_birth},
+				#{advisor_no},
+				#{already_group_ins}			
+		)
 	</insert>
 
 	<delete id="delete">

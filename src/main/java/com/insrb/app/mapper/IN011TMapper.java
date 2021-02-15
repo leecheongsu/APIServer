@@ -2,7 +2,6 @@ package com.insrb.app.mapper;
 
 public interface IN011TMapper {
 	void insert(
-		String user_id,
 		String quote_no,
 		int termsA_1,
 		int termsA_2,

@@ -7,4 +7,18 @@
 		  from in002t 
 		 where quote_no = #{quote_no}
 	</select> 
+
+	<update id="updateAplyYnAllToNById">
+		update in002t
+		   set aply_yn = 'N'
+		 where quote_no = #{quote_no}
+	</update>
+
+	<update id="updateAplyYnToYBySeq">
+		update in002t
+		   set aply_yn = 'Y'
+		 where quote_no = #{quote_no}
+		   and seq = #{seq}
+	</update>
+
 </mapper>

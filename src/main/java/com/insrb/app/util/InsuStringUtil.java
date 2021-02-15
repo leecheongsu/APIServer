@@ -21,4 +21,5 @@ public class InsuStringUtil {
 		}
 		return i;
 	}
+
 }

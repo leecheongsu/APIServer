@@ -4,7 +4,7 @@
 <mapper namespace="com.insrb.app.mapper.IN007TMapper">
 	<insert id="insert">
 		insert into in007t
-			(rslt_name, rslt_birthday, rslt_sex_cd, rslt_ntv_frnr_cd, di, ci, ci_update, tel_com_cd, tel_no, return_msg, now_date)
+			(rslt_name, rslt_birthday, rslt_sex_cd, rslt_ntv_frnr_cd, di, ci, ci_update, tel_com_cd, tel_no, return_msg, quote_no, now_date)
 		values (#{rslt_name}, 
 				#{rslt_birthday}, 
 				#{rslt_sex_cd}, 
@@ -14,6 +14,7 @@
 				#{ci_update}, 
 				#{tel_com_cd}, 
 				#{tel_no}, 
+				#{return_msg}, 
 				#{return_msg}, 
 				sysdate)
 	</insert>
