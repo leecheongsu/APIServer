@@ -29,16 +29,16 @@ public class HouseControllerBusanTest {
 	private MockMvc mockMvc;
 
 	// 단체가입으로 변경
-	// @Value("classpath:static/mock/file_for_test/1.json")
+	// @Value("classpath:mock/file_for_test/1.json")
 	// private Resource test_1_json;
 
-	@Value("classpath:static/mock/file_for_test/6.json")
+	@Value("classpath:mock/file_for_test/6.json")
 	private Resource test_6_json;
 
-	@Value("classpath:static/mock/file_for_test/7.json")
+	@Value("classpath:mock/file_for_test/7.json")
 	private Resource test_7_json;
 
-	@Value("classpath:static/mock/file_for_test/8.json")
+	@Value("classpath:mock/file_for_test/8.json")
 	private Resource test_8_json;
 
 	@Test

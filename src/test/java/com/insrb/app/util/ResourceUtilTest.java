@@ -12,13 +12,13 @@ import kong.unirest.json.JSONObject;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ResourceUtilTest {
-	@Value("classpath:basic/temp_preminum_req_body.json")
-	private Resource tempPreminumReqBodyJson;
+	@Value("classpath:basic/tmpl_preminum_req_body.json")
+	private Resource tmplPreminumReqBodyJson;
 
     @Test
     @DisplayName("Resource를 JSONObject로 변환하여야 한다.")
     public void test03_asJSONObject() throws ParseException{
-        JSONObject obj = ResourceUtil.asJSONObject(tempPreminumReqBodyJson);
+        JSONObject obj = ResourceUtil.asJSONObject(tmplPreminumReqBodyJson);
         assertEquals("", obj.getString("resultCode"));
     }
 }

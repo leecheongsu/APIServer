@@ -32,10 +32,10 @@ public class WWControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Value("classpath:static/mock/pre_premium.json")
+	@Value("classpath:mock/pre_premium.json")
 	private Resource pre_premium_json;
 
-	@Value("classpath:static/mock/premium.json")
+	@Value("classpath:mock/premium.json")
 	private Resource premium_json;
 
 
