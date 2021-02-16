@@ -64,7 +64,9 @@ public class QuoteUtil {
 		Map<String, Object> header = (Map<String, Object>) response.get("header");
 
 		// if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-		if (!"00".equals(header.get("resultCode"))) throw new SearchException("건축물 대장 표제부 검색이 원할하지 않습니다.\n관리자에게 문의하십시요.");
+		if (!"00".equals(header.get("resultCode"))) throw new SearchException(
+			"건축물 대장 표제부 검색이 원할하지 않습니다.\n관리자에게 문의하십시요."
+		);
 
 		Map<String, Object> body = (Map<String, Object>) response.get("body");
 		if (body.get("items") instanceof String) throw new SearchException("해당 물건은 표제부가 없습니다.\n관리자에게 문의하십시요.");
@@ -90,6 +92,7 @@ public class QuoteUtil {
 		if (!"00".equals(header.get("resultCode"))) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 
 		Map<String, Object> body = (Map<String, Object>) response.get("body");
+		if (body.get("items") instanceof String) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 		Map<String, Object> items = (Map<String, Object>) body.get("items");
 
 		List<Map<String, Object>> item = new ArrayList<Map<String, Object>>();

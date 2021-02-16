@@ -20,7 +20,6 @@ public interface IN003TMapper {
 		String mobile,
 		String email,
 		String poption,
-		String receipt_id,
 		String pbohumja_mobile,
 		String jumin,
 		String owner,

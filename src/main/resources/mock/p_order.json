@@ -3,11 +3,12 @@
 	"data": {
 		"quote_no": "Q20210215174317202",
 		"prod_code": "m002",
-		"opayment": 2400,
+		"prod_name":"인슈로보주택종합보험",
+		"opayment": 1100,
 		"polholder": "이근만",
 		"insurant_a": "이근만",
 		"insurant_b": "이근만",
-		"premium": 2400,
+		"premium": 1100,
 		"insdate": "20210215",
 		"ins_from": "20210215",
 		"ins_to": "20220214",
@@ -21,7 +22,12 @@
 		"owner": "o",
 		"pbohumja_birth": "850409",
 		"advisor_no": "2",
-		"receipt_id": "6029cd90d8c1bd001ef759bc",
+		"card": {
+			"card_number" : "4171030633939931",
+			"card_expire" : "2403",
+			"reg_no" : "19681112",
+			"card_pw" : "31"
+		},
 		"terms": {
 			"termsa_1": 1,
 			"termsa_2": 1,

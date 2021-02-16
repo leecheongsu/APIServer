@@ -135,8 +135,8 @@ public class OKCertController {
 		JSONObject resJson = new JSONObject(resultStr);
 
 		String RSLT_CD = resJson.getString("RSLT_CD");
-		String RSLT_MSG = resJson.getString("RSLT_MSG");
-		String TX_SEQ_NO = resJson.getString("TX_SEQ_NO");
+		// String RSLT_MSG = resJson.getString("RSLT_MSG");
+		// String TX_SEQ_NO = resJson.getString("TX_SEQ_NO");
 
 		String html = ""; // 응답 보낼 HTML
 		if ("B000".equals(RSLT_CD)) {

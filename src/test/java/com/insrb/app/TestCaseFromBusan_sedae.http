@@ -1,19 +1,19 @@
 ### 1 부산광역시 해운대구 윗반송로51번길 95-29
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 윗반송로51번길 95-29
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10100&bun=0040&ji=0652
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
-### 전유부 
+### 전유부  getHouseDetailInfo:26350,10100,0040,0652
 GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10100&bun=0040&ji=0652&dongnm=
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견젹요청
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {
@@ -104,19 +104,19 @@ content-type: application/json
 ### 2 부산광역시 해운대구 달맞이길117번다길 130-1
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번다길 130-1
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 표제부 
 GET  http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 전유부 
 GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10600&bun=1493&ji=0005&dongnm=
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견젹요청
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {
@@ -129,18 +129,18 @@ content-type: application/json
 ### 6 부산광역시 해운대구 우동 1388-4 대우마리나1차아파트  101동 202호
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 우동 1388-4 대우마리나1차아파트
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 전유부 
 GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10500&bun=1388&ji=0004&dongnm=101동&honm=202호
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견적 
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {
@@ -271,18 +271,18 @@ content-type: application/json
 ### 7 부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차 에이동 202호
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10600&bun=1501&ji=4
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 전유부 
 GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10600&bun=1501&ji=4&dongnm=에이&honm=202호
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견적 
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {
@@ -413,18 +413,18 @@ content-type: application/json
 ### 7 부산광역시 해운대구 재반로270번길 37-34 정우빌라 202호
 ### 주소검색 
 GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 ### 표제부 
 GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10300&bun=1584&ji=8
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 전유부 
 GET http://localhost:8080/house/detail?sigungucd=26350&bjdongcd=10300&bun=1584&ji=8&dongnm=&honm=201호
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 견적 
 POST http://localhost:8080/house/quotes/sedae
-X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 content-type: application/json
 
 {

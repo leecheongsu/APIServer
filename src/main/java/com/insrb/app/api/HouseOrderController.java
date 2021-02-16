@@ -1,13 +1,10 @@
 package com.insrb.app.api;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import com.insrb.app.exception.BootpayException;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.InsuEncryptException;
+import com.insrb.app.exception.KGInisisException;
 import com.insrb.app.mapper.IN002TMapper;
 import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN007TMapper;
@@ -18,7 +15,15 @@ import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
+import com.insrb.app.util.KGInisisUtil;
+import com.insrb.app.util.KakaoMessageUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -65,82 +68,86 @@ public class HouseOrderController {
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			String quote_no = (String) data.get("quote_no");
-			String receipt_id = (String) data.get("receipt_id");
+			String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
+			int premium = (int) data.get("premium");
+			String mobile = (String) data.get("mobile");
+
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			List<Map<String, Object>> premiums = (List<Map<String, Object>>) data.get("premiums");
-			// log.info("terms:{}", terms.toString());
-			// log.info("premiums:{}", premiums.toString());
-			JSONObject receipt_json = BootpayUtil.ValidateReceipt(receipt_id);
-			insertReceipt(quote_no, receipt_json);
-			insertOrder(quote_no, data);
-			insertTerms(quote_no, terms);
-			updatePremiums(quote_no, premiums);
+			Map<String, Object> card = (Map<String, Object>) data.get("card");
+
+			String card_number = (String) card.get("card_number");
+			String card_expire = (String) card.get("card_expire");
+			String reg_no = (String) card.get("reg_no");
+			String card_pw = (String) card.get("card_pw");
+			try {
+				JSONObject kginisis_json = KGInisisUtil.card(
+					quote_no,
+					prod_name,
+					"인슈로보",
+					user_id,
+					mobile,
+					String.valueOf(premium),
+					card_number,
+					card_expire,
+					reg_no,
+					card_pw
+				);
+				insertIN009T(quote_no, kginisis_json);
+				log.info("terms:{}", terms.toString());
+				log.info("premiums:{}", premiums.toString());
+				// JSONObject receipt_json = BootpayUtil.ValidateReceipt(receipt_id);
+				// insertReceipt(quote_no, receipt_json);
+				insertOrder(quote_no, data);
+				insertTerms(quote_no, terms);
+				updatePremiums(quote_no, premiums);
+				// KakaoMessageUtil.A001(phone, u_name, product, pu_name, pu_insloc, allamount, price, success_num, success, start_date, period)
+			} catch (KGInisisException e) {
+				throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			}
 
 			return quote_no;
-		} catch (ParseException e) {
-			log.error("/house/orders: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 날짜 형식입니다.");
-		} catch (InsuEncryptException e) {
-			log.error("/house/orders: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "암호화에 문제 있습니다.");
+			} catch (ParseException e) {
+				log.error("/house/orders: {}", e.getMessage());
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 날짜 형식입니다.");
+			} catch (InsuEncryptException e) {
+				log.error("/house/orders: {}", e.getMessage());
+				throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "암호화에 문제 있습니다.");
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
 		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
-		} catch (BootpayException e) {
-			log.error("/house/orders: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Bootpay 거래 검증 오류.");
 		}
 	}
 
-	private void insertReceipt(String quote_no, JSONObject json) {
-		String receipt_id = json.getString("receipt_id");
-		String pg = json.getString("pg");
-		String pg_name = json.getString("pg_name");
-		String method = json.getString("method");
-		String method_name = json.getString("method_name");
-		String name = json.getString("name");
-		String order_id = json.getString("order_id");
-		String receipt_url = json.getString("receipt_url");
-		JSONObject payment_data = json.getJSONObject("payment_data");
-		String payment_data_card_name = InsuJsonUtil.IfNullDefault(payment_data,"card_name", "");
-		String payment_data_card_no = InsuJsonUtil.IfNullDefault(payment_data,"card_no", "");
-		String payment_data_card_quota = InsuJsonUtil.IfNullDefault(payment_data,"card_quota", "");
-		String payment_data_card_auth_no = InsuJsonUtil.IfNullDefault(payment_data,"card_auth_no", "");
-		String payment_data_vbank_bankname = InsuJsonUtil.IfNullDefault(payment_data,"vbank_bankname", "");
-		String payment_data_vbank_accountholder = InsuJsonUtil.IfNullDefault(payment_data,"vbank_accountholder", "");
-		String payment_data_vbank_account = InsuJsonUtil.IfNullDefault(payment_data,"vbank_account", "");
-		String payment_data_vbank_expiredate = InsuJsonUtil.IfNullDefault(payment_data,"vbank_expiredate", "");
-		String payment_data_vbank_username = InsuJsonUtil.IfNullDefault(payment_data,"vbank_username", "");
-		String payment_data_vbank_cash_result = InsuJsonUtil.IfNullDefault(payment_data,"vbank_cash_result", "");
-		String price = json.getString("price");
-		String status = json.getString("status");
-		String payment_json = payment_data.toString();
+	private void insertIN009T(String quote_no, JSONObject json) {
+		String tid = json.getString("tid");
+		String resultcode = json.getString("resultCode");
+		String resultmsg = json.getString("resultMsg");
+		String paydate = json.getString("payDate");
+		String paytime = json.getString("payTime");
+		String payauthcode = json.getString("payAuthCode");
+		String cardcode = json.getString("cardCode");
+		String checkflg = json.getString("checkFlg");
+		String payauthquota = json.getString("payAuthQuota");
+		String prtccode = json.getString("prtcCode");
+		int price = json.getInt("price");
+
 		in009tMapper.insert(
-			receipt_id,
 			quote_no,
-			pg,
-			pg_name,
-			method,
-			method_name,
-			name,
-			order_id,
-			receipt_url,
-			payment_data_card_name,
-			payment_data_card_no,
-			payment_data_card_quota,
-			payment_data_card_auth_no,
-			payment_data_vbank_bankname,
-			payment_data_vbank_accountholder,
-			payment_data_vbank_account,
-			payment_data_vbank_expiredate,
-			payment_data_vbank_username,
-			payment_data_vbank_cash_result,
-			price,
-			status,
-			payment_json
+			tid,
+			resultcode,
+			resultmsg,
+			paydate,
+			paytime,
+			payauthcode,
+			cardcode,
+			checkflg,
+			payauthquota,
+			prtccode,
+			price
 		);
 	}
 
@@ -159,7 +166,7 @@ public class HouseOrderController {
 		String mobile = (String) data.get("mobile");
 		String email = (String) data.get("email");
 		String poption = (String) data.get("poption");
-		String receipt_id = (String) data.get("receipt_id");
+		// String receipt_id = (String) data.get("receipt_id");
 		String pbohumja_mobile = (String) data.get("pbohumja_mobile");
 		String enc_pbohumja_mobile = UserInfoCyper.EncryptMobile(pbohumja_mobile);
 
@@ -190,7 +197,6 @@ public class HouseOrderController {
 			mobile,
 			email,
 			poption,
-			receipt_id,
 			enc_pbohumja_mobile, //pbohumja_mobile,
 			encJuminb, //jumin,
 			owner,
