@@ -6,3 +6,13 @@ X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2Vyd
 GET http://localhost:8080/okcert/hello2
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
+
+### KG 이니시스 가상계좌 결제 파라미터
+GET http://localhost:8080/kginicis/vacct/param
+
+
+### KG 이니시스 가상계좌 결제 리턴 테스트
+GET http://localhost:8080/kginicis/noti/house
+    ?P_STATUS=00
+    &P_RMESG1=
+

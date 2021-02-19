@@ -1,30 +1,30 @@
 package com.insrb.app.api;
 
-import com.insrb.app.exception.InsuAuthException;
-import com.insrb.app.exception.InsuAuthExpiredException;
-import com.insrb.app.mapper.IN007TMapper;
-import com.insrb.app.util.InsuAuthentication;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import kcb.module.v3.OkCert;
-import kcb.module.v3.exception.OkCertException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import com.insrb.app.exception.InsuAuthException;
+import com.insrb.app.exception.InsuAuthExpiredException;
+import com.insrb.app.mapper.IN007TMapper;
+import com.insrb.app.util.InsuAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import kcb.module.v3.OkCert;
+import kcb.module.v3.exception.OkCertException;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -110,7 +110,8 @@ public class OKCertController {
 	}
 
 	// 아래 URL은 Filterconfig에서 Rule Out되어야 함.
-	@PostMapping(path = "/rtn/house", produces = MediaType.TEXT_HTML_VALUE)
+	// @PostMapping(path = "/rtn/house", produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(path = "/rtn/house",method = {RequestMethod.POST,RequestMethod.GET}, produces = MediaType.TEXT_HTML_VALUE)
 	@ResponseBody
 	public String rtn(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");

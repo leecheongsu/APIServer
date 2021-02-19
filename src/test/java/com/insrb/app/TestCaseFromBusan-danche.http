@@ -1,3 +1,10 @@
+### TEST
+GET http://localhost:8080/house/juso?search=윗반송로
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
+### TEST
+POST http://localhost:8080/house/quotes/danche?sigungucd=26350&bjdongcd=10100&bun=0216&ji=0264
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 ### 2 부산광역시 해운대구 달맞이길117번다길 130-1
 ### 주소검색 

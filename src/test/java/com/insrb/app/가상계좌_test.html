@@ -1,0 +1,67 @@
+            
+
+<html> 
+<head> 
+<title>INIpay Mobile WEB example</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr"/> 
+
+<script language="javascript"> 
+
+function on_pay() { 
+ form = document.mobileweb; 
+ //form.action = "https://mobile.inicis.com/smart/payment/";
+ //form.action = "http://localhost:8080/vacct";
+ //form.target = "_self";
+ form.submit(); 
+}  
+</script> 
+</head> 
+
+<body>
+
+<!-- 인코딩 euc-kr 필수 -->
+<form name="mobileweb" method="post" accept-charset="euc-kr" action="https://mobile.inicis.com/smart/payment/">
+
+
+<!--*************************필수 세팅 부분************************************-->
+
+<!-- 리턴받는 가맹점 URL 세팅 -->
+<input type="text" name="P_NEXT_URL" value="http://210.218.238.169:8080/kginicis/rtn/house"> 
+ 
+<!-- 입금 결과 통보 URL 세팅 -->
+<input type="text" name="P_NOTI_URL" value="http://210.218.238.169:8080/kginicis/noti/house"> 
+ 
+<!-- 지불수단 선택 (신용카드,계좌이체,가상계좌,휴대폰) -->
+<input type="text" name="P_INI_PAYMENT" value="VBANK"> 
+
+
+<!-- 복합/옵션 파라미터 -->
+<input type="text" name="P_RESERVED" target="vacct" value="twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N"> 
+
+  
+<input type="text" name="P_MID" value="insurobo01"> 
+<input type="text" name="P_OID" value="Q20210218103405486">  
+<input type="text" name="P_GOODS" value="테스트상품1"> 
+<input type="text" name="P_AMT" value="2"> 
+<input type="text" name="P_UNAME" value="김종호"> 
+<input type="text" name="P_MOBILE" value="01047017956"> 
+<input type="text" name="P_EMAIL" value="vigorius@gmail.com"> 
+<input type="text" name="P_CHARSET" value="utf-8"> 
+<input type="text" name="P_VBANK_DT" value="20210218"> 
+<input type="text" name="P_VBANK_TM" value="2359"> 
+<input type="text" name="P_NOTI" value="인슈로보주택종합보험(메리츠화재)"> 
+
+
+<!--*************************선택 필수 세팅 부분************************************--> 
+<!-- 휴대폰결제 필수 [1:컨텐츠, 2:실물] -->
+<input type="text" name="P_HPP_METHOD" value="1">  
+
+
+
+<input type="submit" name="pay" value="결제" >
+
+
+</form> 
+
+</body>
+</html> 

@@ -31,17 +31,35 @@ public class HouseOrderControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Value("classpath:mock/p_order.json")
-	private Resource p_order_json;
+	@Value("classpath:mock/p_order_card.json")
+	private Resource p_order_card_json;
 
+	@Value("classpath:mock/p_order_vacct.json")
+	private Resource p_order_vacct_json;
 
 	@Test
-	@DisplayName("UI-APP-028 계약등록")
+	@DisplayName("UI-APP-028 카드 계약등록")
 	public void UIAPP028_01() throws Exception {
-		String json = ResourceUtil.asString(p_order_json);
+		String json = ResourceUtil.asString(p_order_card_json);
 		mockMvc
 			.perform(
-				post("http://localhost:8080/house/orders")
+				post("http://localhost:8080/house/orders/card")
+					.header("X-insr-servicekey", SERVICE_KEY)
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("UI-APP-028 가상계좌 계약등록")
+	public void UIAPP028_02() throws Exception {
+		String json = ResourceUtil.asString(p_order_vacct_json);
+		mockMvc
+			.perform(
+				post("http://localhost:8080/house/orders/vacct")
 					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(USER_ID))
 					.contentType(MediaType.APPLICATION_JSON)

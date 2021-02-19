@@ -42,7 +42,7 @@ public class UsersControllerTest {
 		mockUser.put("email", "vingorius@gmail.com");
 		mockUser.put("name", "김종호");
 		mockUser.put("teltype", "LG알뜰폰");
-		mockUser.put("mobile", "01047011234");
+		mockUser.put("mobile", "01047017956");
 		mockUser.put("pwd", "1234!!!");
 		mockUser.put("jumina", "980101");
 		mockUser.put("juminb", "094910");

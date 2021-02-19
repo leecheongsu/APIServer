@@ -7,6 +7,7 @@ public interface IN003TMapper {
 	void insert(
 		String quote_no,
 		String prod_code,
+		long amt_ins,
 		int opayment,
 		String polholder,
 		String insurant_a,
@@ -20,6 +21,9 @@ public interface IN003TMapper {
 		String mobile,
 		String email,
 		String poption,
+		String v_bank_name,
+		String v_bank_no,
+		String v_bank_due_date,
 		String pbohumja_mobile,
 		String jumin,
 		String owner,

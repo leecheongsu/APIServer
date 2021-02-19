@@ -15,8 +15,9 @@ public class FilterConfig {
 
 		registrationBean.setFilter(new AuthFilter());
 		// Rule out : /okcert/rtn/*
-		// Rule out : /bootpay/rtn/*
-		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/bootpay/house/*");
+		// Rule out : /kginicis/rtn/*
+		// Rule out : /kginicis/noti/*
+		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/kginicis/vacct/*");
 
 		return registrationBean;
 	}

@@ -7,6 +7,7 @@
 			(
 				quote_no,
 				prod_code,
+				amt_ins,
 				opayment,
 				polholder,
 				insurant_a,
@@ -20,6 +21,9 @@
 				mobile,
 				email,
 				poption,
+				v_bank_name,
+				v_bank_no,
+				v_bank_due_date,
 				pbohumja_mobile,
 				jumin,
 				owner,
@@ -30,6 +34,7 @@
 		values (
 				#{quote_no},
 				#{prod_code},
+				#{amt_ins},
 				#{opayment},
 				#{polholder},
 				#{insurant_a},
@@ -43,6 +48,9 @@
 				#{mobile},
 				#{email},
 				#{poption},
+				#{v_bank_name},
+				#{v_bank_no},
+				#{v_bank_due_date},
 				#{pbohumja_mobile},
 				#{jumin},
 				#{owner},
@@ -57,8 +65,8 @@
 		 where quote_no = #{quote_no}
 	</delete>
 	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
-		select * 
-		  from in003t 
-		 where quote_no = #{quote_no}
+		select a.*, pk_in006c.sf_getPname(prod_code) p_name
+		  from in003t a
+		 where a.quote_no = #{quote_no}
 	</select> 
 </mapper>

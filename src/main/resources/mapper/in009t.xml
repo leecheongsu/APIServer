@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.insrb.app.mapper.IN009TMapper">
-	<insert id="insert">
+	<insert id="insertCard">
 		insert into in009t(
 			quote_no,
+			poption,
 			tid,
 			resultcode,
 			resultmsg,
@@ -19,6 +20,7 @@
 			)
 		values (
 			#{quote_no},
+			3,
 			#{tid},
 			#{resultcode},
 			#{resultmsg},
@@ -32,4 +34,32 @@
 			#{price}
 		)
 	</insert>
+	<insert id="insertVacct">
+		insert into in009t(
+			quote_no,
+			poption,
+			tid,
+			resultcode,
+			resultmsg,
+			vact_auth_dt,
+			vact_fn_cd1,
+			price
+			)
+		values (
+			#{quote_no},
+			5,
+			#{tid},
+			#{resultcode},
+			#{resultmsg},
+			#{vact_auth_dt},
+			#{vact_fn_cd1},
+			#{price}
+		)
+	</insert>
+
+	<delete id="delete">
+		delete from in009t
+		 where tid = #{tid}
+		   and resultcode = #{resultcode}
+	</delete>
 </mapper>
