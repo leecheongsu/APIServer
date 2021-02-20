@@ -1,0 +1,31 @@
+{
+	"resultCode": "",
+	"resultMsg": "",
+	"executeTime": "",
+	"oagi6002vo": {
+		"agmtKind": "01",
+		"ptyKorNm": "?",
+		"regNo1": "?",
+		"regNo2": "?",
+		"emailAddr": "?",
+		"emailDomain": "?",
+		"ptyBizNm": "",
+		"bizNo1": "690",
+		"bizNo2": "87",
+		"bizNo3": "01268",
+		"onnaddrCat": "2",
+		"zip1": "?",
+		"zip2": "?",
+		"addr1": "?",
+		"addr2": "?",
+		"roadNmCd": "?",
+		"trbdCd": "?",
+		"trbdAddr": "?",
+		"elecClauTrYn": "1",
+		"joinBefNotiSelYn": "Y",
+		"certCat": "03",
+		"partnerNo": "4IB078",
+		"partnerIp": "210.179.172.177",
+		"certConfmSeqNo": "1067"
+	}
+}

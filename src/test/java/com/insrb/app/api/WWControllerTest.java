@@ -35,7 +35,7 @@ public class WWControllerTest {
 	@Value("classpath:mock/pre_premium.json")
 	private Resource pre_premium_json;
 
-	@Value("classpath:mock/premium.json")
+	@Value("classpath:mock/premium2.json")
 	private Resource premium_json;
 
 

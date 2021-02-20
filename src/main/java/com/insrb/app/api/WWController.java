@@ -1,8 +1,5 @@
 package com.insrb.app.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insrb.app.exception.InsuAuthException;
@@ -13,6 +10,7 @@ import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.insurance.hi.HiWindWaterInsurance;
 import com.insrb.app.mapper.IN001TMapper;
 import com.insrb.app.mapper.IN005TMapper;
+import com.insrb.app.mapper.IN006CMapper;
 import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
@@ -20,6 +18,11 @@ import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -32,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -59,6 +61,9 @@ public class WWController {
 	IN103CMapper in103cMapper;
 
 	@Autowired
+	IN006CMapper in006cMapper;
+
+	@Autowired
 	IN010TMapper in010tMapper;
 
 	@Value("classpath:basic/tmpl_preminum_req_body.json")
@@ -74,7 +79,6 @@ public class WWController {
 		} catch (SearchException e) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		}
-
 	}
 
 	@GetMapping(path = "cover")
@@ -116,8 +120,11 @@ public class WWController {
 			);
 
 			data = in001tMapper.selectById(quote_no);
-			data.put("premiums", in102cMapper.selectAll());
+			data.put("premiums", in102cMapper.selectAll()); //TODO: 김종호, 풍수해에서 이걸 왜 가져오지?
 			data.put("lobz_cds", in103cMapper.selectAll());
+			Map<String, Object> product = in006cMapper.selectByPcode("h007");
+			data.put("product", product);
+
 			// TODO: cover 정보로 template 정보 보완할 것.,
 			// WindWaterInsurance.aspx.cs::BuildingInfoText
 			Map<String, Object> tmpl = ResourceUtil.asMap(tmpl_preminum_req_body_json);
@@ -132,7 +139,7 @@ public class WWController {
 			oagi6002vo.put("objZip2", zip.substring(3));
 			oagi6002vo.put("objAddr1", cover.get("newPlatPlc"));
 			oagi6002vo.put("objAddr2", cover.get("bldNm")); // 굳이 번지까지는 필요없지 않을까?
-			oagi6002vo.put("objRoadNmCd", cover.get("naRoadCd"));
+			oagi6002vo.put("objRoadNmCd", String.valueOf(cover.get("naRoadCd")));
 			oagi6002vo.put("objTrbdCd", sigungucd + bjdongcd);
 			oagi6002vo.put("objTrbdAddr", (String) cover.get("platPlc") + " " + (String) cover.get("bldNm"));
 
@@ -148,6 +155,7 @@ public class WWController {
 	public Map<String, Object> prePremium(@RequestBody(required = true) Map<String, Object> body) {
 		log.info("현대해상 가보험료 요청");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
+		log.info(new JSONObject(data).toString());
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
@@ -164,18 +172,19 @@ public class WWController {
 	}
 
 	@PostMapping(path = "premium")
-	public String premium(
+	public Map<String, Object> premium(
 		@RequestHeader(name = "Authorization", required = false) String auth_header,
 		@RequestBody(required = true) Map<String, Object> body
 	) {
-		log.info("현대해상 보험료 요청");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
+		log.info("현대해상 보험료 요청:{}", new JSONObject(data).toString());
 		String user_id = (String) data.get("user_id");
+		String quote_no = (String) data.get("quote_no"); // hi 안에서 사용함.
 		String caSerial = (String) data.get("ca_serial");
 		String caDn = (String) data.get("ca_dn");
 		Map<String, Object> ww_info = (Map<String, Object>) data.get("ww_info");
-
 		if (InsuStringUtil.IsEmpty(user_id)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user_id");
+		if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
 		if (InsuStringUtil.IsEmpty(caSerial)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caSerial");
 		if (InsuStringUtil.IsEmpty(caDn)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No caDn");
 		if (ww_info == null || ww_info.size() == 0) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No(Empty) ww_info");
@@ -183,11 +192,37 @@ public class WWController {
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			log.info("현대해상 premium 요청");
-			return "OK";
-			// return hi.batch(caSerial, caDn, ww_info);
-			// } catch (WWException e) {
-			// 	log.error("/ww/premium: {}", e.getMessage());
-			// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			JSONObject rtn = hi.premium(data);
+			log.info(rtn.toString());
+			return rtn.toMap();
+		} catch (WWException e) {
+			log.error("/ww/premium: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+		} catch (InsuAuthException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (InsuAuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
+		}
+	}
+
+	@PostMapping(path = "prevent_denial")
+	public String notdeny(
+		@RequestHeader(name = "Authorization", required = false) String auth_header,
+		@RequestBody(required = true) Map<String, Object> body
+	) {
+		try {
+			Map<String, Object> data = (Map<String, Object>) body.get("data");
+			log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
+			String user_id = (String) data.get("user_id");
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
+			log.info("현대해상 부인방지 요청");
+			data.remove("user_id"); //사용자 정보는 빼고 보낸다.
+			return hi.fn_prevent_of_denial(new JSONObject(data));
+		} catch (WWException e) {
+			log.error("/ww/premium: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

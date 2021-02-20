@@ -26,7 +26,7 @@ public class OKCertControllerTest {
 	public void UIAPP033_01() throws Exception {
 		mockMvc
 			.perform(
-				get("http://localhost:8080/okcert").header("X-insr-servicekey", SERVICE_KEY)
+				get("http://localhost:8080/okcert/house").header("X-insr-servicekey", SERVICE_KEY)
 			)
 			.andDo(print())
 			.andExpect(status().isOk())

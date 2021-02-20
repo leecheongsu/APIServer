@@ -41,7 +41,9 @@ public interface IN101TMapper {
 		String lgovtprem,
 		String applno,
 		String scno,
-		String purpose
+		String purpose,
+		String localurltmp,
+		String mappingno
 	);
 	void delete(String quote_no);
 }

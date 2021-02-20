@@ -1,20 +1,16 @@
 package com.insrb.app.api;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import com.insrb.app.exception.KGInicisException;
 import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN009TMapper;
 import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.KakaoMessageUtil;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,9 +19,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 // ref: https://manual.inicis.com/mobile/ 참고
 
@@ -60,8 +59,13 @@ public class KGInicisController {
 	// 아래 URL은 Filterconfig에서 Rule Out되어야 함.
 	// @PostMapping(path = "/rtn/house")
 
-	@RequestMapping(path = "/rtn/house", method = { RequestMethod.POST, RequestMethod.GET }, produces = MediaType.TEXT_HTML_VALUE)
-	@ResponseBody
+	@RequestMapping(
+		path = "/rtn/house",
+		method = { RequestMethod.POST, RequestMethod.GET },
+		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+		produces = MediaType.TEXT_HTML_VALUE
+	)
+	// @ResponseBody
 	public String rtn_house(
 		@RequestParam(name = "P_STATUS", required = false) String P_STATUS,
 		@RequestParam(name = "P_RMESG1", required = false) String P_RMESG1,
@@ -113,7 +117,12 @@ public class KGInicisController {
 
 	// 아래 URL은 Filterconfig에서 Rule Out되어야 함.
 	// @GetMapping(path = "/noti/house")
-	@RequestMapping(path = "/noti/house", method = { RequestMethod.POST, RequestMethod.GET }, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(
+		path = "/noti/house",
+		method = { RequestMethod.POST, RequestMethod.GET },
+		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+		produces = MediaType.TEXT_HTML_VALUE
+	)
 	public String noti_house(
 		@RequestParam(name = "P_STATUS", required = false) String P_STATUS, //거래상태 [00:가상계좌 채번, 02:가상계좌입금통보]
 		@RequestParam(name = "P_TID", required = false) String P_TID, //승인거래번호
