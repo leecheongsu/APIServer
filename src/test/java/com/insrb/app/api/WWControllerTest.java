@@ -40,7 +40,12 @@ public class WWControllerTest {
 
 	@Value("classpath:mock/prevent_denial.json")
 	private Resource prevent_denial_json;
+
 	
+	@Value("classpath:mock/ww_order.json")
+	private Resource ww_order_json;
+
+
 	Map<String, String> mockUser;
 	{
 		mockUser = new HashMap<String, String>();
@@ -148,4 +153,20 @@ public class WWControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
+
+	@Test
+	@DisplayName("UI-APP-03701 풍수해 청약")
+	public void UIAPP037_03() throws Exception {
+		String json = ResourceUtil.asString(ww_order_json);
+		mockMvc
+			.perform(
+				post("http://localhost:8080/ww/order")
+					.header("X-insr-servicekey", SERVICE_KEY)
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}	
 }

@@ -168,13 +168,13 @@ public class KGInicisController {
 	}
 
 	private void sendAI001KakaoMessage(String quote_no) throws KGInicisException {
-		Map<String, Object> order = in003tMapper.selectById(quote_no);
+		Map<String, Object> order = in003tMapper.selectByQuoteNo(quote_no);
 		log.info("order", order.toString());
 		if (Objects.isNull(order) || order.size() == 0) throw new KGInicisException("입금처리할 주문이 없읍니다.");
 		KakaoMessageUtil.AI001(
 			(String) order.get("mobile"),
 			(String) order.get("polholder"),
-			(String) order.get("p_name"), //order.get("p_name"), //상품명
+			(String) order.get("prod_name"), //order.get("p_name"), //상품명
 			(String) order.get("insurant_a"),
 			(String) order.get("insloc"),
 			String.valueOf(order.get("amt_ins")),

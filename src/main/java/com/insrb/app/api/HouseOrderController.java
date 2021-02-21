@@ -15,7 +15,6 @@ import com.insrb.app.mapper.IN009TMapper;
 import com.insrb.app.mapper.IN011TMapper;
 import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
-import com.insrb.app.util.InsuNumberUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.KGInisisUtil;
 import com.insrb.app.util.KakaoMessageUtil;
@@ -203,6 +202,7 @@ public class HouseOrderController {
 		String ptype = (String) data.get("ptype");
 		String insloc = (String) data.get("insloc");
 		String mobile = (String) data.get("mobile");
+		String enc_mobile = UserInfoCyper.EncryptMobile(mobile);
 		String email = (String) data.get("email");
 		String poption = (String) data.get("poption");
 		String pbohumja_mobile = (String) data.get("pbohumja_mobile");
@@ -243,7 +243,7 @@ public class HouseOrderController {
 			ins_to,
 			ptype,
 			insloc,
-			mobile,
+			enc_mobile,
 			email,
 			poption,
 			v_bank_name,
@@ -318,8 +318,8 @@ public class HouseOrderController {
 
 	private void sendA001KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException {
 		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
-		int amt_ins = (int) data.get("amt_ins");
-		int premium = (int) data.get("premium");
+		String amt_ins = String.valueOf(data.get("amt_ins"));
+		String premium = String.valueOf(data.get("premium"));
 		String mobile = (String) data.get("mobile");
 		String polholder = (String) data.get("polholder");
 		String insloc = (String) data.get("insloc");
@@ -334,8 +334,8 @@ public class HouseOrderController {
 			prod_name,
 			insurant_a,
 			insloc,
-			InsuNumberUtil.ToChar(amt_ins),
-			InsuNumberUtil.ToChar(premium),
+			amt_ins,
+			premium,
 			quote_no,
 			InsuDateUtil.ToChar(insdate, "yyyy.MM.dd"),
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd"),
@@ -345,7 +345,7 @@ public class HouseOrderController {
 
 	private void sendA002KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException {
 		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
-		int premium = (int) data.get("premium");
+		String premium = String.valueOf(data.get("premium"));
 		String mobile = (String) data.get("mobile");
 		String polholder = (String) data.get("polholder");
 
@@ -365,7 +365,7 @@ public class HouseOrderController {
 			prod_name,
 			v_bank_name,
 			v_bank_no,
-			InsuNumberUtil.ToChar(premium),
+			premium,
 			InsuDateUtil.ToChar(v_bank_due_date, "yyyy년MM월dd일 HH시mm분ss초")
 		);
 	}

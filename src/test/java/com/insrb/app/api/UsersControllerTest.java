@@ -564,4 +564,19 @@ public class UsersControllerTest {
 	}
 
 
+	@Test
+	@DisplayName("UI-APP-017 내 보험 : GET /users/certificates 추천인 3건 리턴해야한다")
+	public void UIAPP017_01() throws Exception {
+		mockMvc
+			.perform(
+				get("/users/" + mockUser.get("email") + "/certificates")
+					.header("X-insr-servicekey", SERVICE_KEY)
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
+			)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
+			;
+	}
+
 }

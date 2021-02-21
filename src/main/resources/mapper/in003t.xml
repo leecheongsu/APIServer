@@ -59,13 +59,65 @@
 				#{already_group_ins}			
 		)
 	</insert>
+	<insert id="insertFromIn101t">
+		INSERT into in003t(
+			quote_no,
+			prod_code,
+			amt_ins,
+			opayment,
+			polholder,
+			insurant_a,
+			insurant_b,
+			premium,
+			insdate,
+			ins_from,
+			ins_to,
+			ptype,
+			insloc,
+			mobile,
+			email,
+			poption,
+			pbohumja_mobile,
+			jumin,
+			owner,
+			pbohumja_birth,
+			advisor_no,
+			ins_date
+		)
+		select 
+			quote_no,
+			#{prod_code} prod_code,
+			perprem amt_ins,
+			perprem opayment,
+			ptykornm polholder,
+			ptykornm insurant_a, 
+			ptykornm insurant_b, 
+			perprem premium,
+			insert_date insdate,
+			to_date(insstdt,'yyyymmdd') ins_from,
+			to_date(inseddt,'yyyymmdd')  ins_to,
+			0 ptype,
+			objaddr1||' '||objaddr2 insloc,
+			telno mobile,
+			a.email,
+			4 poption,
+			telno pbohumja_mobile,
+			b.juminb jumin,
+			purpose owner,
+			b.jumina pbohumja_birth,
+			#{advisor_no} advisor_no,
+			sysdate
+		from in101t a, in005t b
+		where a.email = b.email
+		and quote_no = #{quote_no}
+	</insert>
 
 	<delete id="delete">
 		delete from in003t
 		 where quote_no = #{quote_no}
 	</delete>
-	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
-		select a.*, pk_in006c.sf_getPname(prod_code) p_name
+	<select id="selectByQuoteNo" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select a.*, pk_in006c.sf_getPname(prod_code) prod_name
 		  from in003t a
 		 where a.quote_no = #{quote_no}
 	</select> 

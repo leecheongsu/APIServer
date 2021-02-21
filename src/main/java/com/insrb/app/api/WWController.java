@@ -1,9 +1,15 @@
 package com.insrb.app.api;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
+import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.insurance.AddressSearch;
@@ -11,21 +17,21 @@ import com.insrb.app.insurance.hi.Hi_1_PrePremium;
 import com.insrb.app.insurance.hi.Hi_2_Premium;
 import com.insrb.app.insurance.hi.Hi_3_PreventOfDenial;
 import com.insrb.app.mapper.IN001TMapper;
+import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.mapper.IN006CMapper;
 import com.insrb.app.mapper.IN010TMapper;
+import com.insrb.app.mapper.IN011TMapper;
 import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
 import com.insrb.app.util.InsuAuthentication;
+import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.InsuStringUtil;
+import com.insrb.app.util.KakaoMessageUtil;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -38,6 +44,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -70,7 +78,13 @@ public class WWController {
 	IN006CMapper in006cMapper;
 
 	@Autowired
+	IN003TMapper in003tMapper;
+
+	@Autowired
 	IN010TMapper in010tMapper;
+
+	@Autowired
+	IN011TMapper in011tMapper;
 
 	@Autowired
 	IN101TMapper in101tMapper;
@@ -223,13 +237,14 @@ public class WWController {
 		try {
 			String user_id = (String) body.get("user_id");
 			String quote_no = (String) body.get("quote_no");
+			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
 			log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			log.info("현대해상 부인방지 요청");
 			// return hi.fn_prevent_of_denial(new JSONObject(data));
-			String esignurl =  Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
-			in101tMapper.updateEsignurl(quote_no,esignurl);
+			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
+			in101tMapper.updateEsignurl(quote_no, esignurl);
 			return esignurl;
 		} catch (WWException e) {
 			log.error("/ww/premium: {}", e.getMessage());
@@ -254,18 +269,141 @@ public class WWController {
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
 			log.info("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			log.info("현대해상 청약확정 요청");
-			// return hi.fn_prevent_of_denial(new JSONObject(data));
-			return Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
-		} catch (WWException e) {
-			log.error("/ww/premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			String quote_no = (String) data.get("quote_no");
+			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
+			String prod_code = (String) data.get("prod_code");
+			String advisor_no = (String) data.get("advisor_no");
+			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
+			Map<String, Object> card = (Map<String, Object>) data.get("card");
+
+			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
+			JSONObject order = makeOrder(in101t, card);
+			log.info("order:{}", order);
+			// Hi_4_Order.FnConfirmsubscription(order);
+
+			in003tMapper.delete(quote_no);
+			in003tMapper.insertFromIn101t(quote_no, prod_code, advisor_no);
+			insertTerms(quote_no, terms);
+			sendA001KakaoMessage(quote_no, in003tMapper.selectByQuoteNo(quote_no));
+			return "OK";
+			// } catch (WWException e) {
+			// 	log.error("/ww/order: {}", e.getMessage());
+			// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		} catch (InsuAuthException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (ParseException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
 		} catch (InsuAuthExpiredException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
+		} catch (InsuEncryptException e) {
+			log.error("/ww/order: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		}
+	}
+
+	@Value("classpath:basic/tmpl_order_api.json")
+	private Resource tmplOrderApi_json;
+
+	private JSONObject makeOrder(Map<String, Object> in101t, Map<String, Object> card) {
+		JSONObject order = ResourceUtil.asJSONObject(tmplOrderApi_json);
+		order.put("executeTime", in101t.get("sessionexectime"));
+		order.getJSONObject("oagi6002vo").put("agmtKind", in101t.get("agmtkind"));
+		order.getJSONObject("oagi6002vo").put("ptyKorNm", in101t.get("ptykornm"));
+		order.getJSONObject("oagi6002vo").put("mappingNo", in101t.get("mappingno"));
+		order.getJSONObject("oagi6002vo").put("certConfmSeqNo", in101t.get("certconfmseqno"));
+
+		order.getJSONObject("oagi6002vo").put("regNo1", card.get("regNo1"));
+		order.getJSONObject("oagi6002vo").put("regNo2", card.get("regNo2"));
+		order.getJSONObject("oagi6002vo").put("cardNo1", card.get("cardNo1"));
+		order.getJSONObject("oagi6002vo").put("cardNo2", card.get("cardNo2"));
+		order.getJSONObject("oagi6002vo").put("cardNo3", card.get("cardNo3"));
+		order.getJSONObject("oagi6002vo").put("cardNo4", card.get("cardNo4"));
+		order.getJSONObject("oagi6002vo").put("validMonth", card.get("validMonth"));
+		order.getJSONObject("oagi6002vo").put("validYear", card.get("validYear"));
+		return order;
+	}
+
+	private void insertTerms(String quote_no, Map<String, Object> data) {
+		int termsA_1 = InsuStringUtil.ToIntOrDefault(data.get("termsa_1"), 0);
+		int termsA_2 = InsuStringUtil.ToIntOrDefault(data.get("termsa_2"), 0);
+		int termsA_3 = InsuStringUtil.ToIntOrDefault(data.get("termsa_3"), 0);
+		int termsA_4 = InsuStringUtil.ToIntOrDefault(data.get("termsa_4"), 0);
+		int termsA_5 = InsuStringUtil.ToIntOrDefault(data.get("termsa_5"), 0);
+		int termsB_1 = InsuStringUtil.ToIntOrDefault(data.get("termsb_1"), 0);
+		int termsB_2 = InsuStringUtil.ToIntOrDefault(data.get("termsb_2"), 0);
+		int termsB_3 = InsuStringUtil.ToIntOrDefault(data.get("termsb_3"), 0);
+		int termsC_1 = InsuStringUtil.ToIntOrDefault(data.get("termsc_1"), 0);
+		int termsC_2 = InsuStringUtil.ToIntOrDefault(data.get("termsc_2"), 0);
+		int termsC_3 = InsuStringUtil.ToIntOrDefault(data.get("termsc_3"), 0);
+		int termsC_4 = InsuStringUtil.ToIntOrDefault(data.get("termsc_4"), 0);
+		int termsC_5 = InsuStringUtil.ToIntOrDefault(data.get("termsc_5"), 0);
+		int termsD_1 = InsuStringUtil.ToIntOrDefault(data.get("termsd_1"), 0);
+		int termsD_2 = InsuStringUtil.ToIntOrDefault(data.get("termsd_2"), 0);
+		int termsD_3 = InsuStringUtil.ToIntOrDefault(data.get("termsd_3"), 0);
+		int termsE_1 = InsuStringUtil.ToIntOrDefault(data.get("termse_1"), 0);
+		int termsE_2 = InsuStringUtil.ToIntOrDefault(data.get("termse_2"), 0);
+		int termsE_3 = InsuStringUtil.ToIntOrDefault(data.get("termse_3"), 0);
+		int termsF_1 = InsuStringUtil.ToIntOrDefault(data.get("termsf_1"), 0);
+		int termsG_1 = InsuStringUtil.ToIntOrDefault(data.get("termsf_1"), 0);
+
+		in011tMapper.delete(quote_no);
+		in011tMapper.insert(
+			quote_no,
+			termsA_1,
+			termsA_2,
+			termsA_3,
+			termsA_4,
+			termsA_5,
+			termsB_1,
+			termsB_2,
+			termsB_3,
+			termsC_1,
+			termsC_2,
+			termsC_3,
+			termsC_4,
+			termsC_5,
+			termsD_1,
+			termsD_2,
+			termsD_3,
+			termsE_1,
+			termsE_2,
+			termsE_3,
+			termsF_1,
+			termsG_1
+		);
+	}
+
+	private void sendA001KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException, InsuEncryptException {
+		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
+		String amt_ins = String.valueOf(data.get("amt_ins"));
+		String premium = String.valueOf(data.get("premium"));
+		String mobile = (String) data.get("mobile");
+		String encMobile = UserInfoCyper.DecryptMobile(mobile);
+		String polholder = (String) data.get("polholder");
+		String insloc = (String) data.get("insloc");
+		String insurant_a = (String) data.get("insurant_a");
+		// Date insdate = InsuDateUtil.ToDate((String) data.get("insdate"));
+		// Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
+		// Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
+		Date insdate = (Date) data.get("insdate");
+		Date ins_from = (Date) data.get("ins_from");
+		Date ins_to = (Date) data.get("ins_to");
+
+		KakaoMessageUtil.A001(
+			encMobile,
+			polholder,
+			prod_name,
+			insurant_a,
+			insloc,
+			amt_ins,
+			premium,
+			quote_no,
+			InsuDateUtil.ToChar(insdate, "yyyy.MM.dd"),
+			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd"),
+			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd") + " 24:00 ~ " + InsuDateUtil.ToChar(ins_to, "yyyy.MM.dd") + " 24:00"
+		);
 	}
 }

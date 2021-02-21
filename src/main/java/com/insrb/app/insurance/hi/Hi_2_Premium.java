@@ -1,11 +1,12 @@
 package com.insrb.app.insurance.hi;
 
-import java.util.HashMap;
 import java.util.Map;
+import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.ResourceUtil;
+import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -327,7 +328,7 @@ public class Hi_2_Premium {
 		}
 	}
 
-	private void fn_7_ApiPremSaveData() {
+	private void fn_7_ApiPremSaveData() throws InsuEncryptException {
 		//저장할 정보 담기
 		JSONObject oagi6002vo = fn_2_premiumJson.getJSONObject("oagi6002vo");
 		JSONObject giid0100vo = oagi6002vo.getJSONObject("giid0100vo");
@@ -359,6 +360,7 @@ public class Hi_2_Premium {
 		String ptykornm = oagi6002vo.getString("ptyKorNm");
 		String telcat = oagi6002vo.getString("telCat");
 		String telno = oagi6002vo.getString("telNo1") + oagi6002vo.getString("telNo2") + oagi6002vo.getString("telNo3");
+		telno = UserInfoCyper.EncryptMobile(telno);
 		String ptybiznm = oagi6002vo.getString("ptyBizNm");
 		String bizno = oagi6002vo.getString("bizNo1") + oagi6002vo.getString("bizNo2") + oagi6002vo.getString("bizNo3");
 		String objonnaddrcat = oagi6002vo.getString("objOnnaddrCat");

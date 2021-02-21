@@ -1,0 +1,30 @@
+{
+	"resultCode": "",
+	"resultMsg": "",
+	"executeTime": "?",
+	"oagi6002vo": {
+		"agmtKind": "?",
+		"ptyKorNm": "?",
+		"regNo1": "?",
+		"regNo2": "?",
+		"bizNo1": "",
+		"bizNo2": "",
+		"bizNo3": "",
+		"pgMethod": "card",
+		"cardNo1": "?",
+		"cardNo2": "?",
+		"cardNo3": "?",
+		"cardNo4": "?",
+		"validMonth": "?",
+		"validYear": "?",
+		"cardDivide": "0",
+		"agmtMakeArgSelYn": "Y",
+		"intgAppSendYn": "Y",
+		"prodTermsUrlSelYn": "Y",
+		"certGb": "G",
+		"mappingNo": "?",
+		"certConfmSeqNo": "?",
+		"partnerIp": "210.179.172.177",
+		"partnerNo": "4IB078"
+	}
+}

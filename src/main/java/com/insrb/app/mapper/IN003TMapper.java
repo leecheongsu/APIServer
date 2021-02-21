@@ -1,7 +1,8 @@
 package com.insrb.app.mapper;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface IN003TMapper {
 	void insert(
@@ -30,9 +31,11 @@ public interface IN003TMapper {
 		String pbohumja_birth,
 		String advisor_no,
 		String already_group_ins
-		);
+	);
+
+	void insertFromIn101t(String quote_no,String prod_code,String advisor_no);
+
 	void delete(String quote_no);
 
-	HashMap<String, Object> selectById(String quote_no);
-
+	Map<String, Object> selectByQuoteNo(String quote_no);
 }
