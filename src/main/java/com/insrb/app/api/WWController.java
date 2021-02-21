@@ -7,11 +7,14 @@ import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.insurance.AddressSearch;
-import com.insrb.app.insurance.hi.HiWindWaterInsurance;
+import com.insrb.app.insurance.hi.Hi_1_PrePremium;
+import com.insrb.app.insurance.hi.Hi_2_Premium;
+import com.insrb.app.insurance.hi.Hi_3_PreventOfDenial;
 import com.insrb.app.mapper.IN001TMapper;
 import com.insrb.app.mapper.IN005TMapper;
 import com.insrb.app.mapper.IN006CMapper;
 import com.insrb.app.mapper.IN010TMapper;
+import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
 import com.insrb.app.util.InsuAuthentication;
@@ -48,8 +51,11 @@ public class WWController {
 	@Autowired
 	AddressSearch addressSearch;
 
+	// @Autowired
+	// HiWindWaterInsurance hi;
+
 	@Autowired
-	HiWindWaterInsurance hi;
+	Hi_2_Premium hi_2_premium;
 
 	@Autowired
 	IN001TMapper in001tMapper;
@@ -65,6 +71,9 @@ public class WWController {
 
 	@Autowired
 	IN010TMapper in010tMapper;
+
+	@Autowired
+	IN101TMapper in101tMapper;
 
 	@Value("classpath:basic/tmpl_preminum_req_body.json")
 	private Resource tmpl_preminum_req_body_json;
@@ -158,8 +167,9 @@ public class WWController {
 		log.info(new JSONObject(data).toString());
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
-			Map<String, Object> result = hi.getPrePremium(json);
+			String json_str = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+			// Map<String, Object> result = hi.getPrePremium(json);
+			Map<String, Object> result = Hi_1_PrePremium.GetPrePremium(json_str);
 			log.info("Result:{}", result);
 			return result;
 		} catch (JsonProcessingException e) {
@@ -176,9 +186,9 @@ public class WWController {
 		@RequestHeader(name = "Authorization", required = false) String auth_header,
 		@RequestBody(required = true) Map<String, Object> body
 	) {
+		String user_id = (String) body.get("user_id");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
-		log.info("현대해상 보험료 요청:{}", new JSONObject(data).toString());
-		String user_id = (String) data.get("user_id");
+		log.info("현대해상 실보험료 요청:{}", new JSONObject(data).toString());
 		String quote_no = (String) data.get("quote_no"); // hi 안에서 사용함.
 		String caSerial = (String) data.get("ca_serial");
 		String caDn = (String) data.get("ca_dn");
@@ -191,10 +201,36 @@ public class WWController {
 
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			log.info("현대해상 premium 요청");
-			JSONObject rtn = hi.premium(data);
-			log.info(rtn.toString());
-			return rtn.toMap();
+			hi_2_premium.premium(user_id, data);
+			return in101tMapper.selectById(quote_no);
+		} catch (WWException e) {
+			log.error("/ww/premium: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상API오류: " + e.getMessage());
+		} catch (InsuAuthException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+		} catch (InsuAuthExpiredException e) {
+			log.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
+		}
+	}
+
+	@PostMapping(path = "prevent_denial")
+	public String prevent_denail(
+		@RequestHeader(name = "Authorization", required = false) String auth_header,
+		@RequestBody(required = true) Map<String, Object> body
+	) {
+		try {
+			String user_id = (String) body.get("user_id");
+			String quote_no = (String) body.get("quote_no");
+			Map<String, Object> data = (Map<String, Object>) body.get("data");
+			log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
+			log.info("현대해상 부인방지 요청");
+			// return hi.fn_prevent_of_denial(new JSONObject(data));
+			String esignurl =  Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
+			in101tMapper.updateEsignurl(quote_no,esignurl);
+			return esignurl;
 		} catch (WWException e) {
 			log.error("/ww/premium: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
@@ -207,19 +243,20 @@ public class WWController {
 		}
 	}
 
-	@PostMapping(path = "prevent_denial")
-	public String notdeny(
+	// 현대해상 청약확정
+	@PostMapping(path = "order")
+	public String order(
 		@RequestHeader(name = "Authorization", required = false) String auth_header,
 		@RequestBody(required = true) Map<String, Object> body
 	) {
 		try {
+			String user_id = (String) body.get("user_id");
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
-			log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
-			String user_id = (String) data.get("user_id");
+			log.info("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			log.info("현대해상 부인방지 요청");
-			data.remove("user_id"); //사용자 정보는 빼고 보낸다.
-			return hi.fn_prevent_of_denial(new JSONObject(data));
+			log.info("현대해상 청약확정 요청");
+			// return hi.fn_prevent_of_denial(new JSONObject(data));
+			return Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
 		} catch (WWException e) {
 			log.error("/ww/premium: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());

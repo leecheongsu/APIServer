@@ -1,6 +1,10 @@
 package com.insrb.app.mapper;
 
+import java.util.Map;
+
 public interface IN101TMapper {
+	Map<String, Object> selectById(String quote_no);
+
 	void insert(
 		String quote_no,
 		String email,
@@ -35,6 +39,11 @@ public interface IN101TMapper {
 		String objtrbdcd,
 		String objtrbdaddr,
 		String partnerno,
+		String insstdt,
+		String inseddt,
+		String inssttm,
+		String insedtm,
+		String prdins,
 		String tpymprem,
 		String perprem,
 		String govtprem,
@@ -43,7 +52,12 @@ public interface IN101TMapper {
 		String scno,
 		String purpose,
 		String localurltmp,
-		String mappingno
+		String mappingno,
+		String sessionexectime,
+		String sessionid,
+		String certconfmseqno
 	);
 	void delete(String quote_no);
+
+	void updateEsignurl(String quote_no,String esignurl);
 }

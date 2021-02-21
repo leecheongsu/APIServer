@@ -1,35 +1,26 @@
 package com.insrb.app.insurance.hi;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.ResourceUtil;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
 //ref : http://kong.github.io/unirest-java/#requests
 
 @Slf4j
 @Component
-public class HiWindWaterInsurance {
-
-	// @Value("${hi.waterwind.sso_server}")
-	// private String sso_server;
-
-	// @Value("${hi.waterwind.server}")
-	// private String server;
-
-	// @Value("classpath:basic/tmpl_preminum_req_body.json")
-	// private Resource tmplPreminumReqBody_json;
+public class Hi_2_Premium {
 
 	@Value("classpath:basic/tmpl_cert_confm_api.json")
 	private Resource tmplCertConfmApi_json;
@@ -43,91 +34,6 @@ public class HiWindWaterInsurance {
 	@Autowired
 	IN101TMapper in101tMapper;
 
-	// 개발
-	// private String sso_server = "https://apid-sso.hi.co.kr";
-	// private String server = "https://apid.hi.co.kr";
-	// private String ww_client_id = "29311b91";
-	// private String ww_client_secret = "75e365273b4f1d81ea944b1c9a9560ad";
-	// private String common_client_id = "6a08aba5";
-	// private String common_client_secret = "be085145cd0ab2aa19f668ee777bff9a";
-	// 운영
-	private String sso_server = "https://api-sso.hi.co.kr";
-	private String server = "https://api.hi.co.kr";
-	private String ww_client_id = "53dca6a6";
-	private String ww_client_secret = "5a838fc51a4015d030f19770f78fc143";
-	private String common_client_id = "60b111e8";
-	private String common_client_secret = "9241b101f32b482853a8ea40c7ec8ba2";
-
-	// 풍수해 인증키
-	private String getWWBearerToken() throws WWException {
-		HttpResponse<JsonNode> res = Unirest
-			.post(sso_server + "/auth/realms/3scale/protocol/openid-connect/token")
-			.basicAuth(ww_client_id, ww_client_secret)
-			.header("Origin", "https://insrb.com")
-			.header("Content-Type", "application/x-www-form-urlencoded")
-			.field("grant_type", "client_credentials")
-			.field("scope", "web-origins")
-			.asJson();
-
-		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
-			return "Bearer " + json.getString("access_token");
-		} else {
-			log.error("getWWBearerToken:" + res.getStatusText());
-			throw new WWException(res.getStatusText());
-		}
-	}
-
-	// 일반 인증키
-	private String getCommonBearerToken() throws WWException {
-		HttpResponse<JsonNode> res = Unirest
-			.post(sso_server + "/auth/realms/3scale/protocol/openid-connect/token")
-			.basicAuth(common_client_id, common_client_secret)
-			.header("Origin", "https://insrb.com")
-			.header("Content-Type", "application/x-www-form-urlencoded")
-			.field("grant_type", "client_credentials")
-			.field("scope", "web-origins")
-			.asJson();
-		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
-			return "Bearer " + json.getString("access_token");
-		} else {
-			log.error("getCommonBearerToken:" + res.getStatusText());
-			throw new WWException(res.getStatusText());
-		}
-	}
-
-	// 2. 가보험료 산출 요청
-	public Map<String, Object> getPrePremium(String data) throws WWException {
-		String wwToken = getWWBearerToken();
-		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OASF2001M05S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
-			.header("Authorization", wwToken)
-			.header("Content-Type", "application/json;charset=UTF-8")
-			.body(data)
-			.asJson();
-
-		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
-			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 가보험료 요청 결과 오류(오류코드):" + resultCode);
-			JSONObject giid0100vo = json.getJSONObject("oagi6002vo").getJSONObject("giid0100vo");
-			Map<String, Object> rtn = new HashMap<String, Object>();
-			rtn.put("perPrem", giid0100vo.getInt("perPrem")); //본인 부담 보험료
-			rtn.put("govtPrem", giid0100vo.getInt("govtPrem")); //정부 부담 보험료
-			rtn.put("lgovtPrem", giid0100vo.getInt("lgovtPrem")); // 지자체 부담 보험료
-			rtn.put("tpymPrem", giid0100vo.getInt("tpymPrem")); //총보험료
-			return rtn;
-		} else {
-			log.error("getPrePremium:" + res.getStatusText());
-			throw new WWException(res.getStatusText());
-		}
-	}
-
 	// 본인인증이후,
 	// 본인인증 이력등록, 보험료계산 ....
 	private String wwToken;
@@ -140,20 +46,22 @@ public class HiWindWaterInsurance {
 	private JSONObject fn_3_joinTobeJson;
 	private JSONObject fn_4_prodtManualJson;
 	private String certConfmSeqNo; //인증순번
-	private JSONObject hid; // TODO: 이거 왜 저장하지?
-	String X_Session_Id = "";
-	String localurltmp = "";
-	String mappingno = "";
+	// private JSONObject hid; // TODO: 이거 왜 저장하지?
 
-	public JSONObject premium(Map<String, Object> data) throws WWException {
+	private String X_Session_Id = ""; //세션 ID
+	private String X_Session_Execute_Time = ""; // 세션 실행 시간
+	private String localurltmp = ""; // 본인 전자 서명 URL
+	private String mappingno = ""; // 매핑 번호
+
+	public boolean premium(String user_id, Map<String, Object> data) throws WWException {
 		try {
-			String user_id = (String) data.get("user_id");
+			// String user_id = (String) data.get("user_id");
 			user_email = user_id.split("@");
 			String caSerial = (String) data.get("ca_serial");
 			String caDn = (String) data.get("ca_dn");
 			quote_no = (String) data.get("quote_no");
 
-			this.hid = new JSONObject();
+			// this.hid = new JSONObject();
 			JSONObject ww_json = new JSONObject(data.get("ww_info"));
 			oagi6002vo = ww_json.getJSONObject("oagi6002vo");
 			this.fn_1_certJson = ResourceUtil.asJSONObject(tmplCertConfmApi_json);
@@ -161,14 +69,13 @@ public class HiWindWaterInsurance {
 			this.fn_3_joinTobeJson = ResourceUtil.asJSONObject(tmplJoinTobe_json);
 			this.fn_4_prodtManualJson = ResourceUtil.asJSONObject(tmplProdtManual_json);
 
-			// cert 설정(? 4개 설정)
+			// OkCert로부터 넘어온 본인 인증 정보
 			fn_1_certJson.put("caSerial", caSerial);
 			fn_1_certJson.put("caDn", caDn);
-			// premium 설정, TODO: 파라미터로 넘어오도록
 
 			// 0. Token
-			wwToken = getWWBearerToken();
-			commonToken = getCommonBearerToken();
+			wwToken = HiToken.GetWWBearerToken();
+			commonToken = HiToken.GetCommonBearerToken();
 			// 1. 본인인증이력등록 API 호출
 			fn_1_CertConfmApi();
 			// 2. 보험료 계산 API 호출
@@ -183,14 +90,18 @@ public class HiWindWaterInsurance {
 			fn_6_ApifnElectronicSignApi();
 			// 7. Data 저장
 			fn_7_ApiPremSaveData();
-			JSONObject rtn = new JSONObject();
-			rtn.put("localurltmp",localurltmp);
-			rtn.put("mappingno",mappingno);
-			rtn.put("certconfmseqno",certConfmSeqNo);
-			return rtn;
+
+			// 8. 모든 작업을 완료하고 전자서명/부인방지/카드결제에 필요한 정보를 내려보낸다. --> 모든 정보를 IN101T에 저장.
+			// Map<String,Object> rtn = new HashMap<String,Object>();
+			// rtn.put("localurltmp", localurltmp);
+			// rtn.put("mappingno", mappingno);
+			// rtn.put("certconfmseqno", certConfmSeqNo);
+			// rtn.put("executetime", X_Session_Execute_Time);
+			// return rtn;
+			return true;
 		} catch (Exception e) {
 			log.info(e.getMessage());
-			throw new WWException("잘못된 JSON 형식입니다.");
+			throw new WWException("현대해상 청약오류:" + e.getMessage());
 		}
 	}
 
@@ -200,11 +111,11 @@ public class HiWindWaterInsurance {
 		fn_1_certJson.put("ptyKorNm", oagi6002vo.getString("ptyKorNm"));
 
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OACO0100M01S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
+			.post(HiConfig.SERVER + "/v1/OACO0100M01S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json;charset=UTF-8")
 			.body(fn_1_certJson.toString())
@@ -224,12 +135,12 @@ public class HiWindWaterInsurance {
 	// TODO: token을 파라미터로 받아서 가보험료 계산과 통합할 것.
 	private void fn_2_PremiumMathApi() throws WWException {
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OASF2001M05S")
+			.post(HiConfig.SERVER + "/v1/OASF2001M05S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", wwToken)
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
 			.header("X-Session-Id", "")
 			.header("Content-Type", "application/json;charset=UTF-8")
 			.body(fn_2_premiumJson.toString())
@@ -241,22 +152,22 @@ public class HiWindWaterInsurance {
 			if (resultCode != 0) throw new WWException("현대해상 보험료 요청 결과 오류(오류코드):" + resultCode);
 			log.info("fn_2_PremiumMathApi:" + json.toString());
 
-			JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
-			JSONObject giid0100vo = oagi6002vo.getJSONObject("giid0100vo");
-			fn_2_premiumJson = json; // 새로 설정.
+			// JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
+			// JSONObject giid0100vo = oagi6002vo.getJSONObject("giid0100vo");
 
-			hid.put("insStDt", oagi6002vo.getString("insStDt")); //보험개시일자
-			hid.put("insEdDt", oagi6002vo.getString("insEdDt")); //보험종료일자
-			hid.put("insStTm", oagi6002vo.getString("insStTm")); //보험개시시간
-			hid.put("insEdTm", oagi6002vo.getString("insEdTm")); //보험종료시간
-			hid.put("prdins", oagi6002vo.getString("prdins")); //보험가입기간
+			// hid.put("insStDt", oagi6002vo.getString("insStDt")); //보험개시일자
+			// hid.put("insEdDt", oagi6002vo.getString("insEdDt")); //보험종료일자
+			// hid.put("insStTm", oagi6002vo.getString("insStTm")); //보험개시시간
+			// hid.put("insEdTm", oagi6002vo.getString("insEdTm")); //보험종료시간
+			// hid.put("prdins", oagi6002vo.getString("prdins")); //보험가입기간
 
-			hid.put("perPrem", giid0100vo.getInt("perPrem")); //본인 부담 보험료
-			hid.put("govtPrem", giid0100vo.getInt("govtPrem")); //정부 부담 보험료
-			hid.put("lgovtPrem", giid0100vo.getInt("lgovtPrem")); //지자체 부담 보험료
-			hid.put("tpymPrem", giid0100vo.getInt("tpymPrem")); //총보험료
-			hid.put("executeTime", json.getString("executeTime")); // 세션실행시간
-			hid.put("X-Session-Id", res.getHeaders().get("X-Session-Id").get(0)); // 세션ID
+			// hid.put("perPrem", giid0100vo.getInt("perPrem")); //본인 부담 보험료
+			// hid.put("govtPrem", giid0100vo.getInt("govtPrem")); //정부 부담 보험료
+			// hid.put("lgovtPrem", giid0100vo.getInt("lgovtPrem")); //지자체 부담 보험료
+			// hid.put("tpymPrem", giid0100vo.getInt("tpymPrem")); //총보험료
+			// hid.put("executeTime", json.getString("executeTime")); // 세션실행시간
+			// hid.put("X-Session-Id", res.getHeaders().get("X-Session-Id").get(0)); // 세션ID
+			X_Session_Execute_Time = json.getString("executeTime"); // 세션실행시간
 			X_Session_Id = res.getHeaders().get("X-Session-Id").get(0); // 세션ID
 
 			fn_2_premiumJson = json;
@@ -282,11 +193,11 @@ public class HiWindWaterInsurance {
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("trbdAddr", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("certConfmSeqNo", certConfmSeqNo);
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OASF2001M08S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
+			.post(HiConfig.SERVER + "/v1/OASF2001M08S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", wwToken)
 			.header("X-Session-Id", X_Session_Id)
 			.header("Content-Type", "application/json")
@@ -322,11 +233,11 @@ public class HiWindWaterInsurance {
 		fn_4_prodtManualJson.put("intgEmailDomain", oagi6002vo.getString("emailDomain")); // 이메일 도메인
 
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OACO0100M07S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
+			.post(HiConfig.SERVER + "/v1/OACO0100M07S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json")
 			.body(fn_4_prodtManualJson.toString())
@@ -338,10 +249,10 @@ public class HiWindWaterInsurance {
 			if (resultCode != 0) throw new WWException("현대해상 통합청약서(상품설명서) API 호출 결과 오류(오류코드):" + resultCode);
 			log.info("fn_4_ProdtManual:" + json.toString());
 
-			hid.put("intgXmlData", json.getString("intgXmlData")); //RD파일에 사용될 xml 데이터
-			hid.put("intgMrdData", json.getString("intgMrdData")); //보고서 파일
-			hid.put("intgReportGubun", json.getString("intgReportGubun")); //RD경로데이터 업무구분
-			hid.put("intgPageTitle", json.getString("intgPageTitle")); //보고서 제목
+			// hid.put("intgXmlData", json.getString("intgXmlData")); //RD파일에 사용될 xml 데이터
+			// hid.put("intgMrdData", json.getString("intgMrdData")); //보고서 파일
+			// hid.put("intgReportGubun", json.getString("intgReportGubun")); //RD경로데이터 업무구분
+			// hid.put("intgPageTitle", json.getString("intgPageTitle")); //보고서 제목
 		} else {
 			throw new WWException(res.getStatusText());
 		}
@@ -355,11 +266,11 @@ public class HiWindWaterInsurance {
 		prodtTerms.put("prodCd", "7717"); //상품코드
 		prodtTerms.put("flFullUrl", "");
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OACO0100M08S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
+			.post(HiConfig.SERVER + "/v1/OACO0100M08S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json")
 			.body(prodtTerms.toString())
@@ -393,11 +304,11 @@ public class HiWindWaterInsurance {
 		eSign.put("bzDetCd", "10061022"); // 업무상세코드
 
 		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OACO0100M05S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
+			.post(HiConfig.SERVER + "/v1/OACO0100M05S")
+			.header("X-Channel-Id", HiConfig.X_Channel_Id)
+			.header("X-Client-Id", HiConfig.X_Client_Id)
+			.header("X-Menu-Id", HiConfig.X_Menu_Id)
+			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json")
 			.body(eSign.toString())
@@ -458,12 +369,18 @@ public class HiWindWaterInsurance {
 		String objtrbdcd = oagi6002vo.getString("objRoadNmCd");
 		String objtrbdaddr = oagi6002vo.getString("objRoadNmCd");
 		String partnerno = oagi6002vo.getString("partnerNo");
-		String tpymprem = giid0100vo.getString("tpymPrem");
-		String perprem = giid0100vo.getString("perPrem");
-		String govtprem = giid0100vo.getString("govtPrem");
-		String lgovtprem = giid0100vo.getString("lgovtPrem");
+		String insstdt = oagi6002vo.getString("insStDt"); //보험개시일자
+		String inseddt = oagi6002vo.getString("insEdDt"); //보험종료일자
+		String inssttm = oagi6002vo.getString("insStTm"); //보험개시시간
+		String insedtm = oagi6002vo.getString("insEdTm"); //보험종료시간
+		String prdins = oagi6002vo.getString("prdins");//보험가입기간
+		String tpymprem = giid0100vo.getString("tpymPrem");//총보험료
+		String perprem = giid0100vo.getString("perPrem");//본인 부담 보험료
+		String govtprem = giid0100vo.getString("govtPrem"); //정부 부담 보험료
+		String lgovtprem = giid0100vo.getString("lgovtPrem");//지자체 부담 보험료
 		String applno = oagi6002vo.getString("applNo");
 		String scno = oagi6002vo.getString("scNo");
+
 		in101tMapper.delete(quote_no);
 		in101tMapper.insert(
 			quote_no,
@@ -499,6 +416,11 @@ public class HiWindWaterInsurance {
 			objtrbdcd,
 			objtrbdaddr,
 			partnerno,
+			insstdt,
+			inseddt,
+			inssttm,
+			insedtm,
+			prdins,
 			tpymprem,
 			perprem,
 			govtprem,
@@ -507,36 +429,10 @@ public class HiWindWaterInsurance {
 			scno,
 			purpose,
 			localurltmp,
-			mappingno
+			mappingno,
+			X_Session_Execute_Time,
+			X_Session_Id,
+			certConfmSeqNo
 		);
-	}
-
-
-	
-	// 11.	부인방지
-	public String fn_prevent_of_denial(JSONObject data) throws WWException {
-		commonToken = getCommonBearerToken();
-
-		HttpResponse<JsonNode> res = Unirest
-			.post(server + "/v1/OACO0100M06S")
-			.header("X-Channel-Id", "Main")
-			.header("X-Client-Id", "210.179.172.177")
-			.header("X-Menu-Id", "home")
-			.header("X-User-Id", "4IB078")
-			.header("Authorization", commonToken)
-			.header("Content-Type", "application/json;charset=UTF-8")
-			.body(data.toString())
-			.asJson();
-		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
-			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 부인방지 API 호출 결과 오류(오류코드):" + resultCode);
-			log.info("fn_1_CertConfmApi:" + json.toString());
-			log.info("oaImgViewUrl:" + json.getString("oaImgViewUrl"));
-			String url = json.getString("oaImgViewUrl");
-			return url.replace("dB2C/data/", "");
-		} else {
-			throw new WWException(res.getStatusText());
-		}
 	}
 }

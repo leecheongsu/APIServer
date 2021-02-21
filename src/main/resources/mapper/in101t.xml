@@ -4,7 +4,58 @@
 <mapper namespace="com.insrb.app.mapper.IN101TMapper">
 	<insert id="insert">
 		insert into in101t
-			(quote_no, email, agmtkind, bldtotlyrnum, hsarea, lsgccd, polestrc, roofstrc, otwlstrc, objcat, bldfloors1, bldfloors2, lobzcd, gitdtarifcat1, objtypcd1, objtypcd2, objtypcd3, elagorgninsdamt1, elagorgninsdamt2, elagorgninsdamt3, ptykornm, telcat, telno, ptybiznm, bizno, objonnaddrcat, objzip, objaddr1, objaddr2, objroadnmcd, objtrbdcd, objtrbdaddr, partnerno, tpymprem, perprem, govtprem, lgovtprem, applno, scno, insert_date, purpose,localurltmp,mappingno)
+			(quote_no, 
+			email, 
+			agmtkind, 
+			bldtotlyrnum, 
+			hsarea, 
+			lsgccd, 
+			polestrc, 
+			roofstrc, 
+			otwlstrc, 
+			objcat, 
+			bldfloors1, 
+			bldfloors2, 
+			lobzcd, 
+			gitdtarifcat1, 
+			objtypcd1, 
+			objtypcd2, 
+			objtypcd3, 
+			elagorgninsdamt1, 
+			elagorgninsdamt2, 
+			elagorgninsdamt3, 
+			ptykornm, 
+			telcat, 
+			telno, 
+			ptybiznm, 
+			bizno, 
+			objonnaddrcat, 
+			objzip, 
+			objaddr1, 
+			objaddr2, 
+			objroadnmcd, 
+			objtrbdcd, 
+			objtrbdaddr, 
+			partnerno,
+			insstdt,
+			inseddt,
+			inssttm,
+			insedtm,
+			prdins,
+			tpymprem, 
+			perprem, 
+			govtprem, 
+			lgovtprem, 
+			applno, 
+			scno, 
+			insert_date, 
+			purpose,
+			localurltmp,
+			mappingno,
+			sessionexectime,
+			sessionid,
+			certconfmseqno
+		)
 		values (#{quote_no},
 				#{email},
 				#{agmtkind},
@@ -38,6 +89,11 @@
 				#{objtrbdcd},
 				#{objtrbdaddr},
 				#{partnerno},
+				#{insstdt},
+				#{inseddt},
+				#{inssttm},
+				#{insedtm},
+				#{prdins},
 				#{tpymprem},
 				#{perprem},
 				#{govtprem},
@@ -47,7 +103,10 @@
 				sysdate,
 				#{purpose},
 				#{localurltmp},
-				#{mappingno}
+				#{mappingno},
+				#{sessionexectime},
+				#{sessionid},
+				#{certconfmseqno}
 				)
 	</insert>
 
@@ -55,5 +114,17 @@
 		delete from in101t
 		 where quote_no = #{quote_no}
 	</delete>
+
+	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select * 
+		  from in101t 
+		 where quote_no = #{quote_no}
+	</select> 
+
+	<update id="updateEsignurl">
+		update in101t
+		   set esignurl = #{esignurl}
+		 where quote_no = #{quote_no}
+	</update>
 
 </mapper>

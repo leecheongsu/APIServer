@@ -35,10 +35,12 @@ public class WWControllerTest {
 	@Value("classpath:mock/pre_premium.json")
 	private Resource pre_premium_json;
 
-	@Value("classpath:mock/premium2.json")
+	@Value("classpath:mock/premium.json")
 	private Resource premium_json;
 
-
+	@Value("classpath:mock/prevent_denial.json")
+	private Resource prevent_denial_json;
+	
 	Map<String, String> mockUser;
 	{
 		mockUser = new HashMap<String, String>();
@@ -61,7 +63,6 @@ public class WWControllerTest {
 		mockAddress.put("ji", "0");
 		mockAddress.put("zip", "07788");
 	}
-
 
 	@Test
 	@DisplayName("UI-APP-033-01 풍수해 주소찾기")
@@ -123,6 +124,22 @@ public class WWControllerTest {
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/premium")
+					.header("X-insr-servicekey", SERVICE_KEY)
+					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("UI-APP-03701 풍수해 부인방지 확인")
+	public void UIAPP037_02() throws Exception {
+		String json = ResourceUtil.asString(prevent_denial_json);
+		mockMvc
+			.perform(
+				post("http://localhost:8080/ww/prevent_denial")
 					.header("X-insr-servicekey", SERVICE_KEY)
 					.header(InsuAuthentication.HEADER_STRING, InsuAuthentication.GetAuthorizationValue(mockUser.get("email")))
 					.contentType(MediaType.APPLICATION_JSON)
