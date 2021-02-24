@@ -25,7 +25,7 @@ public class Hi_4_Order {
 			.body(data.toString())
 			.asJson();
 		JSONObject json = res.getBody().getObject();
-		log.info("fn_fnConfirmsubscription:" + json.toString());
+		log.debug("fn_fnConfirmsubscription:" + json.toString());
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");

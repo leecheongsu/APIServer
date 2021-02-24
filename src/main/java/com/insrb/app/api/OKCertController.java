@@ -102,7 +102,7 @@ public class OKCertController {
 			data.put("RSLT_MSG", RSLT_MSG);
 			data.put("succ", succ);
 
-			log.info("okcert:{}", data.toString());
+			log.debug("okcert:{}", data.toString());
 			return data;
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
@@ -174,7 +174,7 @@ public class OKCertController {
 			// 실패 시 클라이언트에 보낼 메세지
 			html = "<html><title></title><body></body><script>window.ReactNativeWebView.postMessage('fail');</script></html>";
 		}
-		log.info("html:{}", html);
+		log.debug("html:{}", html);
 		return html;
 	}
 
@@ -229,7 +229,7 @@ public class OKCertController {
 			data.put("RSLT_MSG", RSLT_MSG);
 			data.put("succ", succ);
 
-			log.info("okcert:{}", data.toString());
+			log.debug("okcert:{}", data.toString());
 			return data;
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
@@ -310,7 +310,7 @@ public class OKCertController {
 		}
 		html =
 			"<html><title></title><body></body><script>window.ReactNativeWebView.postMessage('" + data.toString() + "');</script></html>";
-		log.info("html:{}", html);
+		log.debug("html:{}", html);
 		return html;
 	}
 }

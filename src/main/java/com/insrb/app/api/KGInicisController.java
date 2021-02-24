@@ -90,7 +90,7 @@ public class KGInicisController {
 			.queryString("P_MID", "insurobo01")
 			.asString();
 		String rtn_string = res.getBody();
-		log.info("Rtn: {}", rtn_string);
+		log.debug("Rtn: {}", rtn_string);
 		String[] values = rtn_string.split("&");
 
 		JSONObject status = new JSONObject();
@@ -101,9 +101,9 @@ public class KGInicisController {
 				status.put("status", "ok");
 				for (int x = 0; x < values.length; x++) {
 					String[] key_value = values[x].split("=");
-					log.info(values[x], key_value.length); // 승인결과를 출력
+					log.debug(values[x], key_value.length); // 승인결과를 출력
 					if (key_value.length == 2) {
-						// log.info("K:V: {}:{}", key_value[0], key_value[1]);
+						// log.debug("K:V: {}:{}", key_value[0], key_value[1]);
 						data.put(key_value[0], key_value[1]);
 					} else if (key_value.length == 1) {
 						data.put(key_value[0], "");
@@ -121,7 +121,7 @@ public class KGInicisController {
 		// 성공 시 클라이언트에 보낼 메세지
 		String html =
 			"<html><title></title><body></body><script>window.ReactNativeWebView.postMessage('" + status.toString() + "');</script></html>";
-		log.info("html:{}", html);
+		log.debug("html:{}", html);
 		return html;
 	}
 
@@ -148,17 +148,17 @@ public class KGInicisController {
 		@RequestParam(name = "P_NOTI", required = false) String P_NOTI //가맹점 임의 데이터
 	)
 		throws UnsupportedEncodingException {
-		// log.info("P_STATUS: {}", P_STATUS);
-		// log.info("P_RMESG1: {}", P_RMESG1);
-		// log.info("P_TID: {}", P_TID);
-		// log.info("P_TYPE: {}", P_TYPE);
-		// log.info("P_AUTH_DT: {}", P_AUTH_DT);
-		// log.info("P_MID: {}", P_MID);
-		// log.info("P_OID: {}", P_OID);
-		// log.info("P_AMT: {}", P_AMT);
-		// log.info("P_FN_CD1: {}", P_FN_CD1);
-		// log.info("P_FN_NM: {}", P_FN_NM);
-		// log.info("P_NOTI: {}", P_NOTI);
+		// log.debug("P_STATUS: {}", P_STATUS);
+		// log.debug("P_RMESG1: {}", P_RMESG1);
+		// log.debug("P_TID: {}", P_TID);
+		// log.debug("P_TYPE: {}", P_TYPE);
+		// log.debug("P_AUTH_DT: {}", P_AUTH_DT);
+		// log.debug("P_MID: {}", P_MID);
+		// log.debug("P_OID: {}", P_OID);
+		// log.debug("P_AMT: {}", P_AMT);
+		// log.debug("P_FN_CD1: {}", P_FN_CD1);
+		// log.debug("P_FN_NM: {}", P_FN_NM);
+		// log.debug("P_NOTI: {}", P_NOTI);
 		if (!Objects.isNull(P_TID) && !Objects.isNull(P_STATUS) && !Objects.isNull(P_OID)) {
 			String quote_no = P_OID;
 			String tid = P_TID;
@@ -183,8 +183,8 @@ public class KGInicisController {
 		Map<String, Object> order = in003tMapper.selectByQuoteNo(quote_no);
 		if (Objects.isNull(order) || order.size() == 0) throw new KGInicisException("입금처리할 주문이 없읍니다.");
 		String dec_mobile = UserInfoCyper.DecryptMobile((String) order.get("mobile"));
-		log.info("order:{}", order.toString());
-		log.info("dec_mobile:{}", dec_mobile);
+		log.debug("order:{}", order.toString());
+		log.debug("dec_mobile:{}", dec_mobile);
 		kakaoMessage.AI001(
 			quote_no,
 			dec_mobile,

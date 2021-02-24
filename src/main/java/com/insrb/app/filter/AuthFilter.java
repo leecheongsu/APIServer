@@ -33,7 +33,7 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String service_key = req.getHeader("X-insr-servicekey");
-		log.info("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
+		log.debug("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
 
 		// 시스템 외부에서 들어오는 요청은 인증 체크 하지 않는다.
 		// String path = req.getRequestURI();

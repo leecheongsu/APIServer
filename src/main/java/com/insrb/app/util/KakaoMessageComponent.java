@@ -153,7 +153,7 @@ public class KakaoMessageComponent {
 		if (res.getStatus() == 200) {
 			// {"result_message":"OK","result_code":"200","cmid":"2021021411351886720601"}
 			JSONObject json = res.getBody().getObject();
-			log.info("KakaoMessage.A001 성공:{}", json.toString());
+			log.debug("KakaoMessage.A001 성공:{}", json.toString());
 			in901tMapper.insert(
 				quote_no,
 				"A001",
@@ -206,7 +206,7 @@ public class KakaoMessageComponent {
 		if (res.getStatus() == 200) {
 			// {"result_message":"OK","result_code":"200","cmid":"2021021411351886720601"}
 			JSONObject json = res.getBody().getObject();
-			log.info("KakaoMessage.A002 성공:{}", json.toString());
+			log.debug("KakaoMessage.A002 성공:{}", json.toString());
 			in901tMapper.insert(
 				quote_no,
 				"A002",
@@ -265,7 +265,7 @@ public class KakaoMessageComponent {
 			"\n-.보험기간 : " +
 			period +
 			"\n\n※약관 및 증권은 info@insurobo.co.kr로 전송되었습니다.\n기타 문의 사항은 인슈로보 문의하기 또는 고객센터(070-4126-3333)로\n문의 바랍니다.";
-		log.info(msg);
+		log.debug(msg);
 		HttpResponse<JsonNode> res = Unirest
 			.post(URL)
 			.header("x-waple-authorization", KEY)
@@ -282,7 +282,7 @@ public class KakaoMessageComponent {
 		if (res.getStatus() == 200) {
 			// {"result_message":"OK","result_code":"200","cmid":"2021021411351886720601"}
 			JSONObject json = res.getBody().getObject();
-			log.info("KakaoMessage.AI001 성공:{}", json.toString());
+			log.debug("KakaoMessage.AI001 성공:{}", json.toString());
 			in901tMapper.insert(
 				quote_no,
 				"AI001",

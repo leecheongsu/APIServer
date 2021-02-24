@@ -102,7 +102,7 @@ public class Hi_2_Premium {
 			// return rtn;
 			return true;
 		} catch (Exception e) {
-			log.info(e.getMessage());
+			log.debug(e.getMessage());
 			throw new WWException("현대해상 청약오류:" + e.getMessage());
 		}
 	}
@@ -126,7 +126,7 @@ public class Hi_2_Premium {
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
-			log.info("fn_1_CertConfmApi:" + json.toString());
+			log.debug("fn_1_CertConfmApi:" + json.toString());
 			this.certConfmSeqNo = json.getString("certConfmSeqNo"); //인증순번
 		} else {
 			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
@@ -152,7 +152,7 @@ public class Hi_2_Premium {
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
-			log.info("fn_2_PremiumMathApi:" + json.toString());
+			log.debug("fn_2_PremiumMathApi:" + json.toString());
 
 			// JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
 			// JSONObject giid0100vo = oagi6002vo.getJSONObject("giid0100vo");
@@ -208,7 +208,7 @@ public class Hi_2_Premium {
 			.asJson();
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			log.info("fn_3_JoinTobeApi:" + json.toString());
+			log.debug("fn_3_JoinTobeApi:" + json.toString());
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 
@@ -216,7 +216,7 @@ public class Hi_2_Premium {
 			// TODO: 아래는 필요없음.
 			// JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
 
-			// log.info()
+			// log.debug()
 			// hid.put("applNo", oagi6002vo.getString("applNo")); //계약번호
 			// hid.put("scNo", oagi6002vo.getString("scNo")); //청약번호
 			X_Session_Id = res.getHeaders().get("X-Session-Id").get(0); // 세션ID
@@ -253,7 +253,7 @@ public class Hi_2_Premium {
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
-			log.info("fn_4_ProdtManual:" + json.toString());
+			log.debug("fn_4_ProdtManual:" + json.toString());
 			// hid.put("intgXmlData", json.getString("intgXmlData")); //RD파일에 사용될 xml 데이터
 			// hid.put("intgMrdData", json.getString("intgMrdData")); //보고서 파일
 			// hid.put("intgReportGubun", json.getString("intgReportGubun")); //RD경로데이터 업무구분
@@ -286,7 +286,7 @@ public class Hi_2_Premium {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 
-			log.info("hidResultUrl:" + json.getString("flFullUrl"));
+			log.debug("hidResultUrl:" + json.getString("flFullUrl"));
 		} else {
 			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
@@ -324,8 +324,8 @@ public class Hi_2_Premium {
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
-			log.info("fn_7_ApifnElectronicSignApi(localUrlTmp):" + json.getString("localUrlTmp"));
-			log.info("fn_7_ApifnElectronicSignApi(mappingNo):" + json.getString("mappingNo"));
+			log.debug("fn_7_ApifnElectronicSignApi(localUrlTmp):" + json.getString("localUrlTmp"));
+			log.debug("fn_7_ApifnElectronicSignApi(mappingNo):" + json.getString("mappingNo"));
 			localurltmp = json.getString("localUrlTmp");
 			mappingno = json.getString("mappingNo");
 		} else {

@@ -26,13 +26,13 @@ public class Hi_3_PreventOfDenial {
 			.body(data.toString())
 			.asJson();
 		JSONObject json = res.getBody().getObject();
-		log.info("fn_prevent_of_denial:" + json.toString());
+		log.debug("fn_prevent_of_denial:" + json.toString());
 
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
 			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
-			log.info("fn_1_CertConfmApi:" + json.toString());
-			log.info("oaImgViewUrl:" + json.getString("oaImgViewUrl"));
+			log.debug("fn_1_CertConfmApi:" + json.toString());
+			log.debug("oaImgViewUrl:" + json.getString("oaImgViewUrl"));
 			String url = json.getString("oaImgViewUrl");
 			return url.replace("dB2C/data/", "");
 		} else {

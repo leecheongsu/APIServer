@@ -35,7 +35,7 @@ public class AddressSearch {
 	 * @throws SearchException
 	 */
 	public Map<String, Object> getJusoList(String search) throws SearchException {
-		log.info("getJusoList:" + search);
+		log.debug("getJusoList:" + search);
 		HttpResponse<JsonNode> res = Unirest
 			.post(JUSO_GO_KR_URL)
 			.field("keyword", search)
@@ -48,7 +48,7 @@ public class AddressSearch {
 			.asJson();
 
 		JSONObject json = res.getBody().getObject();
-		log.info(json.toString());
+		log.debug(json.toString());
 		if(Objects.isNull(json)) throw new SearchException("응답이없습니다");
 		String errCode = json.getJSONObject("results").getJSONObject("common").getString("errorCode");
 		if(!InsuStringUtil.Equals(errCode, "0")){
@@ -80,7 +80,7 @@ public class AddressSearch {
 	public Map<String, Object> getHouseCoverInfo(String sigunguCd, String bjdongCd, int bun, int ji) {
 		String str_bun = String.format("%04d", bun);
 		String str_ji = String.format("%04d", ji);
-		log.info("getHouseCoverInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
+		log.debug("getHouseCoverInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
 			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrTitleInfo")
@@ -112,7 +112,7 @@ public class AddressSearch {
 	public Map<String, Object> getHouseDetailInfo(String sigunguCd, String bjdongCd, int bun, int ji, String dongnm, String honm) {
 		String str_bun = String.format("%04d", bun);
 		String str_ji = String.format("%04d", ji);
-		log.info("getHouseDetailInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
+		log.debug("getHouseDetailInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
 			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrExposPubuseAreaInfo")

@@ -61,7 +61,7 @@ public class HouseController {
 		@RequestParam(name = "bun", required = true) int bun,
 		@RequestParam(name = "ji", required = true) int ji
 	) {
-		log.info("quotes/danche:{},{},{},{}", sigungucd, bjdongcd, bun, ji);
+		log.debug("quotes/danche:{},{},{},{}", sigungucd, bjdongcd, bun, ji);
 		try {
 			Map<String, Object> search = addressSearch.getHouseCoverInfo(sigungucd, bjdongcd, bun, ji);
 			List<Map<String, Object>> items = QuoteUtil.GetItemFromHouseInfo(search);

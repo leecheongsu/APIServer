@@ -52,7 +52,7 @@ public class UsersController {
 
 	@GetMapping(path = "today")
 	public String today() {
-		log.info("Today is called");
+		log.debug("Today is called");
 		return in005tMapper.getCurrentDateTime();
 	}
 
@@ -341,6 +341,7 @@ public class UsersController {
 			in006tMapper.merge(id, comname, sosok, businessnum);
 			return "OK";
 		} catch (NumberFormatException e) {
+			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
@@ -409,7 +410,7 @@ public class UsersController {
 	@GetMapping(path = "/{id}/test")
 	public List<Map<String, Object>> test(@PathVariable String id) {
 		List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
-		log.info(list.toString());
+		log.debug(list.toString());
 		return list;
 	}
 }

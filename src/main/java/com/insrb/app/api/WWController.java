@@ -176,9 +176,9 @@ public class WWController {
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		try {
 			JSONObject jsonObj = new JSONObject(data);
-			log.info("현대해상 가보험료 요청:{}",jsonObj.toString());
+			log.debug("현대해상 가보험료 요청:{}",jsonObj.toString());
 			Map<String, Object> result = Hi_1_PrePremium.GetPrePremium(jsonObj);
-			log.info("Result:{}", result);
+			log.debug("Result:{}", result);
 			return result;
 		} catch (WWException e) {
 			log.error("/ww/pre-premium: {}", e.getMessage());
@@ -193,7 +193,7 @@ public class WWController {
 	) {
 		String user_id = (String) body.get("user_id");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
-		log.info("현대해상 실보험료 요청:{}", new JSONObject(data).toString());
+		log.debug("현대해상 실보험료 요청:{}", new JSONObject(data).toString());
 		String quote_no = (String) data.get("quote_no"); // hi 안에서 사용함.
 		String caSerial = (String) data.get("ca_serial");
 		String caDn = (String) data.get("ca_dn");
@@ -238,7 +238,7 @@ public class WWController {
 			data.put("regNo", reg_no);
 			data.put("certConfmSeqNo", in101t.get("certconfmseqno"));
 			data.put("mappingNo", in101t.get("mappingno"));
-			log.info("현대해상 부인방지 요청:{}",  data.toString());
+			log.debug("현대해상 부인방지 요청:{}",  data.toString());
 
 			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial((String) in101t.get("sessionid"), data);
 			in101tMapper.updateEsignurl(quote_no, esignurl);
@@ -264,7 +264,7 @@ public class WWController {
 		try {
 			String user_id = (String) body.get("user_id");
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
-			log.info("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
+			log.debug("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			String quote_no = (String) data.get("quote_no");
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
@@ -275,7 +275,7 @@ public class WWController {
 
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
-			log.info("order:{}", order);
+			log.debug("order:{}", order);
 			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription((String) in101t.get("sessionid"), order);
 			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);

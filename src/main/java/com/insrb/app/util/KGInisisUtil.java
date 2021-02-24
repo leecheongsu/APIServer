@@ -84,8 +84,8 @@ public class KGInisisUtil {
 			String language = ""; // 언어설정 [ENG] * 결과메세지 언어 셋팅
 			String plain = KEY + type + paymethod + timestamp + clientIp + mid + moid + price + cardNumber;
 			String hashData = SHA512Util.Hash(plain); // 전문위변조 HASH   HASH hash(KEY+type+paymethod+timestamp+c
-			log.info("plain:{}", plain);
-			log.info("hashData:{}", hashData);
+			log.debug("plain:{}", plain);
+			log.debug("hashData:{}", hashData);
 			HttpResponse<JsonNode> res = Unirest
 				.post("https://iniapi.inicis.com/api/v1/formpay")
 				.header("Content-Type", "application/x-www-form-urlencoded")
@@ -160,8 +160,8 @@ public class KGInisisUtil {
 	// 	String language = ""; // 언어설정 [ENG] * 결과메세지 언어 셋팅
 	// 	String plain = KEY + type + paymethod + timestamp + clientIp + mid + moid + price + cardNumber;
 	// 	String hashData = SHA512Util.Hash(plain); // 전문위변조 HASH   HASH hash(KEY+type+paymethod+timestamp+c
-	// 	log.info("plain:{}", plain);
-	// 	log.info("hashData:{}", hashData);
+	// 	log.debug("plain:{}", plain);
+	// 	log.debug("hashData:{}", hashData);
 	// 	HttpResponse<JsonNode> res = Unirest
 	// 		.post("https://iniapi.inicis.com/api/v1/formpay")
 	// 		.header("Content-Type", "application/x-www-form-urlencoded")
@@ -190,7 +190,7 @@ public class KGInisisUtil {
 	// 		.field("hashData", hashData)
 	// 		.asJson();
 	// 	JSONObject json = res.getBody().getObject();
-	// 	log.info(json.toString());
+	// 	log.debug(json.toString());
 	// 	return json.toString();
 	// }
 
@@ -218,8 +218,8 @@ public class KGInisisUtil {
 	// 	String vacct = ""; // 벌크가상계좌번호 * 과오납 체크의 경우만 세팅
 	// 	String hashData = ""; // 전문위변조 HASH   HASH hash(KEY+type+paymethod+timestamp+clientIp+mid+moi
 	// 	String plain = KEY + type + paymethod + timestamp + clientIp + mid + moid + price;
-	// 	log.info("plain:{}", plain);
-	// 	log.info("hashData:{}", hashData);
+	// 	log.debug("plain:{}", plain);
+	// 	log.debug("hashData:{}", hashData);
 	// 	HttpResponse<JsonNode> res = Unirest
 	// 		.post("https://iniapi.inicis.com/api/v1/formpay")
 	// 		.header("Content-Type", "application/x-www-form-urlencoded")
@@ -245,7 +245,7 @@ public class KGInisisUtil {
 	// 		.field("hashData", hashData)
 	// 		.asJson();
 	// 	JSONObject json = res.getBody().getObject();
-	// 	log.info(json.toString());
+	// 	log.debug(json.toString());
 	// 	return json.toString();
 	// }
 }

@@ -27,7 +27,7 @@ public class Hi_1_PrePremium {
 			.asJson();
 
 		JSONObject json = res.getBody().getObject();
-		log.info("GetPrePremium:" + json.toString());
+		log.debug("GetPrePremium:" + json.toString());
 
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");

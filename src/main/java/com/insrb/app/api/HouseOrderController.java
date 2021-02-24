@@ -64,8 +64,8 @@ public class HouseOrderController {
 	) {
 		String user_id = (String) body.get("user_id");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
-		// log.info("User:{}", user_id);
-		// log.info(data.toString());
+		// log.debug("User:{}", user_id);
+		// log.debug(data.toString());
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			String quote_no = (String) data.get("quote_no");
@@ -94,8 +94,8 @@ public class HouseOrderController {
 					reg_no,
 					card_pw
 				);
-				// log.info("terms:{}", terms.toString());
-				// log.info("premiums:{}", premiums.toString());
+				// log.debug("terms:{}", terms.toString());
+				// log.debug("premiums:{}", premiums.toString());
 				// 카드결제 결과 저장
 				insertIN009T(quote_no, kginisis_json);
 				insertOrder(quote_no, data);
@@ -131,16 +131,16 @@ public class HouseOrderController {
 	) {
 		String user_id = (String) body.get("user_id");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
-		// log.info("User:{}", user_id);
-		log.info("/vacct: {}", data.toString());
+		// log.debug("User:{}", user_id);
+		log.debug("/vacct: {}", data.toString());
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			String quote_no = (String) data.get("quote_no");
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			List<Map<String, Object>> premiums = (List<Map<String, Object>>) data.get("premiums");
 
-			log.info("terms:{}", terms.toString());
-			log.info("premiums:{}", premiums.toString());
+			log.debug("terms:{}", terms.toString());
+			log.debug("premiums:{}", premiums.toString());
 			insertOrder(quote_no, data);
 			insertTerms(quote_no, terms);
 			updatePremiums(quote_no, premiums);

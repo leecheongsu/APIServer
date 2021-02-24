@@ -33,7 +33,7 @@ public class DatabaseConfiguration {
 	@Profile("local")
 	public DataSource dataSource() {
 		DataSource dataSource = new HikariDataSource(hikariConfig());
-		log.info("local datasource : {}", dataSource);
+		log.debug("local datasource : {}", dataSource);
 		return dataSource;
     }
     
