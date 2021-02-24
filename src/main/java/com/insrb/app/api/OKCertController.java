@@ -63,9 +63,6 @@ public class OKCertController {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			// 서비스명 (고정값)
 			String svcName = "IDS_HS_POPUP_START";
-			// TODO: http --> 나중에 https 로 바꿀것...URL을 통째로 바꿀것.
-			// String RETURN_URL = "http://" + request.getServerName() + ":8080/okcert/rtn/house"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
-			// String RETURN_URL = "http://210.179.175.145/okcert/rtn/house"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
 			String RETURN_URL = okcert_rtn_server + "/okcert/rtn/house"; // 인증 완료 후 리턴될 URL (도메인 포함 full path)
 
 			// okcert3 요청 정보
@@ -79,7 +76,6 @@ public class OKCertController {
 
 			// okcert3 실행
 			OkCert okcert = new OkCert();
-			// String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr);
 			java.io.InputStream is = licenseResource.getInputStream(); // new java.io.FileInputStream(license);	// 환경에 맞게 InputStream 로드
 			String resultStr = okcert.callOkCert(TARGET_SYSTEM, CP_CD, svcName, LICENSE_FILE_NAME, reqStr, is);
 			JSONObject resJson = new JSONObject(resultStr);

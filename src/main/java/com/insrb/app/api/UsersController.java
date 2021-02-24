@@ -386,7 +386,7 @@ public class UsersController {
 				certi.put("insurant_a_mobile", insurant_a_mobile);
 				String jumin = UserInfoCyper.DecryptJuminb((String) certi.get("jumin"));
 				certi.put("jumin", jumin);
-				// 풍수해인 경우 적용 담보를 조회한다.
+				// 주택화재인 경우 적용 담보를 조회한다.
 				if (InsuStringUtil.Equals((String) certi.get("prod_code"), "m002")) {
 					List<Map<String, Object>> premiums = in002t_v1Mapper.selectById((String) certi.get("quote_no"));
 					certi.put("premiums", premiums);
@@ -407,10 +407,10 @@ public class UsersController {
 		}
 	}
 
-	@GetMapping(path = "/{id}/test")
-	public List<Map<String, Object>> test(@PathVariable String id) {
-		List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
-		log.debug(list.toString());
-		return list;
-	}
+	// @GetMapping(path = "/{id}/test")
+	// public List<Map<String, Object>> test(@PathVariable String id) {
+	// 	List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
+	// 	log.debug(list.toString());
+	// 	return list;
+	// }
 }

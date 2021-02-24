@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.insrb</groupId>
 	<artifactId>api</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8</version>
 	<packaging>war</packaging>
 	<name>api</name>
 	<description>InsuRobo Api Server</description>
