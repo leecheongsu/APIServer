@@ -16,6 +16,7 @@ import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.insurance.hi.Hi_1_PrePremium;
 import com.insrb.app.insurance.hi.Hi_2_Premium;
 import com.insrb.app.insurance.hi.Hi_3_PreventOfDenial;
+import com.insrb.app.insurance.hi.Hi_4_Order;
 import com.insrb.app.mapper.IN001TMapper;
 import com.insrb.app.mapper.IN003TMapper;
 import com.insrb.app.mapper.IN005TMapper;
@@ -28,7 +29,7 @@ import com.insrb.app.mapper.IN103CMapper;
 import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.InsuStringUtil;
-import com.insrb.app.util.KakaoMessageUtil;
+import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
@@ -88,6 +89,9 @@ public class WWController {
 
 	@Autowired
 	IN101TMapper in101tMapper;
+
+	@Autowired
+	KakaoMessageComponent kakaoMessage;
 
 	@Value("classpath:basic/tmpl_preminum_req_body.json")
 	private Resource tmpl_preminum_req_body_json;
@@ -187,10 +191,10 @@ public class WWController {
 			log.info("Result:{}", result);
 			return result;
 		} catch (JsonProcessingException e) {
-			log.error("/house/orders: {}", e.getMessage());
+			log.error("/ww/orders: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 JSON 형식입니다.");
 		} catch (WWException e) {
-			log.error("/house/orders: {}", e.getMessage());
+			log.error("/ww/orders: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		}
 	}
@@ -237,13 +241,23 @@ public class WWController {
 		try {
 			String user_id = (String) body.get("user_id");
 			String quote_no = (String) body.get("quote_no");
+			String reg_no = (String) body.get("reg_no");
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
-			Map<String, Object> data = (Map<String, Object>) body.get("data");
-			log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
+			// Map<String, Object> data = (Map<String, Object>) body.get("data");
+			// log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 			log.info("현대해상 부인방지 요청");
 			// return hi.fn_prevent_of_denial(new JSONObject(data));
-			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial(new JSONObject(data));
+			//TODO: 클라이언트로부터 받지말고 dB에서 가져오자.
+			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
+			JSONObject data = new JSONObject();
+			data.put("intgAgmtKind",in101t.get("agmtkind"));
+			data.put("regNo",reg_no);
+			data.put("certConfmSeqNo",in101t.get("certconfmseqno"));
+			data.put("mappingNo",in101t.get("mappingno"));
+			log.info("POD:{}",data.toString());
+			// return "ok";
+			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial((String)in101t.get("sessionid"),data);
 			in101tMapper.updateEsignurl(quote_no, esignurl);
 			return esignurl;
 		} catch (WWException e) {
@@ -279,16 +293,16 @@ public class WWController {
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
 			log.info("order:{}", order);
-			// Hi_4_Order.FnConfirmsubscription(order);
-
+			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription((String)in101t.get("sessionid"),order);
+			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);
 			in003tMapper.insertFromIn101t(quote_no, prod_code, advisor_no);
 			insertTerms(quote_no, terms);
 			sendA001KakaoMessage(quote_no, in003tMapper.selectByQuoteNo(quote_no));
 			return "OK";
-			// } catch (WWException e) {
-			// 	log.error("/ww/order: {}", e.getMessage());
-			// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+		} catch (WWException e) {
+			log.error("/ww/order: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -392,7 +406,8 @@ public class WWController {
 		Date ins_from = (Date) data.get("ins_from");
 		Date ins_to = (Date) data.get("ins_to");
 
-		KakaoMessageUtil.A001(
+		kakaoMessage.A001(
+			quote_no,
 			encMobile,
 			polholder,
 			prod_name,

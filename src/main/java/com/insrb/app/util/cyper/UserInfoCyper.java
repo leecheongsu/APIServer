@@ -42,6 +42,13 @@ public class UserInfoCyper {
         return TripleDESUtil.encrypt(key, juminB);
     }
 
+    public static String DecryptJuminb(String juminB) throws InsuEncryptException {
+        Key key = TripleDESUtil.createKey(SALT);
+        String dec = TripleDESUtil.decrypt(key, juminB);
+        return dec;
+    }
+ 
+
     /**
      * 비밀번호는 단방향 SHA256 Hashing을 사용한다. Rainbow Attack 을 피하기 위해 Hashing 시 이메일 주소를 salt로 사용한다.
      * 

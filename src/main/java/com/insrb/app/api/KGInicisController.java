@@ -1,16 +1,23 @@
 package com.insrb.app.api;
 
+import com.insrb.app.exception.InsuEncryptException;
+import com.insrb.app.exception.KGInicisException;
+import com.insrb.app.mapper.IN003TMapper;
+import com.insrb.app.mapper.IN009TMapper;
+import com.insrb.app.mapper.IN901TMapper;
+import com.insrb.app.util.InsuDateUtil;
+import com.insrb.app.util.InsuStringUtil;
+import com.insrb.app.util.KakaoMessageComponent;
+import com.insrb.app.util.cyper.UserInfoCyper;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import com.insrb.app.exception.KGInicisException;
-import com.insrb.app.mapper.IN003TMapper;
-import com.insrb.app.mapper.IN009TMapper;
-import com.insrb.app.util.InsuDateUtil;
-import com.insrb.app.util.InsuStringUtil;
-import com.insrb.app.util.KakaoMessageUtil;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,12 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 // ref: https://manual.inicis.com/mobile/ 참고
 
@@ -41,6 +45,12 @@ public class KGInicisController {
 
 	@Autowired
 	IN009TMapper in009tMapper;
+
+	@Autowired
+	IN901TMapper in901tMapper;
+
+	@Autowired
+	KakaoMessageComponent kakaoMessage;
 
 	@GetMapping(path = "/vacct/param")
 	public Map<String, Object> vacct_param() {
@@ -65,7 +75,7 @@ public class KGInicisController {
 		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 		produces = MediaType.TEXT_HTML_VALUE
 	)
-	// @ResponseBody
+	@ResponseBody
 	public String rtn_house(
 		@RequestParam(name = "P_STATUS", required = false) String P_STATUS,
 		@RequestParam(name = "P_RMESG1", required = false) String P_RMESG1,
@@ -123,6 +133,7 @@ public class KGInicisController {
 		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 		produces = MediaType.TEXT_HTML_VALUE
 	)
+	@ResponseBody
 	public String noti_house(
 		@RequestParam(name = "P_STATUS", required = false) String P_STATUS, //거래상태 [00:가상계좌 채번, 02:가상계좌입금통보]
 		@RequestParam(name = "P_TID", required = false) String P_TID, //승인거래번호
@@ -154,10 +165,11 @@ public class KGInicisController {
 			int price = (int) InsuStringUtil.ToIntOrDefault(P_AMT, 0);
 			if (InsuStringUtil.Equals(P_STATUS, "02")) { //가상계좌 입금
 				in009tMapper.delete(tid, P_STATUS);
-				in009tMapper.insertVacct(quote_no, tid, P_STATUS, P_RMESG1, P_AUTH_DT, P_FN_CD1, price);
+				in009tMapper.insertVacct(quote_no, tid, P_STATUS, P_RMESG1, P_AUTH_DT, P_FN_CD1, price); // 입금처리
+				in003tMapper.updateVacct(quote_no, P_AUTH_DT); // 입금확인
 				try {
 					sendAI001KakaoMessage(quote_no);
-				} catch (KGInicisException e) {
+				} catch (KGInicisException | InsuEncryptException e) {
 					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 				}
 				return "OK";
@@ -167,12 +179,15 @@ public class KGInicisController {
 		throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "입금 Noti from KG이니시스 오류");
 	}
 
-	private void sendAI001KakaoMessage(String quote_no) throws KGInicisException {
+	private void sendAI001KakaoMessage(String quote_no) throws KGInicisException, InsuEncryptException {
 		Map<String, Object> order = in003tMapper.selectByQuoteNo(quote_no);
-		log.info("order", order.toString());
 		if (Objects.isNull(order) || order.size() == 0) throw new KGInicisException("입금처리할 주문이 없읍니다.");
-		KakaoMessageUtil.AI001(
-			(String) order.get("mobile"),
+		String dec_mobile = UserInfoCyper.DecryptMobile((String) order.get("mobile"));
+		log.info("order:{}", order.toString());
+		log.info("dec_mobile:{}", dec_mobile);
+		kakaoMessage.AI001(
+			quote_no,
+			dec_mobile,
 			(String) order.get("polholder"),
 			(String) order.get("prod_name"), //order.get("p_name"), //상품명
 			(String) order.get("insurant_a"),

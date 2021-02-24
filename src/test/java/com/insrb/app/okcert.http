@@ -16,3 +16,13 @@ GET http://localhost:8080/kginicis/noti/house
     ?P_STATUS=00
     &P_RMESG1=
 
+
+
+### mybatis null test
+GET http://localhost:8080/users/vingorius@gmail.com/test
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
+### mybatis null test
+GET http://210.179.175.145/users/vingorius@gmail.com/test
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+

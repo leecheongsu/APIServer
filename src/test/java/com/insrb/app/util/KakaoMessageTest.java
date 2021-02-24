@@ -1,11 +1,15 @@
 package com.insrb.app.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class KakaoMessageTest {
+	String quote_no =  "TEST";
 
+	@Autowired
+	KakaoMessageComponent kakao;
+	
 	@Test
 	public void test_A001() {
 		String phone = "01047017956";
@@ -23,7 +27,7 @@ public class KakaoMessageTest {
 		String period = "2020.07.11 24:00 ~ 2021.07.10 24:00";
 		assertEquals(
 			true,
-			KakaoMessageUtil.A001(phone, u_name, product, pu_name, pu_insloc, allamount, price, success_num, success, start_date, period)
+			kakao.A001(quote_no,phone, u_name, product, pu_name, pu_insloc, allamount, price, success_num, success, start_date, period)
 		);
 	}
 
@@ -39,7 +43,7 @@ public class KakaoMessageTest {
         // String msg =
 		// 	"안녕하세요 #{홍길동}님.\r\n#{보험가입상품명} 계약건에 대한 보험료를\r\n이체하실 계좌번호 정보를 알려드립니다.\r\n\r\n-.거래은행 : #{KB국민은행}\r\n-.계좌주명 : 주식회사 인슈로보\r\n-.계좌번호(가상계좌) : #{02649071247314}\r\n-.입금하실 보험료 : #{00,000}원\r\n-.입금마감일자 : #{2020년 7월 10일 23시 59분 00초}\r\n\r\n※입금마감일자가 지나면 계좌가 자동 폐쇄되어 입금이 되지 않고,\r\n 계약이 완료되지 않습니다. 유의하시어 기간 내에 처리 바랍니다.";
 
-		assertEquals(true, KakaoMessageUtil.A002(phone, u_name, p_name, b_name, account_num, amt, last_date));
+		assertEquals(true, kakao.A002(quote_no, phone, u_name, p_name, b_name, account_num, amt, last_date));
 	}
 
 	@Test
@@ -57,6 +61,6 @@ public class KakaoMessageTest {
             String			success = "2020.07.10";
             String			start_date = "2020.07.21";
             String			period = "2020.07.11 24:00 ~ 2021.07.10 24:00";
-		assertEquals(true, KakaoMessageUtil.AI001(phone, u_name, p_name, pu_name, pu_insloc, allamount, price, success_num, success, start_date, period));
+		assertEquals(true, kakao.AI001(quote_no, phone, u_name, p_name, pu_name, pu_insloc, allamount, price, success_num, success, start_date, period));
 	}
 }

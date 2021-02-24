@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.IN002T_V1Mapper">
+	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select a.*
+		  from in002t_v1 a
+		 where a.quote_no = #{quote_no}
+	</select> 
+</mapper>

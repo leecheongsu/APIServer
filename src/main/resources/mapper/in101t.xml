@@ -127,4 +127,11 @@
 		 where quote_no = #{quote_no}
 	</update>
 
+	<update id="updateContract">
+		update in101t
+		   set giid0410vo_json = #{giid0410vo_json}
+		 where quote_no = #{quote_no}
+	</update>
+
+
 </mapper>

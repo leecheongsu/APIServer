@@ -1,12 +1,9 @@
 package com.insrb.app.api;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.InsuEncryptException;
+import com.insrb.app.mapper.IN002T_V1Mapper;
 import com.insrb.app.mapper.IN003T_V1Mapper;
 import com.insrb.app.mapper.IN005CMapper;
 import com.insrb.app.mapper.IN005TMapper;
@@ -14,6 +11,11 @@ import com.insrb.app.mapper.IN006TMapper;
 import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -42,6 +43,9 @@ public class UsersController {
 
 	@Autowired
 	IN005CMapper in005cMapper;
+
+	@Autowired
+	IN002T_V1Mapper in002t_v1Mapper;
 
 	@Autowired
 	IN003T_V1Mapper in003t_v1Mapper;
@@ -196,7 +200,7 @@ public class UsersController {
 	}
 
 	@GetMapping(path = "/email")
-	public String email(
+	public List<Map<String, Object>> email(
 		@RequestParam(name = "name", required = true) String name,
 		@RequestParam(name = "teltype", required = true) String teltype,
 		@RequestParam(name = "mobile", required = true) String mobile,
@@ -205,9 +209,9 @@ public class UsersController {
 	) {
 		try {
 			String encMobile = UserInfoCyper.EncryptMobile(mobile);
-			String email = in005tMapper.findId(name, teltype, encMobile, jumina, sex);
-			if (Objects.isNull(email)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user");
-			return email;
+			List<Map<String, Object>> list = in005tMapper.findId(name, teltype, encMobile, jumina, sex);
+			if (Objects.isNull(list) || list.size() == 0) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user");
+			return list;
 		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "암호화 오류.");
@@ -367,15 +371,25 @@ public class UsersController {
 	}
 
 	@GetMapping(path = "/{id}/certificates")
-	public List<Map<String,Object>> certificates(@RequestHeader(name = "Authorization", required = false) String auth_header, @PathVariable String id) {
+	public List<Map<String, Object>> certificates(
+		@RequestHeader(name = "Authorization", required = false) String auth_header,
+		@PathVariable String id
+	) {
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, id);
-			List<Map<String,Object>> list = in003t_v1Mapper.selectByUserId(id);
-			for(Map<String,Object> certi : list){
-				String pbohumja_mobile = UserInfoCyper.DecryptMobile((String)certi.get("pbohumja_mobile"));
-				certi.put("pbohumja_mobile",pbohumja_mobile);
-				String insurant_a_mobile = UserInfoCyper.DecryptMobile((String)certi.get("insurant_a_mobile"));
-				certi.put("insurant_a_mobile",insurant_a_mobile);
+			List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
+			for (Map<String, Object> certi : list) {
+				String pbohumja_mobile = UserInfoCyper.DecryptMobile((String) certi.get("pbohumja_mobile"));
+				certi.put("pbohumja_mobile", pbohumja_mobile);
+				String insurant_a_mobile = UserInfoCyper.DecryptMobile((String) certi.get("insurant_a_mobile"));
+				certi.put("insurant_a_mobile", insurant_a_mobile);
+				String jumin = UserInfoCyper.DecryptJuminb((String) certi.get("jumin"));
+				certi.put("jumin", jumin);
+				// 풍수해인 경우 적용 담보를 조회한다.
+				if (InsuStringUtil.Equals((String) certi.get("prod_code"), "m002")) {
+					List<Map<String, Object>> premiums = in002t_v1Mapper.selectById((String) certi.get("quote_no"));
+					certi.put("premiums", premiums);
+				}
 			}
 			return list;
 		} catch (NumberFormatException e) {
@@ -390,5 +404,12 @@ public class UsersController {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
+	}
+
+	@GetMapping(path = "/{id}/test")
+	public List<Map<String, Object>> test(@PathVariable String id) {
+		List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
+		log.info(list.toString());
+		return list;
 	}
 }

@@ -1,7 +1,6 @@
 package com.insrb.app.mapper;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public interface IN003TMapper {
@@ -38,4 +37,6 @@ public interface IN003TMapper {
 	void delete(String quote_no);
 
 	Map<String, Object> selectByQuoteNo(String quote_no);
+
+  void updateVacct(String quote_no, String v_bank_auth_dt);
 }

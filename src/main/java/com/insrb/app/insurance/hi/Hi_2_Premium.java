@@ -1,21 +1,22 @@
 package com.insrb.app.insurance.hi;
 
-import java.util.Map;
 import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.exception.WWException;
 import com.insrb.app.mapper.IN101TMapper;
 import com.insrb.app.util.InsuJsonUtil;
+import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.ResourceUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
+import java.util.Map;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 //ref : http://kong.github.io/unirest-java/#requests
 
@@ -121,14 +122,14 @@ public class Hi_2_Premium {
 			.header("Content-Type", "application/json;charset=UTF-8")
 			.body(fn_1_certJson.toString())
 			.asJson();
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 본인인증이력등록 API 호출 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 			log.info("fn_1_CertConfmApi:" + json.toString());
 			this.certConfmSeqNo = json.getString("certConfmSeqNo"); //인증순번
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
@@ -147,10 +148,10 @@ public class Hi_2_Premium {
 			.body(fn_2_premiumJson.toString())
 			.asJson();
 
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 보험료 요청 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 			log.info("fn_2_PremiumMathApi:" + json.toString());
 
 			// JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
@@ -168,18 +169,19 @@ public class Hi_2_Premium {
 			// hid.put("tpymPrem", giid0100vo.getInt("tpymPrem")); //총보험료
 			// hid.put("executeTime", json.getString("executeTime")); // 세션실행시간
 			// hid.put("X-Session-Id", res.getHeaders().get("X-Session-Id").get(0)); // 세션ID
-			X_Session_Execute_Time = json.getString("executeTime"); // 세션실행시간
+
+			X_Session_Execute_Time = json.getString("executeTime"); // 세션실행시간:세션키 05S에서 받은 걸 08S에서 사용
 			X_Session_Id = res.getHeaders().get("X-Session-Id").get(0); // 세션ID
 
 			fn_2_premiumJson = json;
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
 	// 5.	fnJoinTobeApi(): 가입설계 API 호출
 	private void fn_3_JoinTobeApi() throws WWException {
-		fn_3_joinTobeJson.put("executeTime", fn_2_premiumJson.getString("executeTime"));
+		fn_3_joinTobeJson.put("executeTime", X_Session_Execute_Time);
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("ptyKorNm", oagi6002vo.getString("ptyKorNm"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("regNo1", oagi6002vo.getString("regNo1"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("regNo2", oagi6002vo.getString("regNo2"));
@@ -192,7 +194,7 @@ public class Hi_2_Premium {
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("roadNmCd", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("trbdCd", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("trbdAddr", oagi6002vo.getString("objZip2"));
-		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("certConfmSeqNo", certConfmSeqNo);
+		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("certConfmSeqNo", this.certConfmSeqNo);
 		HttpResponse<JsonNode> res = Unirest
 			.post(HiConfig.SERVER + "/v1/OASF2001M08S")
 			.header("X-Channel-Id", HiConfig.X_Channel_Id)
@@ -204,11 +206,11 @@ public class Hi_2_Premium {
 			.header("Content-Type", "application/json")
 			.body(fn_3_joinTobeJson.toString())
 			.asJson();
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			log.info("fn_3_JoinTobeApi:" + json.toString());
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 가입설계 API 호출 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 
 			fn_2_premiumJson = json; // 새로 설정.
 			// TODO: 아래는 필요없음.
@@ -217,8 +219,10 @@ public class Hi_2_Premium {
 			// log.info()
 			// hid.put("applNo", oagi6002vo.getString("applNo")); //계약번호
 			// hid.put("scNo", oagi6002vo.getString("scNo")); //청약번호
+			X_Session_Id = res.getHeaders().get("X-Session-Id").get(0); // 세션ID
+			X_Session_Execute_Time = json.getString("executeTime"); // 세션실행시간:세션키 08S에서 받은 걸 12S에서 사용
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
@@ -239,23 +243,23 @@ public class Hi_2_Premium {
 			.header("X-Client-Id", HiConfig.X_Client_Id)
 			.header("X-Menu-Id", HiConfig.X_Menu_Id)
 			.header("X-User-Id", HiConfig.X_User_Id)
+			// .header("X-Session-Id", X_Session_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json")
 			.body(fn_4_prodtManualJson.toString())
 			.asJson();
 
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 통합청약서(상품설명서) API 호출 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 			log.info("fn_4_ProdtManual:" + json.toString());
-
 			// hid.put("intgXmlData", json.getString("intgXmlData")); //RD파일에 사용될 xml 데이터
 			// hid.put("intgMrdData", json.getString("intgMrdData")); //보고서 파일
 			// hid.put("intgReportGubun", json.getString("intgReportGubun")); //RD경로데이터 업무구분
 			// hid.put("intgPageTitle", json.getString("intgPageTitle")); //보고서 제목
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
@@ -272,18 +276,19 @@ public class Hi_2_Premium {
 			.header("X-Client-Id", HiConfig.X_Client_Id)
 			.header("X-Menu-Id", HiConfig.X_Menu_Id)
 			.header("X-User-Id", HiConfig.X_User_Id)
+			// .header("X-Session-Id", X_Session_Id)
 			.header("Authorization", commonToken)
 			.header("Content-Type", "application/json")
 			.body(prodtTerms.toString())
 			.asJson();
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 상품약관조회 API 호출 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 
 			log.info("hidResultUrl:" + json.getString("flFullUrl"));
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
@@ -315,16 +320,16 @@ public class Hi_2_Premium {
 			.body(eSign.toString())
 			.asJson();
 
+		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 상품약관조회 API 호출 결과 오류(오류코드):" + resultCode);
-			// log.info("fn_7_ApifnElectronicSignApi:" + json.getString("localUrlTmp"));
+			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			log.info("fn_7_ApifnElectronicSignApi(localUrlTmp):" + json.getString("localUrlTmp"));
+			log.info("fn_7_ApifnElectronicSignApi(mappingNo):" + json.getString("mappingNo"));
 			localurltmp = json.getString("localUrlTmp");
 			mappingno = json.getString("mappingNo");
 		} else {
-			log.info(res.toString());
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 
@@ -336,7 +341,6 @@ public class Hi_2_Premium {
 		String agmtkind = oagi6002vo.getString("agmtKind");
 		String bldtotlyrnum = oagi6002vo.getString("bldTotLyrNum");
 		String hsarea = oagi6002vo.getString("hsArea");
-		String purpose = "?"; //TODO: o,r 이 들어가는데, 사용자로부터 입력받아야함. oagi6002vo.getString("purpose");
 		String lsgccd = oagi6002vo.getString("lsgcCd");
 		String polestrc = oagi6002vo.getString("poleStrc");
 		String roofstrc = oagi6002vo.getString("roofStrc");
@@ -351,6 +355,8 @@ public class Hi_2_Premium {
 		String objtypcd1 = InsuJsonUtil.IfNullDefault(oagi6002vo, "objTypCd1", "");
 		String objtypcd2 = InsuJsonUtil.IfNullDefault(oagi6002vo, "objTypCd2", "");
 		String objtypcd3 = InsuJsonUtil.IfNullDefault(oagi6002vo, "objTypCd3", "");
+		String purpose = "?"; // 건물담보가 있으면 소유, 아니면 렌트
+		purpose = (InsuStringUtil.Equals(objtypcd1, "Y")) ? "o" : "r";
 		// String elagorgninsdamt1 = oagi6002vo.getString("elagOrgnInsdAmt1");
 		// String elagorgninsdamt2 = oagi6002vo.getString("elagOrgnInsdAmt2");
 		// String elagorgninsdamt3 = (String)oagi6002vo.get("elagOrgnInsdAmt3");
@@ -375,11 +381,11 @@ public class Hi_2_Premium {
 		String inseddt = oagi6002vo.getString("insEdDt"); //보험종료일자
 		String inssttm = oagi6002vo.getString("insStTm"); //보험개시시간
 		String insedtm = oagi6002vo.getString("insEdTm"); //보험종료시간
-		String prdins = oagi6002vo.getString("prdins");//보험가입기간
-		String tpymprem = giid0100vo.getString("tpymPrem");//총보험료
-		String perprem = giid0100vo.getString("perPrem");//본인 부담 보험료
+		String prdins = oagi6002vo.getString("prdins"); //보험가입기간
+		String tpymprem = giid0100vo.getString("tpymPrem"); //총보험료
+		String perprem = giid0100vo.getString("perPrem"); //본인 부담 보험료
 		String govtprem = giid0100vo.getString("govtPrem"); //정부 부담 보험료
-		String lgovtprem = giid0100vo.getString("lgovtPrem");//지자체 부담 보험료
+		String lgovtprem = giid0100vo.getString("lgovtPrem"); //지자체 부담 보험료
 		String applno = oagi6002vo.getString("applNo");
 		String scno = oagi6002vo.getString("scNo");
 

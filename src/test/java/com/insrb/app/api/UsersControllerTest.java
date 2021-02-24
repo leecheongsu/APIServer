@@ -565,7 +565,7 @@ public class UsersControllerTest {
 
 
 	@Test
-	@DisplayName("UI-APP-017 내 보험 : GET /users/certificates 추천인 3건 리턴해야한다")
+	@DisplayName("UI-APP-017 내 보험 : GET /users/certificates 3건 리턴해야한다")
 	public void UIAPP017_01() throws Exception {
 		mockMvc
 			.perform(
@@ -575,8 +575,12 @@ public class UsersControllerTest {
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+			.andExpect(MockMvcResultMatchers.jsonPath("$[0].owner").value("o"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$[0].advisor_company").value(""))
 			;
 	}
 
+
+	
 }

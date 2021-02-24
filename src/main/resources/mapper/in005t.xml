@@ -48,12 +48,14 @@
     </select>
 
 	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
-		select * 
-		  from in005t 
-		 where email = #{id}
+		select a.*, b.comname,b.sosok,b.businessnum,b.gacode
+		  from in005t a,in006t b
+		 where a.email = b.email(+)
+		   and a.email = #{id}
+		   and use_yn  = 'Y'
 	</select> 
 
-	<select id="findId" resultType="String">
+	<select id="findId" resultType="com.insrb.app.util.LowerKeyMap">
 		select email
 		  from in005t 
 		 where name    = #{name}
@@ -61,6 +63,7 @@
 		   and mobile  = #{mobile}
 		   and jumina  = #{jumina}
 		   and sex     = #{sex}
+		   and use_yn  = 'Y'
 	</select> 
 
 	<resultMap id="userResultMap" type="com.insrb.app.util.LowerKeyMap"></resultMap>

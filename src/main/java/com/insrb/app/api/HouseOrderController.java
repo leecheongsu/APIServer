@@ -17,7 +17,7 @@ import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.KGInisisUtil;
-import com.insrb.app.util.KakaoMessageUtil;
+import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.cyper.UserInfoCyper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +51,9 @@ public class HouseOrderController {
 
 	@Autowired
 	IN011TMapper in011tMapper;
+
+     @Autowired
+	 KakaoMessageComponent kakaoMessage;
 
 	//카드결제
 	@PostMapping(path = "/card")
@@ -328,7 +331,8 @@ public class HouseOrderController {
 		Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
 		Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
 
-		KakaoMessageUtil.A001(
+		kakaoMessage.A001(
+			quote_no,
 			mobile,
 			polholder,
 			prod_name,
@@ -341,6 +345,7 @@ public class HouseOrderController {
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd"),
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd") + " 24:00 ~ " + InsuDateUtil.ToChar(ins_to, "yyyy.MM.dd") + " 24:00"
 		);
+
 	}
 
 	private void sendA002KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException {
@@ -359,7 +364,8 @@ public class HouseOrderController {
 			v_bank_no = (String) vacct.get("v_bank_no");
 			v_bank_due_date = InsuDateUtil.ToDateTime((String) vacct.get("v_bank_due_date"));
 		}
-		KakaoMessageUtil.A002(
+		kakaoMessage.A002(
+			quote_no,
 			mobile,
 			polholder,
 			prod_name,

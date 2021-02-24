@@ -1,6 +1,7 @@
 package com.insrb.app.mapper;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface IN005TMapper {
 	String getCurrentDateTime();
@@ -10,11 +11,11 @@ public interface IN005TMapper {
 	// Test에서 사용된 user 삭제할 때만 사용하고, 실재 웹 서비스는 하지 않는다.
 	void delete(String email);
 
-	HashMap<String, Object> selectById(String id);
+	Map<String, Object> selectById(String id);
 
-	void selectAll(HashMap<String, Object> out);
+	void selectAll(Map<String, Object> out);
 
-	String findId(String name, String teltype, String mobile, String jumina, String sex);
+	List<Map<String, Object>> findId(String name, String teltype, String mobile, String jumina, String sex);
 
 	void updatePwd(String id, String newPwd);
 

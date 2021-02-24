@@ -1,9 +1,6 @@
 package com.insrb.app.insurance.hi;
 
 import com.insrb.app.exception.WWException;
-import com.insrb.app.util.ResourceUtil;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -14,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Hi_4_Order {
 
 	// 청약확정
-	public static String FnConfirmsubscription(JSONObject data) throws WWException {
+	public static JSONObject FnConfirmsubscription(String X_Session_Id, JSONObject data) throws WWException {
 		String wwToken = HiToken.GetWWBearerToken();
 		HttpResponse<JsonNode> res = Unirest
 			.post(HiConfig.SERVER + "/v1/OASF2001M12S")
@@ -23,17 +20,18 @@ public class Hi_4_Order {
 			.header("X-Menu-Id", HiConfig.X_Menu_Id)
 			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", wwToken)
+			.header("X-Session-Id", X_Session_Id)
 			.header("Content-Type", "application/json;charset=UTF-8")
 			.body(data.toString())
 			.asJson();
+		JSONObject json = res.getBody().getObject();
+		log.info("fn_fnConfirmsubscription:" + json.toString());
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 청약확정 API 호출 결과 오류(오류코드):" + resultCode);
-			log.info("fn_fnConfirmsubscription:" + json.toString());
-			return "OK";
+			if (resultCode != 0) throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			return json.getJSONObject("giid0410vo");
 		} else {
-			throw new WWException(res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 }

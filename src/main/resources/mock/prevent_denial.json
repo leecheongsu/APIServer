@@ -1,10 +1,5 @@
 {
 	"user_id":"vingorius@gmail.com",
 	"quote_no":"W20210219111508899",
-	"data": {
-		"intgAgmtKind": "01",
-		"regNo": "6811121094910",
-		"certConfmSeqNo": "1143",
-		"mappingNo": "16137852078049932598843"
-	}
+	"reg_no": "6811121094910"
 }

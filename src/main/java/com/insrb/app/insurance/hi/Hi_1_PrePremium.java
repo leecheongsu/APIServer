@@ -26,10 +26,12 @@ public class Hi_1_PrePremium {
 			.body(data)
 			.asJson();
 
+		JSONObject json = res.getBody().getObject();
+		log.info("GetPrePremium:" + json.toString());
+
 		if (res.getStatus() == 200) {
-			JSONObject json = res.getBody().getObject();
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException("현대해상 가보험료 요청 결과 오류(오류코드):" + resultCode);
+			if (resultCode != 0) throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 			JSONObject giid0100vo = json.getJSONObject("oagi6002vo").getJSONObject("giid0100vo");
 			Map<String, Object> rtn = new HashMap<String, Object>();
 			rtn.put("perPrem", giid0100vo.getInt("perPrem")); //본인 부담 보험료
@@ -38,8 +40,7 @@ public class Hi_1_PrePremium {
 			rtn.put("tpymPrem", giid0100vo.getInt("tpymPrem")); //총보험료
 			return rtn;
 		} else {
-			log.error("getPrePremium:" + res.getStatusText());
-			throw new WWException("현대해상 가보험료 요청 연결 오류:" + res.getStatusText());
+			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
 		}
 	}
 }

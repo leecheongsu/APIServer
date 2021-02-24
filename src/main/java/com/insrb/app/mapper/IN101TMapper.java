@@ -60,4 +60,6 @@ public interface IN101TMapper {
 	void delete(String quote_no);
 
 	void updateEsignurl(String quote_no,String esignurl);
+
+	void updateContract(String quote_no,String giid0410vo_json);
 }

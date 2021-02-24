@@ -87,7 +87,7 @@
 		select 
 			quote_no,
 			#{prod_code} prod_code,
-			perprem amt_ins,
+			0 amt_ins,
 			perprem opayment,
 			ptykornm polholder,
 			ptykornm insurant_a, 
@@ -112,13 +112,20 @@
 		and quote_no = #{quote_no}
 	</insert>
 
-	<delete id="delete">
-		delete from in003t
-		 where quote_no = #{quote_no}
-	</delete>
 	<select id="selectByQuoteNo" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
 		select a.*, pk_in006c.sf_getPname(prod_code) prod_name
 		  from in003t a
 		 where a.quote_no = #{quote_no}
 	</select> 
+
+	<delete id="delete">
+		delete from in003t
+		 where quote_no = #{quote_no}
+	</delete>
+
+	<update id="updateVacct">
+		update in003t
+		   set v_bank_auth_dt = #{v_bank_auth_dt}
+		 where quote_no = #{quote_no}
+	</update>	
 </mapper>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import kcb.module.v3.OkCert;
@@ -117,10 +118,10 @@ public class OKCertController {
 	@RequestMapping(
 		path = "/rtn/house",
 		method = { RequestMethod.POST, RequestMethod.GET },
-		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+		// consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 		produces = MediaType.TEXT_HTML_VALUE
 	)
-	// @ResponseBody
+	@ResponseBody
 	public String rtn_house(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");
 
@@ -244,10 +245,10 @@ public class OKCertController {
 	@RequestMapping(
 		path = "/rtn/ww",
 		method = { RequestMethod.POST, RequestMethod.GET },
-		consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+		// consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 		produces = MediaType.TEXT_HTML_VALUE
 	)
-	// @ResponseBody
+	@ResponseBody
 	public String rtn_ww(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");
 
