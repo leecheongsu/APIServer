@@ -28,7 +28,7 @@ public class Hi_4_Order {
 		log.info("fn_fnConfirmsubscription:" + json.toString());
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			return json.getJSONObject("giid0410vo");
 		} else {
 			throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");

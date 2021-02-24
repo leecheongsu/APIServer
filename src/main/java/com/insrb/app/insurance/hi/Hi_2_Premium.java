@@ -125,7 +125,7 @@ public class Hi_2_Premium {
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			log.info("fn_1_CertConfmApi:" + json.toString());
 			this.certConfmSeqNo = json.getString("certConfmSeqNo"); //인증순번
 		} else {
@@ -151,7 +151,7 @@ public class Hi_2_Premium {
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			log.info("fn_2_PremiumMathApi:" + json.toString());
 
 			// JSONObject oagi6002vo = json.getJSONObject("oagi6002vo");
@@ -210,7 +210,7 @@ public class Hi_2_Premium {
 		if (res.getStatus() == 200) {
 			log.info("fn_3_JoinTobeApi:" + json.toString());
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 
 			fn_2_premiumJson = json; // 새로 설정.
 			// TODO: 아래는 필요없음.
@@ -252,7 +252,7 @@ public class Hi_2_Premium {
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			log.info("fn_4_ProdtManual:" + json.toString());
 			// hid.put("intgXmlData", json.getString("intgXmlData")); //RD파일에 사용될 xml 데이터
 			// hid.put("intgMrdData", json.getString("intgMrdData")); //보고서 파일
@@ -284,7 +284,7 @@ public class Hi_2_Premium {
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 
 			log.info("hidResultUrl:" + json.getString("flFullUrl"));
 		} else {
@@ -323,7 +323,7 @@ public class Hi_2_Premium {
 		JSONObject json = res.getBody().getObject();
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			log.info("fn_7_ApifnElectronicSignApi(localUrlTmp):" + json.getString("localUrlTmp"));
 			log.info("fn_7_ApifnElectronicSignApi(mappingNo):" + json.getString("mappingNo"));
 			localurltmp = json.getString("localUrlTmp");

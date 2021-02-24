@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Hi_1_PrePremium {
 
 	// 가보험료 산출 요청
-	public static Map<String, Object> GetPrePremium(String data) throws WWException {
+	public static Map<String, Object> GetPrePremium(JSONObject data) throws WWException {
 		String wwToken = HiToken.GetWWBearerToken();
 		HttpResponse<JsonNode> res = Unirest
 			.post(HiConfig.SERVER + "/v1/OASF2001M05S")
@@ -23,7 +23,7 @@ public class Hi_1_PrePremium {
 			.header("X-User-Id", HiConfig.X_User_Id)
 			.header("Authorization", wwToken)
 			.header("Content-Type", "application/json;charset=UTF-8")
-			.body(data)
+			.body(data.toString())
 			.asJson();
 
 		JSONObject json = res.getBody().getObject();
@@ -31,7 +31,7 @@ public class Hi_1_PrePremium {
 
 		if (res.getStatus() == 200) {
 			int resultCode = json.getInt("resultCode");
-			if (resultCode != 0) throw new WWException(json.getString("message") + "(" + json.getString("code") + ")");
+			if (resultCode != 0) throw new WWException(json.getString("resultCode") + "(" + json.getString("resultMsg") + ")");
 			JSONObject giid0100vo = json.getJSONObject("oagi6002vo").getJSONObject("giid0100vo");
 			Map<String, Object> rtn = new HashMap<String, Object>();
 			rtn.put("perPrem", giid0100vo.getInt("perPrem")); //본인 부담 보험료

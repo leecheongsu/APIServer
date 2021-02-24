@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.InsuEncryptException;
@@ -28,6 +26,7 @@ import com.insrb.app.mapper.IN102CMapper;
 import com.insrb.app.mapper.IN103CMapper;
 import com.insrb.app.util.InsuAuthentication;
 import com.insrb.app.util.InsuDateUtil;
+import com.insrb.app.util.InsuNumberUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.QuoteUtil;
@@ -59,9 +58,6 @@ public class WWController {
 
 	@Autowired
 	AddressSearch addressSearch;
-
-	// @Autowired
-	// HiWindWaterInsurance hi;
 
 	@Autowired
 	Hi_2_Premium hi_2_premium;
@@ -98,9 +94,6 @@ public class WWController {
 
 	@GetMapping(path = "juso")
 	public Map<String, Object> juso(@RequestParam(name = "search", required = true) String search) {
-		// Map<String, Object> result = addressSearch.getJusoList(search);
-		// return result;
-
 		try {
 			return addressSearch.getJusoList(search);
 		} catch (SearchException e) {
@@ -139,7 +132,7 @@ public class WWController {
 				String.valueOf(cover.get("dongNm")),
 				String.valueOf(cover.get("total_area")),
 				String.valueOf(cover.get("cnt_sedae")),
-				String.valueOf(cover.get("grndFlrCnt")),
+				String.valueOf(cover.get("max_grnd_flr_cnt")),
 				String.valueOf(cover.get("ugrndFlrCnt")),
 				String.valueOf(cover.get("etcStrct")),
 				cover.toString(),
@@ -147,15 +140,15 @@ public class WWController {
 			);
 
 			data = in001tMapper.selectById(quote_no);
-			data.put("premiums", in102cMapper.selectAll()); //TODO: 김종호, 풍수해에서 이걸 왜 가져오지?
+			data.put("premiums", in102cMapper.selectAll());
 			data.put("lobz_cds", in103cMapper.selectAll());
 			Map<String, Object> product = in006cMapper.selectByPcode("h007");
 			data.put("product", product);
 
-			// TODO: cover 정보로 template 정보 보완할 것.,
 			// WindWaterInsurance.aspx.cs::BuildingInfoText
 			Map<String, Object> tmpl = ResourceUtil.asMap(tmpl_preminum_req_body_json);
 			Map<String, Object> oagi6002vo = (Map<String, Object>) tmpl.get("oagi6002vo");
+			oagi6002vo.put("bldTotLyrNum", cover.get("max_grnd_flr_cnt")); // 총층수
 			oagi6002vo.put("lsgcCd", data.get("lsgc_cd"));
 			oagi6002vo.put("poleStrc", data.get("pole_strc"));
 			oagi6002vo.put("roofStrc", data.get("roof_strc"));
@@ -165,7 +158,7 @@ public class WWController {
 			oagi6002vo.put("objZip1", zip.substring(0, 3));
 			oagi6002vo.put("objZip2", zip.substring(3));
 			oagi6002vo.put("objAddr1", cover.get("newPlatPlc"));
-			oagi6002vo.put("objAddr2", cover.get("bldNm")); // 굳이 번지까지는 필요없지 않을까?
+			oagi6002vo.put("objAddr2", InsuNumberUtil.ToIntChar(cover.get("naMainBun")) + ", " + cover.get("bldNm"));
 			oagi6002vo.put("objRoadNmCd", String.valueOf(cover.get("naRoadCd")));
 			oagi6002vo.put("objTrbdCd", sigungucd + bjdongcd);
 			oagi6002vo.put("objTrbdAddr", (String) cover.get("platPlc") + " " + (String) cover.get("bldNm"));
@@ -180,22 +173,16 @@ public class WWController {
 
 	@PostMapping(path = "pre-premium")
 	public Map<String, Object> prePremium(@RequestBody(required = true) Map<String, Object> body) {
-		log.info("현대해상 가보험료 요청");
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
-		log.info(new JSONObject(data).toString());
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String json_str = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
-			// Map<String, Object> result = hi.getPrePremium(json);
-			Map<String, Object> result = Hi_1_PrePremium.GetPrePremium(json_str);
+			JSONObject jsonObj = new JSONObject(data);
+			log.info("현대해상 가보험료 요청:{}",jsonObj.toString());
+			Map<String, Object> result = Hi_1_PrePremium.GetPrePremium(jsonObj);
 			log.info("Result:{}", result);
 			return result;
-		} catch (JsonProcessingException e) {
-			log.error("/ww/orders: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 JSON 형식입니다.");
 		} catch (WWException e) {
-			log.error("/ww/orders: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			log.error("/ww/pre-premium: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상가보험료API오류: " + e.getMessage());
 		}
 	}
 
@@ -223,7 +210,7 @@ public class WWController {
 			return in101tMapper.selectById(quote_no);
 		} catch (WWException e) {
 			log.error("/ww/premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상실보험료API오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -241,28 +228,24 @@ public class WWController {
 		try {
 			String user_id = (String) body.get("user_id");
 			String quote_no = (String) body.get("quote_no");
-			String reg_no = (String) body.get("reg_no");
+			String reg_no = (String) body.get("reg_no"); // 주민번호는 DB 저장하기 뭐해서, 요청시 받는다.
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
-			// Map<String, Object> data = (Map<String, Object>) body.get("data");
-			// log.info("현대해상 부인방지 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			log.info("현대해상 부인방지 요청");
-			// return hi.fn_prevent_of_denial(new JSONObject(data));
-			//TODO: 클라이언트로부터 받지말고 dB에서 가져오자.
+
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject data = new JSONObject();
-			data.put("intgAgmtKind",in101t.get("agmtkind"));
-			data.put("regNo",reg_no);
-			data.put("certConfmSeqNo",in101t.get("certconfmseqno"));
-			data.put("mappingNo",in101t.get("mappingno"));
-			log.info("POD:{}",data.toString());
-			// return "ok";
-			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial((String)in101t.get("sessionid"),data);
+			data.put("intgAgmtKind", in101t.get("agmtkind"));
+			data.put("regNo", reg_no);
+			data.put("certConfmSeqNo", in101t.get("certconfmseqno"));
+			data.put("mappingNo", in101t.get("mappingno"));
+			log.info("현대해상 부인방지 요청:{}",  data.toString());
+
+			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial((String) in101t.get("sessionid"), data);
 			in101tMapper.updateEsignurl(quote_no, esignurl);
 			return esignurl;
 		} catch (WWException e) {
-			log.error("/ww/premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			log.error("/ww/prevent_denial: {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상부인방지API오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -293,7 +276,7 @@ public class WWController {
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
 			log.info("order:{}", order);
-			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription((String)in101t.get("sessionid"),order);
+			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription((String) in101t.get("sessionid"), order);
 			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);
 			in003tMapper.insertFromIn101t(quote_no, prod_code, advisor_no);
@@ -302,7 +285,7 @@ public class WWController {
 			return "OK";
 		} catch (WWException e) {
 			log.error("/ww/order: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상청약확정API오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

@@ -32,8 +32,12 @@ public class WWControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Value("classpath:mock/pre_premium2.json")
+	@Value("classpath:mock/pre_premium.json")
 	private Resource pre_premium_json;
+
+	@Value("classpath:mock/pre_premium2.json")
+	private Resource pre_premium2_json;
+
 
 	@Value("classpath:mock/premium.json")
 	private Resource premium_json;
@@ -58,6 +62,7 @@ public class WWControllerTest {
 		mockSearch = new HashMap<String, String>();
 		mockSearch.put("search_text", "두산더랜드파크");
 	}
+
 
 	Map<String, String> mockAddress;
 	{
@@ -105,7 +110,7 @@ public class WWControllerTest {
 	@Test
 	@DisplayName("UI-APP-036-01 풍수해 가보험료 확인")
 	public void UIAPP036_01() throws Exception {
-		String json = ResourceUtil.asString(pre_premium_json);
+		String json = ResourceUtil.asString(pre_premium2_json);
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/pre-premium")
