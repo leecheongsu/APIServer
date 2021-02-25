@@ -70,11 +70,11 @@ public class HouseController {
 			Map<String, Object> cover = QuoteUtil.GetCoverSummary(items);
 
 			String building_type = in001tMapper.getBuildingType(
-				(String) cover.get("etcPurps"),
-				(String) cover.get("mainPurpsCdNm"),
+				String.valueOf(cover.get("etcPurps")),
+				String.valueOf(cover.get("mainPurpsCdNm")),
 				String.valueOf(items.size()),
-				(String) cover.get("max_grnd_flr_cnt"),
-				(String) cover.get("total_area")
+				String.valueOf(cover.get("max_grnd_flr_cnt")),
+				String.valueOf(cover.get("total_area"))
 			);
 			// 주택화재 보험은 주택에 대해서만 가입 가능하다.
 			if (InsuStringUtil.IsEmpty(building_type) || InsuStringUtil.Equals(building_type, "ETC")) {
@@ -132,8 +132,8 @@ public class HouseController {
 		// 주택화재 보험은 주택에 대해서만 가입 가능하다.
 		Double tot_area = InsuJsonUtil.IntOrDoubleToDouble(cover.get("totArea"));
 		String building_type = in001tMapper.getBuildingType(
-			(String) cover.get("etcPurps"),
-			(String) cover.get("mainPurpsCdNm"),
+			String.valueOf(cover.get("etcPurps")),
+			String.valueOf(cover.get("mainPurpsCdNm")),
 			"1",
 			String.valueOf(cover.get("grndFlrCnt")),
 			String.valueOf(tot_area)
@@ -229,11 +229,11 @@ public class HouseController {
 			Map<String, Object> coverSummary = QuoteUtil.GetCoverSummary(items);
 
 			String building_type = in001tMapper.getBuildingType(
-				(String) coverSummary.get("etcPurps"),
-				(String) coverSummary.get("mainPurpsCdNm"),
+				String.valueOf(coverSummary.get("etcPurps")),
+				String.valueOf( coverSummary.get("mainPurpsCdNm")),
 				String.valueOf(items.size()),
-				(String) coverSummary.get("max_grnd_flr_cnt"),
-				(String) coverSummary.get("total_area")
+				String.valueOf(coverSummary.get("max_grnd_flr_cnt")),
+				String.valueOf(coverSummary.get("total_area"))
 			);
 
 			// 주택화재 보험은 주택에 대해서만 가입 가능하다.

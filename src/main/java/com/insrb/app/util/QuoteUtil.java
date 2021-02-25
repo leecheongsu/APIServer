@@ -38,7 +38,7 @@ public class QuoteUtil {
 			// if (cover == null && sedae > 0) cover = item; // 세대가 한세대라도 있는 건물(동)을 대표로 한다.
 			cnt_sedae += sedae;
 			total_area += InsuJsonUtil.IntOrDoubleToDouble(item.get("totArea"));
-			String dong_name = item.get("dongNm") != "" ? (String) item.get("dongNm") : (String) item.get("bldNm");
+			String dong_name = item.get("dongNm") != "" ? String.valueOf( item.get("dongNm")) : String.valueOf(item.get("bldNm"));
 			dong_info.put(dong_name, item.get("totArea"));
 
 			if (item.get("grndFlrCnt") != null) {
@@ -103,7 +103,7 @@ public class QuoteUtil {
 		} else { //리스트로 올 경우
 			List<Map<String, Object>> list = (List<Map<String, Object>>) items.get("item");
 			for (Map<String, Object> row : list) {
-				if (InsuStringUtil.Equals((String) row.get("exposPubuseGbCdNm"), "전유")) item.add(row);
+				if (InsuStringUtil.Equals(String.valueOf(row.get("exposPubuseGbCdNm")), "전유")) item.add(row);
 			}
 		}
 

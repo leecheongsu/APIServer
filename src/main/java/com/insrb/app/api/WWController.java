@@ -1,10 +1,5 @@
 package com.insrb.app.api;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.InsuEncryptException;
@@ -32,6 +27,13 @@ import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.QuoteUtil;
 import com.insrb.app.util.ResourceUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -44,8 +46,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -161,7 +161,7 @@ public class WWController {
 			oagi6002vo.put("objAddr2", InsuNumberUtil.ToIntChar(cover.get("naMainBun")) + ", " + cover.get("bldNm"));
 			oagi6002vo.put("objRoadNmCd", String.valueOf(cover.get("naRoadCd")));
 			oagi6002vo.put("objTrbdCd", sigungucd + bjdongcd);
-			oagi6002vo.put("objTrbdAddr", (String) cover.get("platPlc") + " " + (String) cover.get("bldNm"));
+			oagi6002vo.put("objTrbdAddr", String.valueOf(cover.get("platPlc")) + " " + String.valueOf(cover.get("bldNm")));
 
 			data.put("ww_info", tmpl);
 			return data;
@@ -176,7 +176,7 @@ public class WWController {
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		try {
 			JSONObject jsonObj = new JSONObject(data);
-			log.debug("현대해상 가보험료 요청:{}",jsonObj.toString());
+			log.debug("현대해상 가보험료 요청:{}", jsonObj.toString());
 			Map<String, Object> result = Hi_1_PrePremium.GetPrePremium(jsonObj);
 			log.debug("Result:{}", result);
 			return result;
@@ -191,12 +191,12 @@ public class WWController {
 		@RequestHeader(name = "Authorization", required = false) String auth_header,
 		@RequestBody(required = true) Map<String, Object> body
 	) {
-		String user_id = (String) body.get("user_id");
+		String user_id = String.valueOf(body.get("user_id"));
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		log.debug("현대해상 실보험료 요청:{}", new JSONObject(data).toString());
-		String quote_no = (String) data.get("quote_no"); // hi 안에서 사용함.
-		String caSerial = (String) data.get("ca_serial");
-		String caDn = (String) data.get("ca_dn");
+		String quote_no = String.valueOf(data.get("quote_no")); // hi 안에서 사용함.
+		String caSerial = String.valueOf(data.get("ca_serial"));
+		String caDn = String.valueOf(data.get("ca_dn"));
 		Map<String, Object> ww_info = (Map<String, Object>) data.get("ww_info");
 		if (InsuStringUtil.IsEmpty(user_id)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user_id");
 		if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
@@ -226,9 +226,9 @@ public class WWController {
 		@RequestBody(required = true) Map<String, Object> body
 	) {
 		try {
-			String user_id = (String) body.get("user_id");
-			String quote_no = (String) body.get("quote_no");
-			String reg_no = (String) body.get("reg_no"); // 주민번호는 DB 저장하기 뭐해서, 요청시 받는다.
+			String user_id = String.valueOf(body.get("user_id"));
+			String quote_no = String.valueOf(body.get("quote_no"));
+			String reg_no = String.valueOf(body.get("reg_no")); // 주민번호는 DB 저장하기 뭐해서, 요청시 받는다.
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
 
@@ -238,9 +238,9 @@ public class WWController {
 			data.put("regNo", reg_no);
 			data.put("certConfmSeqNo", in101t.get("certconfmseqno"));
 			data.put("mappingNo", in101t.get("mappingno"));
-			log.debug("현대해상 부인방지 요청:{}",  data.toString());
+			log.debug("현대해상 부인방지 요청:{}", data.toString());
 
-			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial((String) in101t.get("sessionid"), data);
+			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial(String.valueOf(in101t.get("sessionid")), data);
 			in101tMapper.updateEsignurl(quote_no, esignurl);
 			return esignurl;
 		} catch (WWException e) {
@@ -262,21 +262,21 @@ public class WWController {
 		@RequestBody(required = true) Map<String, Object> body
 	) {
 		try {
-			String user_id = (String) body.get("user_id");
+			String user_id = String.valueOf(body.get("user_id"));
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
 			log.debug("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			String quote_no = (String) data.get("quote_no");
+			String quote_no = String.valueOf(data.get("quote_no"));
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
-			String prod_code = (String) data.get("prod_code");
-			String advisor_no = (String) data.get("advisor_no");
+			String prod_code = String.valueOf(data.get("prod_code"));
+			String advisor_no = String.valueOf(data.get("advisor_no"));
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			Map<String, Object> card = (Map<String, Object>) data.get("card");
 
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
 			log.debug("order:{}", order);
-			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription((String) in101t.get("sessionid"), order);
+			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription(String.valueOf(in101t.get("sessionid")), order);
 			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);
 			in003tMapper.insertFromIn101t(quote_no, prod_code, advisor_no);
@@ -374,17 +374,17 @@ public class WWController {
 	}
 
 	private void sendA001KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException, InsuEncryptException {
-		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
+		String prod_name = String.valueOf(data.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
 		String amt_ins = String.valueOf(data.get("amt_ins"));
 		String premium = String.valueOf(data.get("premium"));
-		String mobile = (String) data.get("mobile");
+		String mobile = String.valueOf(data.get("mobile"));
 		String encMobile = UserInfoCyper.DecryptMobile(mobile);
-		String polholder = (String) data.get("polholder");
-		String insloc = (String) data.get("insloc");
-		String insurant_a = (String) data.get("insurant_a");
-		// Date insdate = InsuDateUtil.ToDate((String) data.get("insdate"));
-		// Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
-		// Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
+		String polholder = String.valueOf(data.get("polholder"));
+		String insloc = String.valueOf(data.get("insloc"));
+		String insurant_a = String.valueOf(data.get("insurant_a"));
+		// Date insdate = InsuDateUtil.ToDate(String.valueOf( data.get("insdate")));
+		// Date ins_from = InsuDateUtil.ToDate(String.valueOf( data.get("ins_from")));
+		// Date ins_to = InsuDateUtil.ToDate(String.valueOf( data.get("ins_to")));
 		Date insdate = (Date) data.get("insdate");
 		Date ins_from = (Date) data.get("ins_from");
 		Date ins_to = (Date) data.get("ins_to");

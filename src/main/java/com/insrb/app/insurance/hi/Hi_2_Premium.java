@@ -57,11 +57,11 @@ public class Hi_2_Premium {
 
 	public boolean premium(String user_id, Map<String, Object> data) throws WWException {
 		try {
-			// String user_id = (String) data.get("user_id");
+			// String user_id = String.valueOf( data.get("user_id");
 			user_email = user_id.split("@");
-			String caSerial = (String) data.get("ca_serial");
-			String caDn = (String) data.get("ca_dn");
-			quote_no = (String) data.get("quote_no");
+			String caSerial = String.valueOf( data.get("ca_serial"));
+			String caDn = String.valueOf( data.get("ca_dn"));
+			quote_no = String.valueOf( data.get("quote_no"));
 
 			// this.hid = new JSONObject();
 			JSONObject ww_json = new JSONObject(data.get("ww_info"));
@@ -359,7 +359,7 @@ public class Hi_2_Premium {
 		purpose = (InsuStringUtil.Equals(objtypcd1, "Y")) ? "o" : "r";
 		// String elagorgninsdamt1 = oagi6002vo.getString("elagOrgnInsdAmt1");
 		// String elagorgninsdamt2 = oagi6002vo.getString("elagOrgnInsdAmt2");
-		// String elagorgninsdamt3 = (String)oagi6002vo.get("elagOrgnInsdAmt3");
+		// String elagorgninsdamt3 = String.valueOf(oagi6002vo.get("elagOrgnInsdAmt3"));
 		String elagorgninsdamt1 = InsuJsonUtil.IfNullDefault(oagi6002vo, "elagOrgnInsdAmt1", "");
 		String elagorgninsdamt2 = InsuJsonUtil.IfNullDefault(oagi6002vo, "elagOrgnInsdAmt2", "");
 		String elagorgninsdamt3 = InsuJsonUtil.IfNullDefault(oagi6002vo, "elagOrgnInsdAmt3", "");

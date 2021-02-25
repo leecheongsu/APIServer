@@ -19,3 +19,8 @@ X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2Vyd
 # ### 견젹요청 다세대주택: 해들목휴먼빌
 # POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028
 # X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+
+
+### 표제부  getHouseCoverInfo:11680,10600,0988,0004
+GET http://localhost:8080/house/cover?sigungucd=11680&bjdongcd=10600&bun=0988&ji=0004
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==

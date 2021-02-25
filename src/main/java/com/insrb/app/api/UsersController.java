@@ -162,7 +162,7 @@ public class UsersController {
 	public String isjoined(@PathVariable String id) {
 		Map<String, Object> user = in005tMapper.selectById(id);
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		return (String) user.get("email");
+		return String.valueOf(user.get("email"));
 	}
 
 	@PostMapping(path = "/auth")
@@ -174,18 +174,18 @@ public class UsersController {
 
 		if (Objects.isNull(user)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
-		if (!InsuStringUtil.Equals((String) user.get("use_yn"), "Y")) {
+		if (!InsuStringUtil.Equals(String.valueOf(user.get("use_yn")), "Y")) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "탈퇴한 사용자입니다.재가입하시기 바랍니다");
 		}
 
-		String pwdOnDatabase = (String) user.get("pwd");
+		String pwdOnDatabase = String.valueOf(user.get("pwd"));
 
 		try {
 			if (!pwdOnDatabase.equals(UserInfoCyper.EncryptPassword(id, plainPassword))) {
 				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid pwd");
 			} else {
 				user.remove("pwd");
-				String decMobile = UserInfoCyper.DecryptMobile((String) user.get("mobile"));
+				String decMobile = UserInfoCyper.DecryptMobile(String.valueOf(user.get("mobile")));
 				user.put("mobile", decMobile);
 				user.put("token", InsuAuthentication.CreateToken(id));
 				return user;
@@ -380,15 +380,15 @@ public class UsersController {
 			InsuAuthentication.ValidateAuthHeader(auth_header, id);
 			List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);
 			for (Map<String, Object> certi : list) {
-				String pbohumja_mobile = UserInfoCyper.DecryptMobile((String) certi.get("pbohumja_mobile"));
+				String pbohumja_mobile = UserInfoCyper.DecryptMobile(String.valueOf(certi.get("pbohumja_mobile")));
 				certi.put("pbohumja_mobile", pbohumja_mobile);
-				String insurant_a_mobile = UserInfoCyper.DecryptMobile((String) certi.get("insurant_a_mobile"));
+				String insurant_a_mobile = UserInfoCyper.DecryptMobile(String.valueOf(certi.get("insurant_a_mobile")));
 				certi.put("insurant_a_mobile", insurant_a_mobile);
-				String jumin = UserInfoCyper.DecryptJuminb((String) certi.get("jumin"));
+				String jumin = UserInfoCyper.DecryptJuminb(String.valueOf(certi.get("jumin")));
 				certi.put("jumin", jumin);
 				// 주택화재인 경우 적용 담보를 조회한다.
-				if (InsuStringUtil.Equals((String) certi.get("prod_code"), "m002")) {
-					List<Map<String, Object>> premiums = in002t_v1Mapper.selectById((String) certi.get("quote_no"));
+				if (InsuStringUtil.Equals(String.valueOf(certi.get("prod_code")), "m002")) {
+					List<Map<String, Object>> premiums = in002t_v1Mapper.selectById(String.valueOf(certi.get("quote_no")));
 					certi.put("premiums", premiums);
 				}
 			}
@@ -406,7 +406,6 @@ public class UsersController {
 			throw new ResponseStatusException(HttpStatus.UPGRADE_REQUIRED, e.getMessage());
 		}
 	}
-
 	// @GetMapping(path = "/{id}/test")
 	// public List<Map<String, Object>> test(@PathVariable String id) {
 	// 	List<Map<String, Object>> list = in003t_v1Mapper.selectByUserId(id);

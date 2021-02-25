@@ -1,9 +1,5 @@
 package com.insrb.app.api;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.exception.InsuEncryptException;
@@ -19,6 +15,12 @@ import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.KGInisisUtil;
 import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.cyper.UserInfoCyper;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -52,8 +52,8 @@ public class HouseOrderController {
 	@Autowired
 	IN011TMapper in011tMapper;
 
-     @Autowired
-	 KakaoMessageComponent kakaoMessage;
+	@Autowired
+	KakaoMessageComponent kakaoMessage;
 
 	//카드결제
 	@PostMapping(path = "/card")
@@ -68,19 +68,19 @@ public class HouseOrderController {
 		// log.debug(data.toString());
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			String quote_no = (String) data.get("quote_no");
-			String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
-			String polholder = (String) data.get("polholder");
+			String quote_no = String.valueOf(data.get("quote_no"));
+			String prod_name = String.valueOf(data.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
+			String polholder = String.valueOf(data.get("polholder"));
 			int premium = (int) data.get("premium");
-			String mobile = (String) data.get("mobile");
+			String mobile = String.valueOf(data.get("mobile"));
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			List<Map<String, Object>> premiums = (List<Map<String, Object>>) data.get("premiums");
 			Map<String, Object> card = (Map<String, Object>) data.get("card");
 
-			String card_number = (String) card.get("card_number");
-			String card_expire = (String) card.get("card_expire");
-			String reg_no = (String) card.get("reg_no");
-			String card_pw = (String) card.get("card_pw");
+			String card_number = String.valueOf(card.get("card_number"));
+			String card_expire = String.valueOf(card.get("card_expire"));
+			String reg_no = String.valueOf(card.get("reg_no"));
+			String card_pw = String.valueOf(card.get("card_pw"));
 			try {
 				JSONObject kginisis_json = KGInisisUtil.card(
 					quote_no,
@@ -129,13 +129,13 @@ public class HouseOrderController {
 		@RequestBody(required = true) Map<String, Object> body,
 		@RequestHeader(name = "Authorization", required = false) String auth_header
 	) {
-		String user_id = (String) body.get("user_id");
+		String user_id = String.valueOf(body.get("user_id"));
 		Map<String, Object> data = (Map<String, Object>) body.get("data");
 		// log.debug("User:{}", user_id);
 		log.debug("/vacct: {}", data.toString());
 		try {
 			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
-			String quote_no = (String) data.get("quote_no");
+			String quote_no = String.valueOf(data.get("quote_no"));
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			List<Map<String, Object>> premiums = (List<Map<String, Object>>) data.get("premiums");
 
@@ -192,43 +192,43 @@ public class HouseOrderController {
 	}
 
 	private void insertOrder(String quote_no, Map<String, Object> data) throws ParseException, InsuEncryptException {
-		String prod_code = (String) data.get("prod_code"); // 인슈로보주택종합보험(메리츠화재)
+		String prod_code = String.valueOf(data.get("prod_code")); // 인슈로보주택종합보험(메리츠화재)
 		long amt_ins = Long.valueOf(String.valueOf(data.get("amt_ins"))); //보험목적물가액
 		int opayment = (int) data.get("opayment");
-		String polholder = (String) data.get("polholder");
-		String insurant_a = (String) data.get("insurant_a");
-		String insurant_b = (String) data.get("insurant_b");
+		String polholder = String.valueOf(data.get("polholder"));
+		String insurant_a = String.valueOf(data.get("insurant_a"));
+		String insurant_b = String.valueOf(data.get("insurant_b"));
 		int premium = (int) data.get("premium");
-		Date insdate = InsuDateUtil.ToDate((String) data.get("insdate"));
-		Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
-		Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
-		String ptype = (String) data.get("ptype");
-		String insloc = (String) data.get("insloc");
-		String mobile = (String) data.get("mobile");
+		Date insdate = InsuDateUtil.ToDate(String.valueOf(data.get("insdate")));
+		Date ins_from = InsuDateUtil.ToDate(String.valueOf(data.get("ins_from")));
+		Date ins_to = InsuDateUtil.ToDate(String.valueOf(data.get("ins_to")));
+		String ptype = String.valueOf(data.get("ptype"));
+		String insloc = String.valueOf(data.get("insloc"));
+		String mobile = String.valueOf(data.get("mobile"));
 		String enc_mobile = UserInfoCyper.EncryptMobile(mobile);
-		String email = (String) data.get("email");
-		String poption = (String) data.get("poption");
-		String pbohumja_mobile = (String) data.get("pbohumja_mobile");
+		String email = String.valueOf(data.get("email"));
+		String poption = String.valueOf(data.get("poption"));
+		String pbohumja_mobile = String.valueOf(data.get("pbohumja_mobile"));
 		String enc_pbohumja_mobile = UserInfoCyper.EncryptMobile(pbohumja_mobile);
 
-		String jumin = (String) data.get("jumin");
+		String jumin = String.valueOf(data.get("jumin"));
 		String encJuminb = UserInfoCyper.EncryptJuminb(jumin); // TODO: 주민B만 있으면 sex는 필요없는건가? 왜 저장하지? 그래서 여기선 전체주민번호를 암호화함.
 
 		// String user_id = (String) data.get("user_id");
 		// int o_by = (int) data.get("o_by");
-		String owner = (String) data.get("owner");
-		String pbohumja_birth = (String) data.get("pbohumja_birth");
-		String advisor_no = (String) data.get("advisor_no");
-		String already_group_ins = (String) data.get("already_group_ins");
+		String owner = String.valueOf(data.get("owner"));
+		String pbohumja_birth = String.valueOf(data.get("pbohumja_birth"));
+		String advisor_no = String.valueOf(data.get("advisor_no"));
+		String already_group_ins = String.valueOf(data.get("already_group_ins"));
 		Map<String, Object> vacct = (Map<String, Object>) data.get("vacct");
 		String v_bank_name = "";
 		String v_bank_no = "";
 		String v_bank_due_date = "";
 
 		if (vacct != null && vacct.size() > 0) {
-			v_bank_name = (String) vacct.get("v_bank_name");
-			v_bank_no = (String) vacct.get("v_bank_no");
-			v_bank_due_date = (String) vacct.get("v_bank_due_date");
+			v_bank_name = String.valueOf(vacct.get("v_bank_name"));
+			v_bank_no = String.valueOf(vacct.get("v_bank_no"));
+			v_bank_due_date = String.valueOf(vacct.get("v_bank_due_date"));
 		}
 
 		in003tMapper.delete(quote_no);
@@ -320,16 +320,16 @@ public class HouseOrderController {
 	}
 
 	private void sendA001KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException {
-		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
+		String prod_name = String.valueOf(data.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
 		String amt_ins = String.valueOf(data.get("amt_ins"));
 		String premium = String.valueOf(data.get("premium"));
-		String mobile = (String) data.get("mobile");
-		String polholder = (String) data.get("polholder");
-		String insloc = (String) data.get("insloc");
-		String insurant_a = (String) data.get("insurant_a");
-		Date insdate = InsuDateUtil.ToDate((String) data.get("insdate"));
-		Date ins_from = InsuDateUtil.ToDate((String) data.get("ins_from"));
-		Date ins_to = InsuDateUtil.ToDate((String) data.get("ins_to"));
+		String mobile = String.valueOf(data.get("mobile"));
+		String polholder = String.valueOf(data.get("polholder"));
+		String insloc = String.valueOf(data.get("insloc"));
+		String insurant_a = String.valueOf(data.get("insurant_a"));
+		Date insdate = InsuDateUtil.ToDate(String.valueOf(data.get("insdate")));
+		Date ins_from = InsuDateUtil.ToDate(String.valueOf(data.get("ins_from")));
+		Date ins_to = InsuDateUtil.ToDate(String.valueOf(data.get("ins_to")));
 
 		kakaoMessage.A001(
 			quote_no,
@@ -345,14 +345,13 @@ public class HouseOrderController {
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd"),
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd") + " 24:00 ~ " + InsuDateUtil.ToChar(ins_to, "yyyy.MM.dd") + " 24:00"
 		);
-
 	}
 
 	private void sendA002KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException {
-		String prod_name = (String) data.get("prod_name"); // 인슈로보주택종합보험(메리츠화재)
+		String prod_name = String.valueOf(data.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
 		String premium = String.valueOf(data.get("premium"));
-		String mobile = (String) data.get("mobile");
-		String polholder = (String) data.get("polholder");
+		String mobile = String.valueOf(data.get("mobile"));
+		String polholder = String.valueOf(data.get("polholder"));
 
 		String v_bank_name = "";
 		String v_bank_no = "";
@@ -360,9 +359,9 @@ public class HouseOrderController {
 
 		Map<String, Object> vacct = (Map<String, Object>) data.get("vacct");
 		if (vacct != null && vacct.size() > 0) {
-			v_bank_name = (String) vacct.get("v_bank_name");
-			v_bank_no = (String) vacct.get("v_bank_no");
-			v_bank_due_date = InsuDateUtil.ToDateTime((String) vacct.get("v_bank_due_date"));
+			v_bank_name = String.valueOf(vacct.get("v_bank_name"));
+			v_bank_no = String.valueOf(vacct.get("v_bank_no"));
+			v_bank_due_date = InsuDateUtil.ToDateTime(String.valueOf(vacct.get("v_bank_due_date")));
 		}
 		kakaoMessage.A002(
 			quote_no,

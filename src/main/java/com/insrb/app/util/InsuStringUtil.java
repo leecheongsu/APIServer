@@ -16,7 +16,7 @@ public class InsuStringUtil {
 	public static int ToIntOrDefault(Object obj, int dflt) {
 		int i = dflt;
 		try{
-			if (obj instanceof Integer) i = (Integer) obj; else i = Integer.parseInt((String) obj);
+			if (obj instanceof Integer) i = (Integer) obj; else i = Integer.parseInt(String.valueOf( obj));
 		}catch(NumberFormatException e){
 		}
 		return i;

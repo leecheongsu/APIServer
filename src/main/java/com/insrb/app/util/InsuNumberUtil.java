@@ -18,10 +18,10 @@ public class InsuNumberUtil {
 		if (obj instanceof Integer) str = String.valueOf(((Integer) obj).intValue());
 		if (obj instanceof String) {
 			try {
-				str = String.valueOf(Integer.parseInt((String) obj));
+				str = String.valueOf(Integer.parseInt(String.valueOf( obj)));
 			} catch (NumberFormatException e) {
 				try {
-					str = String.valueOf(Math.round(Double.parseDouble((String) obj)));
+					str = String.valueOf(Math.round(Double.parseDouble(String.valueOf( obj))));
 				} catch (NumberFormatException e2) {
 					return "";
 				}

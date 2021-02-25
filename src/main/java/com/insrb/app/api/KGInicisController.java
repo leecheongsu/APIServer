@@ -182,19 +182,19 @@ public class KGInicisController {
 	private void sendAI001KakaoMessage(String quote_no) throws KGInicisException, InsuEncryptException {
 		Map<String, Object> order = in003tMapper.selectByQuoteNo(quote_no);
 		if (Objects.isNull(order) || order.size() == 0) throw new KGInicisException("입금처리할 주문이 없읍니다.");
-		String dec_mobile = UserInfoCyper.DecryptMobile((String) order.get("mobile"));
+		String dec_mobile = UserInfoCyper.DecryptMobile(String.valueOf( order.get("mobile")));
 		log.debug("order:{}", order.toString());
 		log.debug("dec_mobile:{}", dec_mobile);
 		kakaoMessage.AI001(
 			quote_no,
 			dec_mobile,
-			(String) order.get("polholder"),
-			(String) order.get("prod_name"), //order.get("p_name"), //상품명
-			(String) order.get("insurant_a"),
-			(String) order.get("insloc"),
+			String.valueOf( order.get("polholder")),
+			String.valueOf( order.get("prod_name")), //order.get("p_name"), //상품명
+			String.valueOf( order.get("insurant_a")),
+			String.valueOf( order.get("insloc")),
 			String.valueOf(order.get("amt_ins")),
 			String.valueOf(order.get("premium")),
-			(String) order.get("quote_no"),
+			String.valueOf( order.get("quote_no")),
 			InsuDateUtil.ToChar((Date) order.get("insdate"), "yyyy.MM.dd"),
 			InsuDateUtil.ToChar((Date) order.get("ins_from"), "yyyy.MM.dd"),
 			InsuDateUtil.ToChar((Date) order.get("ins_from"), "yyyy.MM.dd") +

@@ -110,7 +110,7 @@ public class WWControllerTest {
 	@Test
 	@DisplayName("UI-APP-036-01 풍수해 가보험료 확인")
 	public void UIAPP036_01() throws Exception {
-		String json = ResourceUtil.asString(pre_premium2_json);
+		String json = ResourceUtil.asString(pre_premium_json);
 		mockMvc
 			.perform(
 				post("http://localhost:8080/ww/pre-premium")
