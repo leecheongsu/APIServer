@@ -44,7 +44,7 @@ public class UsersControllerTest {
 		mockUser.put("teltype", "LG알뜰폰");
 		mockUser.put("mobile", "01047017956");
 		mockUser.put("pwd", "1234!!!");
-		mockUser.put("jumina", "980101");
+		mockUser.put("jumina", "681112");
 		mockUser.put("juminb", "094910");
 		mockUser.put("sex", "1");
 
@@ -267,8 +267,10 @@ public class UsersControllerTest {
 			.perform(
 				post("/users/auth")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.param("id", mockUser.get("email"))
-					.param("pwd", mockUser.get("pwd"))
+					.param("id", "miopadrex@gmail.com")
+					.param("pwd", "aksldi!@12")
+					// .param("id", mockUser.get("email"))
+					// .param("pwd", mockUser.get("pwd"))
 			)
 			.andDo(print())
 			.andExpect(status().isOk())

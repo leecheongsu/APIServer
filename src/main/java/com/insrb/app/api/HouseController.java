@@ -173,16 +173,16 @@ public class HouseController {
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
-				String.valueOf(cover.get("newPlatPlc")),
+				String.valueOf(detail.get("newPlatPlc")),
 				"S", //(String)cover.get("group_ins"),
-				String.valueOf(cover.get("bldNm")),
-				String.valueOf(cover.get("bldNm")), //dong_info
-				String.valueOf(cover.get("mainPurpsCdNm")),
-				String.valueOf(cover.get("newPlatPlc")),
-				String.valueOf(cover.get("etcPurps")),
+				String.valueOf(detail.get("bldNm")),
+				String.valueOf(detail.get("dongNm")) + " " + String.valueOf(detail.get("hoNm")), //dong_info
+				String.valueOf(detail.get("mainPurpsCdNm")),
+				String.valueOf(detail.get("newPlatPlc")),
+				String.valueOf(detail.get("etcPurps")),
 				String.valueOf(cover.get("useAprDay")),
 				String.valueOf(cover.get("etcRoof")),
-				String.valueOf(cover.get("dongNm")),
+				String.valueOf(detail.get("dongNm")),
 				String.valueOf(tot_area),
 				"1", //String.valueOf(cover.get("cnt_sedae")),
 				String.valueOf(cover.get("grndFlrCnt")),
@@ -230,7 +230,7 @@ public class HouseController {
 
 			String building_type = in001tMapper.getBuildingType(
 				String.valueOf(coverSummary.get("etcPurps")),
-				String.valueOf( coverSummary.get("mainPurpsCdNm")),
+				String.valueOf(coverSummary.get("mainPurpsCdNm")),
 				String.valueOf(items.size()),
 				String.valueOf(coverSummary.get("max_grnd_flr_cnt")),
 				String.valueOf(coverSummary.get("total_area"))

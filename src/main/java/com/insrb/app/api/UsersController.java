@@ -127,7 +127,7 @@ public class UsersController {
 			if (result < 1) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
 			in006tMapper.merge(email, comname, sosok, businessnum);
 		} catch (NumberFormatException e) {
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "잘못된 주민번호 뒷자리입니다.");
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "주민번호/성별/모바일번호/사업자번호는 숫자여야합니다.");
 		} catch (InsuEncryptException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "암호화 오류.");

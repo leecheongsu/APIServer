@@ -272,14 +272,15 @@ public class WWController {
 			String advisor_no = String.valueOf(data.get("advisor_no"));
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			Map<String, Object> card = (Map<String, Object>) data.get("card");
-
+			String regno =  String.valueOf(card.get("regNo1")) +  String.valueOf(card.get("regNo1"));
+			String jumin = UserInfoCyper.EncryptJuminb(regno);
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
 			log.debug("order:{}", order);
 			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription(String.valueOf(in101t.get("sessionid")), order);
 			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);
-			in003tMapper.insertFromIn101t(quote_no, prod_code, advisor_no);
+			in003tMapper.insertFromIn101t(quote_no, prod_code,jumin, advisor_no);
 			insertTerms(quote_no, terms);
 			sendA001KakaoMessage(quote_no, in003tMapper.selectByQuoteNo(quote_no));
 			return "OK";
@@ -320,6 +321,7 @@ public class WWController {
 		order.getJSONObject("oagi6002vo").put("cardNo4", card.get("cardNo4"));
 		order.getJSONObject("oagi6002vo").put("validMonth", card.get("validMonth"));
 		order.getJSONObject("oagi6002vo").put("validYear", card.get("validYear"));
+		order.getJSONObject("oagi6002vo").put("cardDivide", card.get("cardDivide"));
 		return order;
 	}
 
@@ -373,21 +375,21 @@ public class WWController {
 		);
 	}
 
-	private void sendA001KakaoMessage(String quote_no, Map<String, Object> data) throws ParseException, InsuEncryptException {
-		String prod_name = String.valueOf(data.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
-		String amt_ins = String.valueOf(data.get("amt_ins"));
-		String premium = String.valueOf(data.get("premium"));
-		String mobile = String.valueOf(data.get("mobile"));
+	private void sendA001KakaoMessage(String quote_no, Map<String, Object> in003t) throws ParseException, InsuEncryptException {
+		String prod_name = String.valueOf(in003t.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
+		String amt_ins = String.valueOf(in003t.get("amt_ins"));
+		String premium = String.valueOf(in003t.get("premium"));
+		String mobile = String.valueOf(in003t.get("mobile"));
 		String encMobile = UserInfoCyper.DecryptMobile(mobile);
-		String polholder = String.valueOf(data.get("polholder"));
-		String insloc = String.valueOf(data.get("insloc"));
-		String insurant_a = String.valueOf(data.get("insurant_a"));
+		String polholder = String.valueOf(in003t.get("polholder"));
+		String insloc = String.valueOf(in003t.get("insloc"));
+		String insurant_a = String.valueOf(in003t.get("insurant_a"));
 		// Date insdate = InsuDateUtil.ToDate(String.valueOf( data.get("insdate")));
 		// Date ins_from = InsuDateUtil.ToDate(String.valueOf( data.get("ins_from")));
 		// Date ins_to = InsuDateUtil.ToDate(String.valueOf( data.get("ins_to")));
-		Date insdate = (Date) data.get("insdate");
-		Date ins_from = (Date) data.get("ins_from");
-		Date ins_to = (Date) data.get("ins_to");
+		Date insdate = (Date) in003t.get("insdate");
+		Date ins_from = (Date) in003t.get("ins_from");
+		Date ins_to = (Date) in003t.get("ins_to");
 
 		kakaoMessage.A001(
 			quote_no,

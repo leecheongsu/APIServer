@@ -102,7 +102,7 @@
 			a.email,
 			4 poption,
 			telno pbohumja_mobile,
-			b.juminb jumin,
+			#{jumin} jumin,
 			purpose owner,
 			b.jumina pbohumja_birth,
 			#{advisor_no} advisor_no,

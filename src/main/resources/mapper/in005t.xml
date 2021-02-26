@@ -48,7 +48,7 @@
     </select>
 
 	<select id="selectById" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
-		select a.*, b.comname,b.sosok,b.businessnum,b.gacode
+		select a.*, b.comname, b.sosok, b.businessnum, b.gacode, pk_in005t.sf_getCntOfInsu(#{id}) cnt_of_insu
 		  from in005t a,in006t b
 		 where a.email = b.email(+)
 		   and a.email = #{id}
