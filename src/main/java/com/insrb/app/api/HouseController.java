@@ -153,11 +153,6 @@ public class HouseController {
 		}
 		// TODO: 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
 
-		// // 단독주택은 전유부만 온다.
-		// if (!detail.get("exposPubuseGbCdNm").equals("전유")) {
-		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "detail.exposPubuseGbCdNm 항목이 \"전유\" 여야합니다.");
-		// }
-
 		// 개별 세대의 면적으로 치환
 		tot_area = InsuJsonUtil.IntOrDoubleToDouble(detail.get("area"));
 
@@ -211,10 +206,6 @@ public class HouseController {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
-	}
-
-	private String makeAddressString(Object newPlatPlc, Object dongNm, Object hoNm) {
-		return String.valueOf(newPlatPlc) + " " + String.valueOf(dongNm) + " " + String.valueOf(hoNm);
 	}
 
 	// 세대가입에서만 호출한다.
