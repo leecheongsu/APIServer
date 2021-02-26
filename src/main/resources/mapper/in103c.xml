@@ -7,7 +7,7 @@
 		select *
 		  from in103c 
 		 where obj_type != 0
-		 order by obj_type asc  
+		 order by obj_type, seq
 	</select> 
 
 </mapper>
