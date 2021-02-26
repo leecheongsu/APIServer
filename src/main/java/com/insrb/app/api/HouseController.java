@@ -170,13 +170,14 @@ public class HouseController {
 
 		String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 		try {
+			String dong_info = String.valueOf(detail.get("dongNm")) + " " + String.valueOf(detail.get("hoNm"));
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
-				String.valueOf(detail.get("newPlatPlc")),
+				String.valueOf(detail.get("newPlatPlc")) + " " + dong_info,
 				"S", //(String)cover.get("group_ins"),
 				String.valueOf(detail.get("bldNm")),
-				String.valueOf(detail.get("dongNm")) + " " + String.valueOf(detail.get("hoNm")), //dong_info
+				dong_info, //dong_info
 				String.valueOf(detail.get("mainPurpsCdNm")),
 				String.valueOf(detail.get("newPlatPlc")),
 				String.valueOf(detail.get("etcPurps")),
@@ -210,6 +211,10 @@ public class HouseController {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
+	}
+
+	private String makeAddressString(Object newPlatPlc, Object dongNm, Object hoNm) {
+		return String.valueOf(newPlatPlc) + " " + String.valueOf(dongNm) + " " + String.valueOf(hoNm);
 	}
 
 	// 세대가입에서만 호출한다.

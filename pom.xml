@@ -91,6 +91,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>${spring.profiles.active}-${artifactId}-${version}</finalName>
 	</build>
 
 </project>
