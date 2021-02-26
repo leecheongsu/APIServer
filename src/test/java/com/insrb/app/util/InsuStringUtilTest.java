@@ -12,5 +12,11 @@ public class InsuStringUtilTest {
         assertEquals(1, InsuStringUtil.ToIntOrDefault(Integer.valueOf(1), 1));
         // assertEquals(123, 123);
     }
+
+    @Test
+    public void test_ContainStringInArray() {
+        assertEquals(true, InsuStringUtil.ContainStringInArray(new String[]{"판넬", "샌드위치", "목조"}, "판넬"));
+        assertEquals(false, InsuStringUtil.ContainStringInArray(new String[]{"판넬", "샌드위치", "목조"}, "판x넬"));
+    }
 }
     

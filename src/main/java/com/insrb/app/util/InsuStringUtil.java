@@ -1,5 +1,8 @@
 package com.insrb.app.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class InsuStringUtil {
 
 	public static boolean IsEmpty(String str) {
@@ -15,11 +18,15 @@ public class InsuStringUtil {
 
 	public static int ToIntOrDefault(Object obj, int dflt) {
 		int i = dflt;
-		try{
-			if (obj instanceof Integer) i = (Integer) obj; else i = Integer.parseInt(String.valueOf( obj));
-		}catch(NumberFormatException e){
-		}
+		try {
+			if (obj instanceof Integer) i = (Integer) obj; else i = Integer.parseInt(String.valueOf(obj));
+		} catch (NumberFormatException e) {}
 		return i;
 	}
 
+	public static boolean ContainStringInArray(String[] strings, String str) {
+		List<String> list = Arrays.asList(strings);
+		if (list.contains(str)) return true;
+		return false;
+	}
 }

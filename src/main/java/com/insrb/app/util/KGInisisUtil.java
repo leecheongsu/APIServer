@@ -115,7 +115,7 @@ public class KGInisisUtil {
 				.asJson();
 			JSONObject json = res.getBody().getObject();
 			if (!InsuStringUtil.Equals(json.getString("resultCode"), "00")) {
-				throw new KGInisisException("결재 오류: " + json.getString("resultCode") + ", " + json.getString("resultMsg"));
+				throw new KGInisisException("결제 오류: " + json.getString("resultCode") + ", " + json.getString("resultMsg"));
 			}
 			return json;
 		} catch (

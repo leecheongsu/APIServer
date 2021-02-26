@@ -182,7 +182,7 @@ public class WWController {
 			return result;
 		} catch (WWException e) {
 			log.error("/ww/pre-premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상가보험료API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 가보험료API오류: " + e.getMessage());
 		}
 	}
 
@@ -240,7 +240,7 @@ public class WWController {
 			data.put("mappingNo", in101t.get("mappingno"));
 			log.debug("현대해상 부인방지 요청:{}", data.toString());
 
-			String esignurl = Hi_3_PreventOfDenial.fn_prevent_of_denial(String.valueOf(in101t.get("sessionid")), data);
+			String esignurl = Hi_3_PreventOfDenial.Fn_prevent_of_denial(String.valueOf(in101t.get("sessionid")), data);
 			in101tMapper.updateEsignurl(quote_no, esignurl);
 			return esignurl;
 		} catch (WWException e) {
@@ -263,9 +263,11 @@ public class WWController {
 	) {
 		try {
 			String user_id = String.valueOf(body.get("user_id"));
+			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
+
 			Map<String, Object> data = (Map<String, Object>) body.get("data");
 			log.debug("현대해상 청약확정 요청:{}", new JSONObject(data).toString());
-			InsuAuthentication.ValidateAuthHeader(auth_header, user_id);
+
 			String quote_no = String.valueOf(data.get("quote_no"));
 			if (InsuStringUtil.IsEmpty(quote_no)) new ResponseStatusException(HttpStatus.BAD_REQUEST, "No quote_no");
 			String prod_code = String.valueOf(data.get("prod_code"));

@@ -10,6 +10,7 @@ import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +110,14 @@ public class HouseController {
 				"" //단체가입은 전유부가 없다.
 			);
 
+			// 단독주택(단독주택,다가구주택) 중 5억 이상은 가입 불가
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
+			if (InsuStringUtil.Equals(building_type, "ILB") || InsuStringUtil.Equals(building_type, "DGG")) {
+				if (InsuStringUtil.ToIntOrDefault(data.get("amt_ins"), 0) > 500000000) {
+					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "보험가입금액 5억 이상 단독/다가구주택은 가입할 수 없습니다.");
+				}
+			}
+
 			List<Map<String, Object>> detail = in002tMapper.selectById(quote_no);
 			data.put("premiums", detail);
 			Map<String, Object> product = in006cMapper.selectByPcode("m002");
@@ -151,17 +159,20 @@ public class HouseController {
 		if (cnt_sedae < 1) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "표제부 세대수가 1 이상이어야 합니다.");
 		}
-		// TODO: 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
 
 		// 개별 세대의 면적으로 치환
 		tot_area = InsuJsonUtil.IntOrDoubleToDouble(detail.get("area"));
 
-		if (InsuStringUtil.IsEmpty(building_type)) {
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
-		}
+		// if (InsuStringUtil.IsEmpty(building_type)) {
+		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
+		// }
 		if (InsuStringUtil.ToIntOrDefault(cover.get("grndFlrCnt"), 0) > 15) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 		}
+		// TODO: 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
+		// if (is_3_4_gradeBuilding(String.valueOf(cover.get("etcStrct")), String.valueOf(cover.get("etcRoof")))) {
+		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "3,4등급 건물은 가입할 수 없습니다.");
+		// }
 
 		String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 		try {
@@ -206,6 +217,65 @@ public class HouseController {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
+	}
+
+	private boolean is_3_4_gradeBuilding(String pillar, String roof) {
+		// 기둥리스트에 판넬,샌드위치,목조,철골 있으면 3,4등급
+		if (InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, pillar)) return true;
+		// 기둥리스트에 아래가 있으면 3,4등급 아님
+		if (
+			!InsuStringUtil.ContainStringInArray(
+				new String[] {
+					"철근콘",
+					"콘크리트",
+					"연와",
+					"시멘트벽돌",
+					"벽조",
+					"조적",
+					"블록",
+					"블럭",
+					"벽돌",
+					"브록",
+					"브럭",
+					"세멘",
+					"라멘",
+				},
+				pillar
+			)
+		) return true;
+
+		// 지붕리스트에  "판넬", "샌드위치", "목조" 가 있고, 아래것이 없으면 3,4등급
+		if (
+			InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, roof) &&
+			!InsuStringUtil.ContainStringInArray(
+				new String[] {
+					"철근콘",
+					"연와",
+					"시멘트벽돌",
+					"세멘",
+					"벽조",
+					"조적",
+					"블록",
+					"블럭",
+					"브럭",
+					"벽돌",
+					"스라브",
+					"슬라브",
+					"슬래브",
+					"스래부",
+					"스래브",
+					"경사지붕",
+					"기타지붕",
+					"콩크리트",
+					"콘크리트",
+					"철근콘",
+					"평옥개",
+					"평판지붕",
+				},
+				roof
+			)
+		) return true;
+		return false;
 	}
 
 	// 세대가입에서만 호출한다.

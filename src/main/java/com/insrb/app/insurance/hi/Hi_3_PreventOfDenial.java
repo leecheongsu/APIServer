@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Hi_3_PreventOfDenial {
 
 	// 11.	부인방지
-	public static String fn_prevent_of_denial(String X_Session_Id, JSONObject data) throws WWException {
+	public static String Fn_prevent_of_denial(String X_Session_Id, JSONObject data) throws WWException {
 		String commonToken = HiToken.GetCommonBearerToken();
 
 		HttpResponse<JsonNode> res = Unirest

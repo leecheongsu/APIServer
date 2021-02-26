@@ -1,0 +1,12 @@
+### mybatis null test
+GET http://localhost:8080/users/vingorius@gmail.com/test
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
+### mybatis null test
+GET https://insrb.com/users/vingorius@gmail.com/test
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
+
+
+### ssh test
+GET https://insrb.com/
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
