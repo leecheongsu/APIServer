@@ -1,20 +1,20 @@
 ### 주소검색 해들목휴먼빌
-GET http://localhost:8080/house/juso?search=부산광역시 해운대구 재반로270번길 37-34
+GET http://localhost:8080/house/juso?search=한진해모로
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 # 2021-02-09 08:49:25.023  INFO 26420 --- [0-19 [web01-60]] com.insrb.app.insurance.AddressSearch    : getJusoList:현대아파트
 # 2021-02-09 08:49:27.046  INFO 26420 --- [0-20 [web01-61]] com.insrb.app.insurance.AddressSearch    : getHouseCoverInfo:26350,10100,0303,0000
-### 표제부 현대아파트
-GET http://localhost:8080/house/cover?sigungucd=26350&bjdongcd=10100&bun=0303&ji=0000
+### 표제부 
+GET http://localhost:8080/house/cover?sigungucd=26710&bjdongcd=25628&bun=1403&ji=0000
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
-### 표제부 현대아파트
+### 표제부 
 GET http://210.179.175.145/house/cover?sigungucd=11350&bjdongcd=10300&bun=0230&ji=0000
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
-# ### 전유부 해들목휴먼빌
-# GET http://localhost:8080/house/detail?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028&dongnm=
-# X-insr-servicekey: sdfsafsaf9osldfsafdosdfsfasf==
+### 전유부 
+GET http://localhost:8080/house/detail?sigungucd=11350&bjdongcd=10300&bun=0230&ji=0000&dongnm=1604동
+X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 # ### 견젹요청 다세대주택: 해들목휴먼빌
 # POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=11900&bun=0001&ji=0028

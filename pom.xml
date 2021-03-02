@@ -10,8 +10,8 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.insrb</groupId>
-	<artifactId>api-prod</artifactId>
-	<version>1.1.0</version>
+	<artifactId>api</artifactId>
+	<version>1.1.1</version>
 	<packaging>war</packaging>
 	<name>api</name>
 	<description>InsuRobo Api Server</description>

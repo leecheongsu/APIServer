@@ -1,5 +1,8 @@
 package com.insrb.app.api;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.mapper.IN001TMapper;
@@ -9,11 +12,6 @@ import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("unchecked")
