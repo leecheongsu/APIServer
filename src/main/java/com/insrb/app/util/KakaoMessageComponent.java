@@ -173,7 +173,16 @@ public class KakaoMessageComponent {
 	}
 
 	// 계좌이체 안내
-	public boolean A002(String quote_no, String phone, String u_name, String p_name, String b_name, String account_num, String amt, String last_date) {
+	public boolean A002(
+		String quote_no,
+		String phone,
+		String u_name,
+		String p_name,
+		String b_name,
+		String account_num,
+		String amt,
+		String last_date
+	) {
 		String msg =
 			"안녕하세요" +
 			u_name +
@@ -221,6 +230,56 @@ public class KakaoMessageComponent {
 			return true;
 		} else {
 			log.error("KakaoMessage.A002 오류:{}", res.getStatusText());
+			return false;
+		}
+	}
+
+	// 계약만료
+	public boolean A003(String quote_no, String phone, String u_name, String product, String exp_day, String success_num, String period) {
+		String msg =
+			"안녕하세요  \r\n" +
+			u_name +
+			" 고객님.\r\n인슈로보 " +
+			product +
+			" 의 보험기간 만료일이 " +
+			exp_day +
+			" 전입니다.\r\n\r\n-.증권번호 : " +
+			success_num +
+			"\r\n-.보험기간 : " +
+			period +
+			"\r\n\r\n※기타 문의 사항은 인슈로보 문의하기 또는 고객센터(070-4126-3333)로\r\n문의 바랍니다.";
+
+		HttpResponse<JsonNode> res = Unirest
+			.post(URL)
+			.header("x-waple-authorization", KEY)
+			.header("Content-Type", FORM_URLENCODED_UTF_8)
+			.field("PHONE", phone)
+			.field("CALLBACK", CALLBACK)
+			.field("MSG", msg)
+			.field("TEMPLATE_CODE", "A003")
+			.field("FAILED_TYPE", "N")
+			.field("BTN_TYPES", "")
+			.field("BTN_TXTS", "계약만료")
+			.field("BTN_URLS1", "")
+			.asJson();
+		if (res.getStatus() == 200) {
+			// {"result_message":"OK","result_code":"200","cmid":"2021021411351886720601"}
+			JSONObject json = res.getBody().getObject();
+			log.debug("KakaoMessage.A003 성공:{}", json.toString());
+			in901tMapper.insert(
+				quote_no,
+				"A003",
+				"계약만료",
+				phone,
+				json.getString("result_code"),
+				json.getString("result_message"),
+				json.getString("cmid"),
+				msg
+			);
+
+			return true;
+		} else {
+			log.error("KakaoMessage.A003 오류:{}", res.getStatusText());
 			return false;
 		}
 	}

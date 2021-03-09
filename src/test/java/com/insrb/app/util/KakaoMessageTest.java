@@ -3,7 +3,9 @@ package com.insrb.app.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class KakaoMessageTest {
 	String quote_no =  "TEST";
 
@@ -46,6 +48,30 @@ public class KakaoMessageTest {
 		assertEquals(true, kakao.A002(quote_no, phone, u_name, p_name, b_name, account_num, amt, last_date));
 	}
 
+	@Test
+	public void test_A003() {
+		String phone = "01047017956";
+		String u_name = "김종호";
+		String p_name = "보험가입상품명";
+		String exp_day = "30일";
+		String success_num = "Q1231242354234534";
+		String period = "2020.07.11 24:00 ~ 2021.07.10 24:00";
+
+		assertEquals(true, kakao.A003(quote_no, phone, u_name, p_name, exp_day, success_num, period));
+	}
+
+	@Test
+	public void test_A0031() {
+		String phone = "01038745390";
+		String u_name = "김학성";
+		String p_name = "인슈로보주택종합보험";
+		String exp_day = "30일";
+		String success_num = "Q1231242354234534";
+		String period = "2021.03.05 24:00 ~ 2022.03.04 24:00";
+
+		assertEquals(true, kakao.A003("Q20210305104820960", phone, u_name, p_name, exp_day, success_num, period));
+	}
+	
 	@Test
 	public void test_AI001() {
 		String phone = "01047017956";

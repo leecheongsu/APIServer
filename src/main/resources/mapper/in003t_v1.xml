@@ -7,4 +7,22 @@
 		  from in003t_v1 a
 		 where a.email = #{user_id}
 	</select> 
+
+	<select id="selectByExpireBefore30" parameterType="String" resultType="com.insrb.app.util.LowerKeyMap">
+		select quote_no, 
+		       sec_no, 
+			   prod_name, 
+			   polholder, 
+			   insurant_a_mobile,
+			   insstdt||' 24:00'||' ~ '||inseddt||' 24:00' period , 
+			   floor(to_date(inseddt,'yyyy.mm.dd') -  sysdate)||'일' exp_day
+		  from in003t_v1 a
+		 where inseddt <![CDATA[ < ]]> to_char(sysdate + 30,'yyyy.mm.dd')
+		   and not exists (select 1
+							 from in901t q
+							where q.quote_no    = a.quote_no
+							  and q.tmpl_id     = 'A003'
+							  and q.result_code = '200')  
+	</select> 
+
 </mapper>

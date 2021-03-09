@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface IN003T_V1Mapper {
 	List<Map<String, Object>> selectByUserId(String user_id);
-
+	List<Map<String, Object>> selectByExpireBefore30();
 }
