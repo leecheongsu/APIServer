@@ -90,7 +90,8 @@ public class HouseController {
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
-				String.valueOf(cover.get("newPlatPlc")),
+				getNotEmptyAddress(cover.get("platPlc"), cover.get("newPlatPlc")),
+				// String.valueOf(cover.get("newPlatPlc")),
 				"T", //(String)cover.get("group_ins"),
 				String.valueOf(cover.get("bldNm")),
 				String.valueOf(cover.get("dong_info")),
@@ -113,7 +114,10 @@ public class HouseController {
 			Map<String, Object> data = in001tMapper.selectById(quote_no);
 			if (InsuStringUtil.Equals(building_type, "ILB") || InsuStringUtil.Equals(building_type, "DGG")) {
 				if (InsuStringUtil.ToIntOrDefault(data.get("amt_ins"), 0) > 500000000) {
-					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "보험가입금액 5억 이상 단독/다가구주택은 가입할 수 없습니다.");
+					throw new ResponseStatusException(
+						HttpStatus.NOT_ACCEPTABLE,
+						"보험가입금액 5억 이상 단독/다가구주택은 가입할 수 없습니다."
+					);
 				}
 			}
 
@@ -179,7 +183,8 @@ public class HouseController {
 			in010tMapper.fireinsurance_insert(
 				quote_no,
 				building_type,
-				String.valueOf(detail.get("newPlatPlc")) + " " + dong_info,
+				getNotEmptyAddress(detail.get("platPlc"), detail.get("newPlatPlc")) + " " + dong_info,
+				// String.valueOf(detail.get("newPlatPlc")) + " " + dong_info,
 				"S", //(String)cover.get("group_ins"),
 				String.valueOf(detail.get("bldNm")),
 				dong_info, //dong_info
@@ -216,6 +221,11 @@ public class HouseController {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		}
+	}
+
+	private String getNotEmptyAddress(Object platPlc, Object newPlatPlc) {
+		String address = InsuStringUtil.IsEmpty(String.valueOf(newPlatPlc)) ? String.valueOf(platPlc) : String.valueOf(newPlatPlc);
+		return address;
 	}
 
 	private boolean is_3_4_gradeBuilding(String pillar, String roof) {

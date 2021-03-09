@@ -32,7 +32,7 @@ public interface IN003TMapper {
 		String already_group_ins
 	);
 
-	void insertFromIn101t(String quote_no,String prod_code,String jumin, String advisor_no);
+	void insertFromIn101t(String quote_no,String prod_code,String jumin, String advisor_no,String ptype);
 
 	void delete(String quote_no);
 

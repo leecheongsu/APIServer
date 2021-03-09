@@ -274,7 +274,8 @@ public class WWController {
 			String advisor_no = String.valueOf(data.get("advisor_no"));
 			Map<String, Object> terms = (Map<String, Object>) data.get("terms");
 			Map<String, Object> card = (Map<String, Object>) data.get("card");
-			String regno =  String.valueOf(card.get("regNo1")) +  String.valueOf(card.get("regNo1"));
+			String regno = String.valueOf(card.get("regNo1")) + String.valueOf(card.get("regNo1"));
+			String ptype =  String.valueOf(card.get("cardDivide")); //일수불,할부개월수
 			String jumin = UserInfoCyper.EncryptJuminb(regno);
 			Map<String, Object> in101t = in101tMapper.selectById(quote_no);
 			JSONObject order = makeOrder(in101t, card);
@@ -282,7 +283,7 @@ public class WWController {
 			JSONObject giid0410vo_json = Hi_4_Order.FnConfirmsubscription(String.valueOf(in101t.get("sessionid")), order);
 			in101tMapper.updateContract(quote_no, giid0410vo_json.toString());
 			in003tMapper.delete(quote_no);
-			in003tMapper.insertFromIn101t(quote_no, prod_code,jumin, advisor_no);
+			in003tMapper.insertFromIn101t(quote_no, prod_code, jumin, advisor_no, ptype);
 			insertTerms(quote_no, terms);
 			sendA001KakaoMessage(quote_no, in003tMapper.selectByQuoteNo(quote_no));
 			return "OK";
