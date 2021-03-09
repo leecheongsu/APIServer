@@ -84,7 +84,6 @@ public class HouseController {
 			if (InsuStringUtil.ToIntOrDefault(cover.get("max_grnd_flr_cnt"), 0) > 15) {
 				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 			}
-			// TODO: 3,4등급 가입 불가 로직 구현할 것.
 
 			String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 			in010tMapper.fireinsurance_insert(
@@ -172,7 +171,7 @@ public class HouseController {
 		if (InsuStringUtil.ToIntOrDefault(cover.get("grndFlrCnt"), 0) > 15) {
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 		}
-		// TODO: 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
+		// 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
 		// if (is_3_4_gradeBuilding(String.valueOf(cover.get("etcStrct")), String.valueOf(cover.get("etcRoof")))) {
 		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "3,4등급 건물은 가입할 수 없습니다.");
 		// }
@@ -228,64 +227,64 @@ public class HouseController {
 		return address;
 	}
 
-	private boolean is_3_4_gradeBuilding(String pillar, String roof) {
-		// 기둥리스트에 판넬,샌드위치,목조,철골 있으면 3,4등급
-		if (InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, pillar)) return true;
-		// 기둥리스트에 아래가 있으면 3,4등급 아님
-		if (
-			!InsuStringUtil.ContainStringInArray(
-				new String[] {
-					"철근콘",
-					"콘크리트",
-					"연와",
-					"시멘트벽돌",
-					"벽조",
-					"조적",
-					"블록",
-					"블럭",
-					"벽돌",
-					"브록",
-					"브럭",
-					"세멘",
-					"라멘",
-				},
-				pillar
-			)
-		) return true;
+	// private boolean is_3_4_gradeBuilding(String pillar, String roof) {
+	// 	// 기둥리스트에 판넬,샌드위치,목조,철골 있으면 3,4등급
+	// 	if (InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, pillar)) return true;
+	// 	// 기둥리스트에 아래가 있으면 3,4등급 아님
+	// 	if (
+	// 		!InsuStringUtil.ContainStringInArray(
+	// 			new String[] {
+	// 				"철근콘",
+	// 				"콘크리트",
+	// 				"연와",
+	// 				"시멘트벽돌",
+	// 				"벽조",
+	// 				"조적",
+	// 				"블록",
+	// 				"블럭",
+	// 				"벽돌",
+	// 				"브록",
+	// 				"브럭",
+	// 				"세멘",
+	// 				"라멘",
+	// 			},
+	// 			pillar
+	// 		)
+	// 	) return true;
 
-		// 지붕리스트에  "판넬", "샌드위치", "목조" 가 있고, 아래것이 없으면 3,4등급
-		if (
-			InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, roof) &&
-			!InsuStringUtil.ContainStringInArray(
-				new String[] {
-					"철근콘",
-					"연와",
-					"시멘트벽돌",
-					"세멘",
-					"벽조",
-					"조적",
-					"블록",
-					"블럭",
-					"브럭",
-					"벽돌",
-					"스라브",
-					"슬라브",
-					"슬래브",
-					"스래부",
-					"스래브",
-					"경사지붕",
-					"기타지붕",
-					"콩크리트",
-					"콘크리트",
-					"철근콘",
-					"평옥개",
-					"평판지붕",
-				},
-				roof
-			)
-		) return true;
-		return false;
-	}
+	// 	// 지붕리스트에  "판넬", "샌드위치", "목조" 가 있고, 아래것이 없으면 3,4등급
+	// 	if (
+	// 		InsuStringUtil.ContainStringInArray(new String[] { "판넬", "샌드위치", "목조" }, roof) &&
+	// 		!InsuStringUtil.ContainStringInArray(
+	// 			new String[] {
+	// 				"철근콘",
+	// 				"연와",
+	// 				"시멘트벽돌",
+	// 				"세멘",
+	// 				"벽조",
+	// 				"조적",
+	// 				"블록",
+	// 				"블럭",
+	// 				"브럭",
+	// 				"벽돌",
+	// 				"스라브",
+	// 				"슬라브",
+	// 				"슬래브",
+	// 				"스래부",
+	// 				"스래브",
+	// 				"경사지붕",
+	// 				"기타지붕",
+	// 				"콩크리트",
+	// 				"콘크리트",
+	// 				"철근콘",
+	// 				"평옥개",
+	// 				"평판지붕",
+	// 			},
+	// 			roof
+	// 		)
+	// 	) return true;
+	// 	return false;
+	// }
 
 	// 세대가입에서만 호출한다.
 	// 따라서 세대별 가입 중 단독주택은 가입할 수 없음을 여기서 미리 체크하여야 뒷단 /sedae 에서 오류가 안 난다.

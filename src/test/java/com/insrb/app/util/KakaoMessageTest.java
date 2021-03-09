@@ -62,8 +62,8 @@ public class KakaoMessageTest {
 
 	@Test
 	public void test_A0031() {
-		String phone = "01038745390";
-		String u_name = "김학성";
+		String phone = "01049345172";
+		String u_name = "이청수";
 		String p_name = "인슈로보주택종합보험";
 		String exp_day = "30일";
 		String success_num = "Q1231242354234534";

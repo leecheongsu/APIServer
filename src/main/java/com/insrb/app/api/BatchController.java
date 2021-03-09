@@ -29,7 +29,7 @@ public class BatchController {
 		List<Map<String, Object>> list = in003t_v1Mapper.selectByExpireBefore30();
 		for (Map<String, Object> item : list) {
 			String phone = UserInfoCyper.DecryptMobile(String.valueOf(item.get("insurant_a_mobile")));
-			log.debug(phone,item.get("quote_no"));
+			// log.debug(phone,item.get("quote_no"));
 			kakaoMessage.A003(
 				String.valueOf(item.get("quote_no")),
 				phone,
