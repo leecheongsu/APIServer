@@ -1,6 +1,5 @@
 package com.insrb.app.util;
 
-import com.insrb.app.exception.SearchException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,10 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import kong.unirest.json.JSONArray;
+import com.insrb.app.exception.SearchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import kong.unirest.json.JSONArray;
 
 @SuppressWarnings("unchecked")
 public class QuoteUtil {

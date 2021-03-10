@@ -16,8 +16,8 @@ X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2Vyd
 GET http://localhost:8080/house/detail?sigungucd=26290&bjdongcd=10600&bun=0852&ji=0023&dongnm=&honm=302
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
-### 견젹요청  11410,12000,0292,0003
-POST http://localhost:8080/house/quotes/danche?sigungucd=11410&bjdongcd=12000&bun=0292&ji=0003
+### 견젹요청 ::41285,11300,1556,0002
+POST http://localhost:8080/house/quotes/danche?sigungucd=41285&bjdongcd=11300&bun=1556&ji=0002
 X-insr-servicekey: Q29weXJpZ2h0IOKTkiBpbnN1cm9iby5jby5rciBBbGwgcmlnaHRzIHJlc2VydmVkLg==
 
 

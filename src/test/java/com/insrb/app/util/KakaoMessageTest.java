@@ -71,8 +71,9 @@ public class KakaoMessageTest {
 		assertEquals(true, kakao.A003("Q20210305104820960", phone, u_name, p_name, exp_day, success_num, period));
 	}
 	
+	@Test
 	public void test_A004() {
-		String phone = "01047017956";
+		String phone = "01049345172";
 		String u_name = "이청수";
 		String product = "현대해상풍수해보험";
 		String pu_name = "이청수";
