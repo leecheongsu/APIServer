@@ -124,6 +124,18 @@ public class HouseController {
 			Map<String, Object> product = in006cMapper.selectByPcode("m002");
 			data.put("product", product);
 			return data;
+		} catch (DataAccessException e) {
+			log.error(e.getMessage());
+			if (e.getRootCause() instanceof SQLException) {
+				SQLException sqlEx = (SQLException) e.getRootCause();
+				int sqlErrorCode = sqlEx.getErrorCode();
+				if(sqlErrorCode == -20101){
+					log.error("quotes/danche(신축단가조회오류):{},{},{},{}", sigungucd, bjdongcd, bun, ji);
+					throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "등록된 건물에 대한 단가를 찾지못했습니다.\n관리자에게 연락해주세요.");
+				}
+				throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,sqlEx.getMessage());
+			}
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
@@ -212,7 +224,12 @@ public class HouseController {
 			if (e.getRootCause() instanceof SQLException) {
 				SQLException sqlEx = (SQLException) e.getRootCause();
 				int sqlErrorCode = sqlEx.getErrorCode();
+				if(sqlErrorCode == -20101){
+					log.error("/house/quotes/sedae(신축단가조회오류):{}", quote_no);
+					throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "등록된 건물에 대한 단가를 찾지못했습니다.\n관리자에게 연락해주세요.");
+				}
 				log.error("/house/quotes/sedae:{}, sqlErrorCode:{}", quote_no, sqlErrorCode);
+				throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,sqlEx.getMessage());
 			}
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		} catch (Exception e) {
