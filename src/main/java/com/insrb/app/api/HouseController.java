@@ -90,7 +90,6 @@ public class HouseController {
 				quote_no,
 				building_type,
 				getNotEmptyAddress(cover.get("platPlc"), cover.get("newPlatPlc")),
-				// String.valueOf(cover.get("newPlatPlc")),
 				"T", //(String)cover.get("group_ins"),
 				String.valueOf(cover.get("bldNm")),
 				String.valueOf(cover.get("dong_info")),

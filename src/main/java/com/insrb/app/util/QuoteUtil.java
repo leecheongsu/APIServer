@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import kong.unirest.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +34,7 @@ public class QuoteUtil {
 
 		Map<String, Object> cover = null;
 		int max_grnd_flr_cnt = 1;
+		int max_sedae = 0;
 		for (Map<String, Object> item : items) {
 			int sedae = (int) item.get("hhldCnt");
 			// if (cover == null && sedae > 0) cover = item; // 세대가 한세대라도 있는 건물(동)을 대표로 한다.
@@ -47,9 +49,14 @@ public class QuoteUtil {
 			}
 			// 마지막 데이터의 승인일.
 			useAprDay = item.get("useAprDay");
+
+			// 많고 많은 표제부 중에서 하나를 선택하는데, 세대수가 가장 많은 표제부를 선택
+			if(sedae > max_sedae){
+				max_sedae = sedae;
+				cover = item;
+			}
 		}
-		// if (cover == null) cover = items.get(items.size() -1 );
-		cover = items.get(items.size() - 1);
+		if (max_sedae == 0) cover = items.get(items.size() -1 );
 
 		cover.put("cnt_sedae", String.valueOf(cnt_sedae));
 		cover.put("total_area", String.valueOf(total_area));

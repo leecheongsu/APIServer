@@ -380,6 +380,7 @@ public class WWController {
 
 	private void sendA001KakaoMessage(String quote_no, Map<String, Object> in003t) throws ParseException, InsuEncryptException {
 		String prod_name = String.valueOf(in003t.get("prod_name")); // 인슈로보주택종합보험(메리츠화재)
+		String email = String.valueOf(in003t.get("email"));
 		String amt_ins = String.valueOf(in003t.get("amt_ins"));
 		String premium = String.valueOf(in003t.get("premium"));
 		String mobile = String.valueOf(in003t.get("mobile"));
@@ -406,7 +407,8 @@ public class WWController {
 			quote_no,
 			InsuDateUtil.ToChar(insdate, "yyyy.MM.dd"),
 			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd"),
-			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd") + " 24:00 ~ " + InsuDateUtil.ToChar(ins_to, "yyyy.MM.dd") + " 24:00"
+			InsuDateUtil.ToChar(ins_from, "yyyy.MM.dd") + " 24:00 ~ " + InsuDateUtil.ToChar(ins_to, "yyyy.MM.dd") + " 24:00",
+			email
 		);
 	}
 }

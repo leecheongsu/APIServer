@@ -96,7 +96,7 @@ public class KakaoMessageComponent {
 	@Autowired
 	IN901TMapper in901tMapper;
 
-	// 계약완료
+	// 풍수해 계약완료
 	public boolean A001(
 		String quote_no,
 		String phone,
@@ -109,7 +109,8 @@ public class KakaoMessageComponent {
 		String success_num,
 		String success,
 		String start_date,
-		String period
+		String period,
+		String email
 	) {
 		String msg =
 			"안녕하세요" +
@@ -135,7 +136,9 @@ public class KakaoMessageComponent {
 			start_date +
 			"\n-.보험기간 : " +
 			period +
-			"\n\n※약관 및 증권은 info@insurobo.co.kr로 전송되었습니다.기타 문의 사항은 인슈로보 문의하기 또는 고객센터(070 - 4126 - 3333)로 문의 바랍니다.";
+			"\n\n※약관 및 증권은 " +
+			email +
+			"로 전송되었습니다.기타 문의 사항은 인슈로보 문의하기 또는 고객센터(070 - 4126 - 3333)로 문의 바랍니다.";
 
 		HttpResponse<JsonNode> res = Unirest
 			.post(URL)
@@ -168,6 +171,79 @@ public class KakaoMessageComponent {
 			return true;
 		} else {
 			log.error("KakaoMessage.A001 오류:{}", res.getStatusText());
+			return false;
+		}
+	}
+
+	// 주택화재 계약완료
+	public boolean A004(
+		String quote_no,
+		String phone,
+		String u_name,
+		String product,
+		String pu_name,
+		String pu_insloc,
+		String allamount,
+		String price,
+		String success_num,
+		String success,
+		String start_date,
+		String period
+	) {
+		String msg =
+			"안녕하세요 " +
+			u_name +
+			"님.\r\n" +
+			product +
+			"\r\n계약 체결이 완료되었습니다.\r\n\r\n★보험가입 요약정보★\r\n-.계약자 : " +
+			u_name +
+			"\r\n-.피보험자 : " +
+			pu_name +
+			"\r\n-.피보험목적물 :" +
+			pu_insloc +
+			"\r\n-.보험가입금액 : " +
+			allamount +
+			"원\r\n-.납입보험료 : " +
+			price +
+			"원\r\n-.증권번호 : " +
+			success_num +
+			"\r\n-.보험계약체결일 : " +
+			success +
+			"\r\n-.보험시작일 : " +
+			start_date +
+			"\r\n-.보험기간 : "+period+"\r\n\r\n※기타 문의 사항은 인슈로보 문의하기 또는 고객센터(070-4126-3333)로\r\n문의 바랍니다.";
+
+		HttpResponse<JsonNode> res = Unirest
+			.post(URL)
+			.header("x-waple-authorization", KEY)
+			.header("Content-Type", FORM_URLENCODED_UTF_8)
+			.field("PHONE", phone)
+			.field("CALLBACK", CALLBACK)
+			.field("MSG", msg)
+			.field("TEMPLATE_CODE", "A004")
+			.field("FAILED_TYPE", "N")
+			.field("BTN_TYPES", "")
+			.field("BTN_TXTS", "계약완료V2")
+			.field("BTN_URLS1", "")
+			.asJson();
+		if (res.getStatus() == 200) {
+			// {"result_message":"OK","result_code":"200","cmid":"2021021411351886720601"}
+			JSONObject json = res.getBody().getObject();
+			log.debug("KakaoMessage.A004 성공:{}", json.toString());
+			in901tMapper.insert(
+				quote_no,
+				"A004",
+				"계약완료",
+				phone,
+				json.getString("result_code"),
+				json.getString("result_message"),
+				json.getString("cmid"),
+				msg
+			);
+
+			return true;
+		} else {
+			log.error("KakaoMessage.A004 오류:{}", res.getStatusText());
 			return false;
 		}
 	}

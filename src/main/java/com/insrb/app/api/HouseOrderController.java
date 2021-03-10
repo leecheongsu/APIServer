@@ -331,7 +331,7 @@ public class HouseOrderController {
 		Date ins_from = InsuDateUtil.ToDate(String.valueOf(data.get("ins_from")));
 		Date ins_to = InsuDateUtil.ToDate(String.valueOf(data.get("ins_to")));
 
-		kakaoMessage.A001(
+		kakaoMessage.A004(
 			quote_no,
 			mobile,
 			polholder,
