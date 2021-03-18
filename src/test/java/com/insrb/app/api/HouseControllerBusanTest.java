@@ -131,8 +131,8 @@ public class HouseControllerBusanTest {
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(222920000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(57736)); 
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(212820000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(52353));
 	}
 
 	@Test
