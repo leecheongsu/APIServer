@@ -74,8 +74,8 @@ public class HouseControllerBusanTest {
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(150840000))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(39067)); 
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(206020000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(53359));
 	}
 
 
@@ -148,7 +148,7 @@ public class HouseControllerBusanTest {
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(71950000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(71860000))
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_premium").value(0)); //단체보험미가입건으로 확인
 	}
 

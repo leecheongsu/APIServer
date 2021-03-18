@@ -31,7 +31,7 @@ public class HouseControllerTest {
 
 	{
 		mockAddress = new HashMap<String, String>();
-		mockAddress.put("search_text", "효창동 현대아트빌");
+		mockAddress.put("search_text", "운화리 53-2");
 	}
 
 	@Test

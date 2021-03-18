@@ -17,7 +17,7 @@ public class FilterConfig {
 		// Rule out : /okcert/rtn/*
 		// Rule out : /kginicis/rtn/*
 		// Rule out : /kginicis/noti/*
-		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/kginicis/vacct/*", "/batch/*");
+		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/kginicis/vacct/*", "/batch/*", "/brs/*");
 
 		return registrationBean;
 	}
