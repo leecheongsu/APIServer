@@ -179,9 +179,9 @@ public class HouseController {
 		// if (InsuStringUtil.IsEmpty(building_type)) {
 		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "주택만 가입 가능합니다.");
 		// }
-		if (InsuStringUtil.ToIntOrDefault(cover.get("grndFlrCnt"), 0) > 15) {
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
-		}
+//		if (InsuStringUtil.ToIntOrDefault(cover.get("grndFlrCnt"), 0) > 15) {
+//			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
+//		}
 		// 3,4등급 가입 불가 로직 구현할 것. Validation.cs::Check 참고할 것.
 		// if (is_3_4_gradeBuilding(String.valueOf(cover.get("etcStrct")), String.valueOf(cover.get("etcRoof")))) {
 		// 	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "3,4등급 건물은 가입할 수 없습니다.");
@@ -342,9 +342,9 @@ public class HouseController {
 			}
 
 			// 16층 이상 건물은 가입할 수 없다.
-			if (InsuStringUtil.ToIntOrDefault(coverSummary.get("max_grnd_flr_cnt"), 0) > 15) {
-				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
-			}
+			//if (InsuStringUtil.ToIntOrDefault(coverSummary.get("max_grnd_flr_cnt"), 0) > 15) {
+			//	throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
+			//}
 
 			return items;
 		} catch (SearchException e) {
