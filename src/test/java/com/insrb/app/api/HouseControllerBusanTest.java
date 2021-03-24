@@ -49,10 +49,10 @@ public class HouseControllerBusanTest {
 			.perform(
 				post("http://localhost:8080/house/quotes/danche")
 					.header("X-insr-servicekey", SERVICE_KEY)
-					.param("sigungucd", "26350")
-					.param("bjdongcd", "10100")
-					.param("bun","0040")
-					.param("ji", "0652")
+					.param("sigungucd", "31710")
+					.param("bjdongcd", "25629")
+					.param("bun","0053")
+					.param("ji", "0002")
 			)
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -94,10 +94,10 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(429028980000L))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(118411998)); 
+			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(118411998));
 	}
 
-	
+
 	@Test
 	@DisplayName("TEST-04 단체가입: 부산광역시 해운대구 달맞이길117번가길 98 아남하이츠3차(단독이라고 했지만 아파트)")
 	public void UIAPP020_04() throws Exception {
@@ -113,10 +113,10 @@ public class HouseControllerBusanTest {
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.jsonPath("$.amt_ins").value(7009220000L))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(1934544)); 
+			.andExpect(MockMvcResultMatchers.jsonPath("$.premiums[?(@.item_id == 'BFRE')].premium").value(1934544));
 	}
 
-	
+
 	@Test
 	@DisplayName("TEST-05 단체가입: 부산광역시 해운대구 재반로270번길 37-34 정우빌라(다세대라고 했지만 단독)")
 	public void UIAPP020_05() throws Exception {

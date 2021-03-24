@@ -83,7 +83,7 @@ public class AddressSearch {
 		log.debug("getHouseCoverInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
-			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrTitleInfo")
+			.get("http://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo")
 			.queryString("ServiceKey", APIS_DATA_GO_KR_SERVICE_KEY)
 			.queryString("sigunguCd", sigunguCd)
 			.queryString("bjdongCd", bjdongCd)
@@ -115,7 +115,7 @@ public class AddressSearch {
 		log.debug("getHouseDetailInfo:" + sigunguCd + "," + bjdongCd + "," + str_bun + "," + str_ji);
 
 		HttpResponse<String> res = Unirest
-			.get("http://apis.data.go.kr/1611000/BldRgstService/getBrExposPubuseAreaInfo")
+			.get("http://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposPubuseAreaInfo")
 			.queryString("ServiceKey", APIS_DATA_GO_KR_SERVICE_KEY)
 			.queryString("sigunguCd", sigunguCd)
 			.queryString("bjdongCd", bjdongCd)

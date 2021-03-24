@@ -85,6 +85,10 @@ public class HouseController {
 				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "16층 이상 건물은 가입할 수 없습니다.");
 			}
 
+			if (String.valueOf(cover.get("mainPurpsCdNm")).contains("근린")) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "해당 건물은 일반화재상품으로 가입할 수 있습니다");
+			}
+
 			String quote_no = QuoteUtil.GetNewQuoteNo("Q");
 			in010tMapper.fireinsurance_insert(
 				quote_no,
@@ -138,7 +142,7 @@ public class HouseController {
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "시스템 점검중입니다");
 		}
 	}
 
@@ -234,7 +238,7 @@ public class HouseController {
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 		} catch (Exception e) {
 			log.error("/house/quotes/sedae: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "시스템 점검중입니다");
 		}
 	}
 
@@ -348,7 +352,8 @@ public class HouseController {
 
 			return items;
 		} catch (SearchException e) {
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			log.error("cover : {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "시스템 점검중입니다");
 		}
 	}
 
