@@ -1,16 +1,17 @@
 package com.insrb.app.insurance;
 
-import java.util.Map;
-import java.util.Objects;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.util.InsuStringUtil;
-import org.json.XML;
-import org.springframework.stereotype.Component;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.json.XML;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -24,8 +25,8 @@ public class AddressSearch {
 	/**
 	 *
 	 */
-	private static final String JUSO_GO_KR_URL = "http://www.juso.go.kr/addrlink/addrLinkApi.do";
-	private static final String CONFIRM_KEY = "U01TX0FVVEgyMDIwMDcwODE3MDExMTEwOTkzNzM=";
+	private static final String JUSO_GO_KR_URL = "https://www.juso.go.kr/addrlink/addrLinkApi.do";
+	private static final String CONFIRM_KEY = "U01TX0FVVEgyMDIxMDMzMTE1MzA1NTExMDk5Mzc=";
 
 	/**
 	 * Spec : https://www.juso.go.kr/addrlink/devAddrLinkRequestGuide.do?menu=roadApi
@@ -38,8 +39,8 @@ public class AddressSearch {
 		log.debug("getJusoList:" + search);
 		HttpResponse<JsonNode> res = Unirest
 			.post(JUSO_GO_KR_URL)
+				.field("confmKey", CONFIRM_KEY)
 			.field("keyword", search)
-			.field("confmKey", CONFIRM_KEY)
 			.field("resultType", "json")
 			.field("currentPage", "1")
 			.field("countPerPage", "1000")
@@ -48,18 +49,24 @@ public class AddressSearch {
 			.asJson();
 
 		JSONObject json = res.getBody().getObject();
-		log.debug(json.toString());
-		if(Objects.isNull(json)) throw new SearchException("응답이없습니다");
-		String errCode = json.getJSONObject("results").getJSONObject("common").getString("errorCode");
+
+		String rep = json.toString().replaceAll("&amp;", "&");
+
+		JSONObject json_rep = new JSONObject(rep);
+
+
+		log.debug(json_rep.toString());
+		if(Objects.isNull(json_rep)) throw new SearchException("응답이없습니다");
+		String errCode = json_rep.getJSONObject("results").getJSONObject("common").getString("errorCode");
 		if(!InsuStringUtil.Equals(errCode, "0")){
-			String errorMessage = json.getJSONObject("results").getJSONObject("common").getString("errorMessage");
+			String errorMessage = json_rep.getJSONObject("results").getJSONObject("common").getString("errorMessage");
 			throw new SearchException(errorMessage);
 		}
-		String totalCount = json.getJSONObject("results").getJSONObject("common").getString("totalCount");
+		String totalCount = json_rep.getJSONObject("results").getJSONObject("common").getString("totalCount");
 		if(InsuStringUtil.Equals(totalCount, "0")){
 			throw new SearchException("조회된 데이터가 없습니다.");
 		}
-		return json.toMap();
+		return json_rep.toMap();
 	}
 
 	/**

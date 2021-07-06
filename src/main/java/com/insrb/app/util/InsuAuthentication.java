@@ -1,7 +1,5 @@
 package com.insrb.app.util;
 
-import java.text.ParseException;
-import java.util.Date;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -12,6 +10,9 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import org.springframework.util.StringUtils;
+
+import java.text.ParseException;
+import java.util.Date;
 
 // ref: https://github.com/auth0/java-jwt
 

@@ -1,15 +1,11 @@
 package com.insrb.app.filter;
 
-import java.io.IOException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import com.insrb.app.util.InsuStringUtil;
+
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.insrb.app.util.InsuStringUtil;
+import java.io.IOException;
 
 // @Slf4j
 // @Component
@@ -33,6 +29,7 @@ public class AuthFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		String service_key = req.getHeader("X-insr-servicekey");
 		// log.debug("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
+
 		if (service_key == null) {
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid access.");
 		} else if (!InsuStringUtil.Equals(service_key, SERVICE_KEY)) {;

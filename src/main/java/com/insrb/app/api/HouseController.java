@@ -1,8 +1,5 @@
 package com.insrb.app.api;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import com.insrb.app.exception.SearchException;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.mapper.IN001TMapper;
@@ -12,17 +9,16 @@ import com.insrb.app.mapper.IN010TMapper;
 import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.QuoteUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.extern.slf4j.Slf4j;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -135,11 +131,11 @@ public class HouseController {
 				int sqlErrorCode = sqlEx.getErrorCode();
 				if(sqlErrorCode == -20101){
 					log.error("quotes/danche(신축단가조회오류):{},{},{},{}", sigungucd, bjdongcd, bun, ji);
-					throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "등록된 건물에 대한 단가를 찾지못했습니다.\n관리자에게 연락해주세요.");
+					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "등록된 건물에 대한 단가를 찾지못했습니다.\n관리자에게 연락해주세요.");
 				}
-				throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,sqlEx.getMessage());
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,sqlEx.getMessage());
 			}
-			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
 		} catch (SearchException e) {
 			log.error("/house/quotes/danche: {}", e.getMessage());
 			throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "시스템 점검중입니다");

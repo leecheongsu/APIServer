@@ -4,13 +4,14 @@ import com.insrb.app.exception.InsuEncryptException;
 import com.insrb.app.mapper.IN003T_V1Mapper;
 import com.insrb.app.util.KakaoMessageComponent;
 import com.insrb.app.util.cyper.UserInfoCyper;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController

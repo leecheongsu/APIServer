@@ -1,16 +1,13 @@
 package com.insrb.app.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.insrb.app.exception.SearchException;
+import kong.unirest.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import kong.unirest.json.JSONArray;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class QuoteUtil {
@@ -47,7 +44,13 @@ public class QuoteUtil {
 				max_grnd_flr_cnt = (grnd_flr_cnt > max_grnd_flr_cnt) ? grnd_flr_cnt : max_grnd_flr_cnt;
 			}
 			// 마지막 데이터의 승인일.
-			useAprDay = item.get("useAprDay");
+			//useAprDay = item.get("useAprDay");
+			if(item.get("useAprDay") == null)
+			{
+				useAprDay = item.get("pmsDay");
+			} else {
+				useAprDay = item.get("useAprDay");
+			}
 
 			// 많고 많은 표제부 중에서 하나를 선택하는데, 세대수가 가장 많은 표제부를 선택
 			if(sedae > max_sedae){

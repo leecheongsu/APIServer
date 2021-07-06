@@ -7,7 +7,6 @@ import com.insrb.app.util.InsuJsonUtil;
 import com.insrb.app.util.InsuStringUtil;
 import com.insrb.app.util.ResourceUtil;
 import com.insrb.app.util.cyper.UserInfoCyper;
-import java.util.Map;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -17,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 //ref : http://kong.github.io/unirest-java/#requests
 
@@ -189,8 +190,10 @@ public class Hi_2_Premium {
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("emailDomain", user_email[1]);
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("zip1", oagi6002vo.getString("objZip1"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("zip2", oagi6002vo.getString("objZip2"));
-		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr1", oagi6002vo.getString("objZip2"));
-		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr2", oagi6002vo.getString("objZip2"));
+		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr1", oagi6002vo.getString("objAddr1"));
+		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr2", oagi6002vo.getString("objAddr2"));
+//		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr1", oagi6002vo.getString("objZip2"));
+//		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("addr2", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("roadNmCd", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("trbdCd", oagi6002vo.getString("objZip2"));
 		fn_3_joinTobeJson.getJSONObject("oagi6002vo").put("trbdAddr", oagi6002vo.getString("objZip2"));

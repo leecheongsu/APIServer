@@ -45,7 +45,7 @@ public class WWControllerTest {
 	@Value("classpath:mock/prevent_denial.json")
 	private Resource prevent_denial_json;
 
-	
+
 	@Value("classpath:mock/ww_order.json")
 	private Resource ww_order_json;
 
@@ -53,25 +53,25 @@ public class WWControllerTest {
 	Map<String, String> mockUser;
 	{
 		mockUser = new HashMap<String, String>();
-		mockUser.put("email", "vingorius@gmail.com"); // premium.json 에 있는 user와 동일하여야 한다.
+		mockUser.put("email", "ashblakbud@insurobo.co.kr"); // premium.json 에 있는 user와 동일하여야 한다.
 	}
 
 	Map<String, String> mockSearch;
 
 	{
 		mockSearch = new HashMap<String, String>();
-		mockSearch.put("search_text", "두산더랜드파크");
+		mockSearch.put("search_text", "파르나스타워");
 	}
 
 
 	Map<String, String> mockAddress;
 	{
 		mockAddress = new HashMap<String, String>();
-		mockAddress.put("sigungucd", "11500");
-		mockAddress.put("bjdongcd", "10500");
-		mockAddress.put("bun", "757");
-		mockAddress.put("ji", "0");
-		mockAddress.put("zip", "07788");
+		mockAddress.put("sigungucd", "26110");
+		mockAddress.put("bjdongcd", "12400");
+		mockAddress.put("bun", "0012");
+		mockAddress.put("ji", "0007");
+		mockAddress.put("zip", "48977");
 	}
 
 	@Test
@@ -173,5 +173,5 @@ public class WWControllerTest {
 			)
 			.andDo(print())
 			.andExpect(status().isOk());
-	}	
+	}
 }

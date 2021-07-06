@@ -1,30 +1,25 @@
 package com.insrb.app.api;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import com.insrb.app.exception.InsuAuthException;
 import com.insrb.app.exception.InsuAuthExpiredException;
 import com.insrb.app.mapper.IN007TMapper;
 import com.insrb.app.util.InsuAuthentication;
+import kcb.module.v3.OkCert;
+import kcb.module.v3.exception.OkCertException;
+import kong.unirest.json.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import kcb.module.v3.OkCert;
-import kcb.module.v3.exception.OkCertException;
-import kong.unirest.json.JSONObject;
-import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -247,7 +242,6 @@ public class OKCertController {
 	@ResponseBody
 	public String rtn_ww(HttpServletRequest request) throws OkCertException, IOException {
 		String MDL_TKN = request.getParameter("mdl_tkn");
-
 		// 서비스명 (고정값)
 		String svcName = "IDS_HS_POPUP_RESULT";
 

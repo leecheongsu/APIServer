@@ -3,12 +3,12 @@ package com.insrb.app.insurance.hi;
 public class HiConfig {
 
 	// 개발
-	// public static String SSO_SERVER = "https://apid-sso.hi.co.kr";
-	// public static String SERVER = "https://apid.hi.co.kr";
-	// public static String WW_CLIENT_ID = "29311b91";
-	// public static String WW_CLIENT_SECRET = "75e365273b4f1d81ea944b1c9a9560ad";
-	// public static String COMMON_CLIENT_ID = "6a08aba5";
-	// public static String COMMON_CLIENT_SECRET = "be085145cd0ab2aa19f668ee777bff9a";
+//	 public static String SSO_SERVER = "https://apid-sso.hi.co.kr";
+//	 public static String SERVER = "https://apid.hi.co.kr";
+//	 public static String WW_CLIENT_ID = "29311b91";
+//	 public static String WW_CLIENT_SECRET = "75e365273b4f1d81ea944b1c9a9560ad";
+//	 public static String COMMON_CLIENT_ID = "6a08aba5";
+//	 public static String COMMON_CLIENT_SECRET = "be085145cd0ab2aa19f668ee777bff9a";
 	// 운영
 	public static String SSO_SERVER = "https://api-sso.hi.co.kr";
 	public static String SERVER = "https://api.hi.co.kr";

@@ -583,6 +583,14 @@ public class UsersControllerTest {
 			;
 	}
 
-
-	
+	@Test
+	public void getAuthKakao() throws Exception {
+		mockMvc
+				.perform(
+						get("/users/auth_kakao")
+								.header("X-insr-servicekey", SERVICE_KEY)
+				)
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
 }

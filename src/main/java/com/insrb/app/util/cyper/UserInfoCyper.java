@@ -1,9 +1,10 @@
 package com.insrb.app.util.cyper;
 
+import com.insrb.app.exception.InsuEncryptException;
+
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import com.insrb.app.exception.InsuEncryptException;
 
 public class UserInfoCyper {
     private static String SALT = "insurobo";

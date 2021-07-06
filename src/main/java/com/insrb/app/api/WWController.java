@@ -1,51 +1,29 @@
 package com.insrb.app.api;
 
-import com.insrb.app.exception.InsuAuthException;
-import com.insrb.app.exception.InsuAuthExpiredException;
-import com.insrb.app.exception.InsuEncryptException;
-import com.insrb.app.exception.SearchException;
-import com.insrb.app.exception.WWException;
+import com.insrb.app.exception.*;
 import com.insrb.app.insurance.AddressSearch;
 import com.insrb.app.insurance.hi.Hi_1_PrePremium;
 import com.insrb.app.insurance.hi.Hi_2_Premium;
 import com.insrb.app.insurance.hi.Hi_3_PreventOfDenial;
 import com.insrb.app.insurance.hi.Hi_4_Order;
-import com.insrb.app.mapper.IN001TMapper;
-import com.insrb.app.mapper.IN003TMapper;
-import com.insrb.app.mapper.IN005TMapper;
-import com.insrb.app.mapper.IN006CMapper;
-import com.insrb.app.mapper.IN010TMapper;
-import com.insrb.app.mapper.IN011TMapper;
-import com.insrb.app.mapper.IN101TMapper;
-import com.insrb.app.mapper.IN102CMapper;
-import com.insrb.app.mapper.IN103CMapper;
-import com.insrb.app.util.InsuAuthentication;
-import com.insrb.app.util.InsuDateUtil;
-import com.insrb.app.util.InsuNumberUtil;
-import com.insrb.app.util.InsuStringUtil;
-import com.insrb.app.util.KakaoMessageComponent;
-import com.insrb.app.util.QuoteUtil;
-import com.insrb.app.util.ResourceUtil;
+import com.insrb.app.mapper.*;
+import com.insrb.app.util.*;
 import com.insrb.app.util.cyper.UserInfoCyper;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import kong.unirest.json.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -166,8 +144,11 @@ public class WWController {
 			data.put("ww_info", tmpl);
 			return data;
 		} catch (SearchException e) {
-			log.error("/ww/cover: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+			log.error("/ww/cover(Search): {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage());
+		} catch (DataAccessException e) {
+			log.error("ww/cover(DataAccess): {}", e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "공공데이터 수신오류입니다.\n관리자에게 연락해주세요.");
 		}
 	}
 
