@@ -40,6 +40,9 @@ public class UsersController {
 	@Autowired
 	IN003T_V1Mapper in003t_v1Mapper;
 
+	@Autowired
+	IN008TMapper in008TMapper;
+
 	@GetMapping(path = "today")
 	public String today() {
 		log.debug("Today is called");
@@ -402,4 +405,34 @@ public class UsersController {
 	// 	log.debug(list.toString());
 	// 	return list;
 	// }
+//	@PostMapping(path = "/postsuper")
+//	public String postSuper(
+//			@RequestParam(name = "uuid", required = true) String uuid,
+//			@RequestParam(name = "upwd", required = true) String upwd,
+//			@RequestParam(name = "name", required = true) String name,
+//			@RequestParam(name = "mobile", required = true) String mobile,
+//			@RequestParam(name = "address", required = false) String address,
+//			@RequestParam(name = "ulevel", required = true) String ulevel,
+//			@RequestParam(name = "comname", required = true) String comname,
+//			@RequestParam(name = "businessnum", required = true) String businessnum,
+//			@RequestParam(name = "gacode", required = false) String gacode,
+//			@RequestParam(name = "account_status", required = true) int status,
+//			@RequestParam(name = "prod_code", required = true) String prod_code
+//	) {
+//		try{
+//
+//			Integer.parseInt(mobile);
+//			String encMobile = UserInfoCyper.EncryptMobile(mobile);
+//			String encPwd = UserInfoCyper.EncryptPassword(uuid, upwd);
+//
+//			mobile = "jHUbmuYqgU/I847RNbmXhg==";
+//
+//			in008TMapper.insert(uuid,encPwd,name,mobile,address,ulevel,comname,businessnum,gacode,status,prod_code);
+//
+//			return "ok";
+//		}catch (Exception e) {
+//			log.info(e.getMessage());
+//			return "x";
+//		}
+//	}
 }

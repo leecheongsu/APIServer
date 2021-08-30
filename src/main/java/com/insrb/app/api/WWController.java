@@ -163,7 +163,7 @@ public class WWController {
 			return result;
 		} catch (WWException e) {
 			log.error("/ww/pre-premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 가보험료API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 오류: " + e.getMessage());
 		}
 	}
 
@@ -191,7 +191,7 @@ public class WWController {
 			return in101tMapper.selectById(quote_no);
 		} catch (WWException e) {
 			log.error("/ww/premium: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상실보험료API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -226,7 +226,7 @@ public class WWController {
 			return esignurl;
 		} catch (WWException e) {
 			log.error("/ww/prevent_denial: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상부인방지API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -270,7 +270,7 @@ public class WWController {
 			return "OK";
 		} catch (WWException e) {
 			log.error("/ww/order: {}", e.getMessage());
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상청약확정API오류: " + e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "현대해상 오류: " + e.getMessage());
 		} catch (InsuAuthException e) {
 			log.error(e.getMessage());
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

@@ -22,7 +22,7 @@ public class FilterConfig {
 		// Rule out : /kginicis/rtn/*
 		// Rule out : /kginicis/noti/*
 		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/kginicis/vacct/*", "/batch/*",
-				"/brs/*", "/hsart/*", "/upload/*", "/apis/*");
+				"/brs/*", "/hsart/*", "/ocr/*", "/apis/*");
 
 		return registrationBean;
 	}
