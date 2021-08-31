@@ -8,9 +8,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class FilterConfig {
+public class FilterConfig implements WebMvcConfigurer {
 
 	// uncomment this and comment the @Component in the filter class definition to register only for a url pattern
 	@Bean
@@ -22,7 +24,7 @@ public class FilterConfig {
 		// Rule out : /kginicis/rtn/*
 		// Rule out : /kginicis/noti/*
 		registrationBean.addUrlPatterns("/users/*", "/house/*", "/ww/*", "/okcert/house/*", "/okcert/ww/*", "/kginicis/vacct/*", "/batch/*",
-				"/brs/*", "/hsart/*", "/ocr/*", "/apis/*");
+				"/brs/*", "/hsart/*", "/ocr/*", "/apis/*", "/sociallogin/*");
 
 		return registrationBean;
 	}
@@ -37,5 +39,12 @@ public class FilterConfig {
 			}
 		});
 		return factory;
+	}
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOrigins("*")
+				.allowedMethods("GET", "POST");
 	}
 }
