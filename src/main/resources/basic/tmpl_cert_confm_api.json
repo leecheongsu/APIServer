@@ -3,8 +3,8 @@
 	"certCat": "03",
 	"caSerial": "?",
 	"caDn": "?",
-	"partnerNo": "4IB078",
-	"partnerIp": "210.179.172.177",
+	"partnerNo": "",
+	"partnerIp": "",
 	"intgAgmtKind": "01",
 	"regNo": "?",
 	"bizNo": "",
@@ -16,5 +16,5 @@
 	"agreeSelect3": "N",
 	"agreeSelect4": "N",
 	"selH": "N",
-	"prodCd": "7717"
+	"prodCd": ""
 }
