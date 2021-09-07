@@ -10,9 +10,9 @@
 		"emailAddr": "?",
 		"emailDomain": "?",
 		"ptyBizNm": "",
-		"bizNo1": "",
-		"bizNo2": "",
-		"bizNo3": "",
+		"bizNo1": "690",
+		"bizNo2": "87",
+		"bizNo3": "01268",
 		"onnaddrCat": "2",
 		"zip1": "?",
 		"zip2": "?",
@@ -24,8 +24,8 @@
 		"elecClauTrYn": "1",
 		"joinBefNotiSelYn": "Y",
 		"certCat": "03",
-		"partnerNo": "",
-		"partnerIp": "",
+		"partnerNo": "4IB078",
+		"partnerIp": "210.179.172.177",
 		"certConfmSeqNo": "?"
 	}
 }
