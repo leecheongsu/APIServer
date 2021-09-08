@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://192.168.0.105:3000")
+                .allowedOrigins("http://localhost:3000", "http://192.168.0.105:3000", "https://insurobo-next.vercel.app")
                 .maxAge(3600);
     }
 }
