@@ -1,14 +1,13 @@
 package com.insrb.app.filter;
 
 import com.insrb.app.util.InsuStringUtil;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
- @Slf4j
+// @Slf4j
 // @Component
 // @WebFilter(urlPatterns = "/*")
 // @Order(1)
@@ -29,12 +28,9 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String service_key = req.getHeader("X-insr-servicekey");
-	    log.info("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
+		// log.debug("Auth Filter: {}: {}, {}", req.getMethod(), req.getRequestURI(), service_key);
 
-		if (InsuStringUtil.Equals(req.getMethod(), "OPTIONS")) {
-			log.info("Auth Filter: pass preflight request");
-			chain.doFilter(request, response);
-		} else if (service_key == null) {
+		if (service_key == null) {
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid access.");
 		} else if (!InsuStringUtil.Equals(service_key, SERVICE_KEY)) {;
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid service key.");
