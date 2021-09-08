@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.IN008TMapper">
+    <insert id="insert">
+        insert into in008t
+        (UUID, UPWD, NAME, MOBILE, ADDRESS, ULEVEL, COMNAME, BUSINESSNUM, GACODE, ACCOUNT_STATUS, PROD_CODE, REGDATE)
+        values (#{uuid},
+                #{upwd},
+                #{name},
+                #{mobile},
+                #{address},
+                #{ulevel},
+                #{comname},
+                #{businessnum},
+                #{gacode},
+                #{account_status},
+                #{prod_code},
+                sysdate)
+    </insert>
+</mapper>

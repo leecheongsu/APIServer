@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.insrb.app.mapper.IN400CMapper">
+	<select id="getPurpsCode" parameterType="String" resultType="String">
+		select MAPPING_CODE
+		from IN400C
+		where PURPS_CODE = #{purps_code}
+	</select>
+</mapper>

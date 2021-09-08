@@ -1,0 +1,38 @@
+{
+  "response": [
+    {
+      "fileName" : "Sample.jpg",
+      "extract" : {
+        "bussinessLicenseType" : "일반과세자",
+        "businessTypeDetail" : "개인과세사업자",
+        "businessRegNo" : "000-00-00000",
+        "companyName" : "000주식회사",
+        "representative" : "김티맥",
+        "commencementDate" : "2021년01월01일",
+        "corporateRegNo" : "000000-0000000",
+        "businessAddr" : "경기도 성남시 분당구 황새울로258번길 29, 7층(수내동)",
+        "headOfficeAddr" : "경기도 성남시 분당구 황새울로258번길 29, 7층(수내동)",
+        "businessKind" : [
+          {
+            "item" : "소프트웨어",
+            "type" : "서비스업"
+          },
+          {
+            "item" : "소프트웨어 개발 및 공급업",
+            "type" : "서비스업"
+          }
+        ],
+        "issueReason" : "정점",
+        "jointBusinessOwner": "",
+        "issueDate" : "2021년01월01일",
+        "issuer" : "분당세무서장",
+        "etc": "000-0-00000"
+      },
+      "result" : {
+        "code" : 2000,
+        "message" : "OK"
+      }
+    }
+
+  ]
+}
